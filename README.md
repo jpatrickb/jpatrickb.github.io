@@ -18,7 +18,7 @@ Deploy
 2) In GitHub → Settings → Pages, ensure Source = GitHub Actions.
 
 First-time GitHub setup (if repo not created yet)
-- Create a new public repo named jpatrickb.github.io under your GitHub account (username: jpatrick) and push this project to it.
+- Create a new public repo named jpatrickb.github.io under your GitHub account (username: jpatrickb) and push this project to it.
 
 Project data (easy to extend)
 - Edit src/data/projects.ts to add/remove/update projects. Each project supports:
@@ -30,7 +30,7 @@ Project data (easy to extend)
   - image?: string (optional path for future use)
 
 Profile photo
-- Place your image at public/profile.jpg and it will appear on the home page. If missing, a friendly placeholder text is shown.
+- Place your image at public/profile.jpeg and it will appear on the home page. If missing, a friendly placeholder text is shown.
 
 Structure
 - src/pages: Home, Projects, ProjectDetail
@@ -38,5 +38,5 @@ Structure
 - src/data/projects.ts: List of projects
 
 Notes
-- For a user site (https://jpatrick.github.io/), the Vite base path can be omitted or set to "/". No repo subpath is needed.
+- For a user site (https://jpatrickb.github.io/), the Vite base path can be omitted or set to "/". No repo subpath is needed.
 - If you prefer BrowserRouter, add an SPA 404 fallback (see github_pages.md).

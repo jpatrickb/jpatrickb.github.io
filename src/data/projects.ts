@@ -9,32 +9,32 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'project-one',
-    title: 'Project One',
-    description: 'Short description of what this project does and why it is interesting.',
-    tech: ['TypeScript', 'React', 'Vite'],
-    externalUrl: 'https://github.com/jpatrick/project-one'
+    slug: 'football-to-admissions',
+    title: 'Football Performance and Admissions - BYU Statistics Case Competition 2025',
+    description: 'Findings-first analysis of how NCAA football team win rates relate to admissions outcomes (enrollment, diversity, and student caliber) using XGBoost and SHAP; prepared for the 2025 BYU Statistics Case Competition.',
+    tech: ['Python', 'XGBoost', 'SHAP', 'scikit-learn', 'pandas'],
+    externalUrl: 'https://jpatrickb.github.io/football-to-admissions'
   },
   {
-    slug: 'project-two',
-    title: 'Project Two',
-    description: 'Another concise blurb highlighting the problem and your solution.',
-    tech: ['Node', 'Express', 'PostgreSQL'],
-    externalUrl: 'https://github.com/jpatrick/project-two'
+    slug: "vol3-semester1-project-imdb",
+    title: "Reel Ratings: Predicting IMDb Scores with Hollywood Data",
+    description: "Predict IMDb film quality from crew metadata using tree-based ML with a Bayesian shrinkage-adjusted rating; includes a paper-style Jekyll site.",
+    tech: ["Python", "scikit-learn", "XGBoost", "pandas"],
+    externalUrl: "https://jpatrickb.github.io/vol3_semester1_project_imdb"
   },
   {
-    slug: 'project-three',
-    title: 'Project Three',
-    description: 'Focus on outcomes, metrics, or interesting technical challenges.',
-    tech: ['Python', 'FastAPI'],
-    externalUrl: 'https://github.com/jpatrick/project-three'
+    slug: 'moonlander-optimal-control',
+    title: 'Fly Me To The Moon!',
+    description: 'Optimal control of a 2D Lunar Lander—formulation, results, and methods with curated figures and Jekyll-based docs.',
+    tech: ['Python', 'SciPy', 'NumPy', 'Matplotlib', 'LaTeX'],
+    externalUrl: 'https://jpatrickb.github.io/moonlander_optimal_control'
   },
   {
-    slug: 'project-four',
-    title: 'Project Four',
-    description: 'A quick summary of the project; you can link out or add detail page content later.',
-    tech: ['Go', 'gRPC'],
-    externalUrl: 'https://github.com/jpatrick/project-four'
+    slug: 'vol3-housing-project',
+    title: 'The Cost of Living: A Zillow Housing Forecast',
+    description: 'State-level housing analysis (2000-2020) merging Zillow HPI with CPS/IPUMS; uses clustering, ARIMA/VARMAX, and a Bayesian hierarchical model to study regional dynamics and forecasting. Includes a GitHub Pages site and paper.',
+    tech: ['Python', 'Jupyter', 'pandas', 'NumPy', 'SciPy', 'statsmodels', 'scikit-learn', 'PyMC3'],
+    externalUrl: 'https://jpatrickb.github.io/vol3_housing_project'
   }
 ]
 
