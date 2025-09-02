@@ -7,7 +7,7 @@ export default function Projects() {
       <div className="grid">
         {projects.map((p) => {
           const url = p.externalUrl
-          const displayUrl = url?.replace(/^https?:\/\//, '')
+          // const displayUrl = url?.replace(/^https?:\/\//, '')
           return (
             <article key={p.slug} className="card">
               <div>
