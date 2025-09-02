@@ -30,7 +30,7 @@ export default function Home() {
             </h3>
             <details className="details-row">
               <summary>
-                <span><strong>GTM Strategy & AI Intern</strong> — Winning by Design (May 2025–Present)</span>
+                <span><strong>GTM Strategy & AI Intern</strong> — Winning by Design (May 2025-Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
@@ -39,7 +39,7 @@ export default function Home() {
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant</strong> — BYU Office of the President (Aug 2024–Present)</span>
+                <span><strong>Research Assistant</strong> — BYU Office of the President (Aug 2024-Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
@@ -48,7 +48,7 @@ export default function Home() {
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant (Jarvis Lab)</strong> — BYU Mathematics (Dec 2023–Present)</span>
+                <span><strong>Research Assistant (Jarvis Lab)</strong> — BYU Mathematics (Dec 2023-Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
@@ -57,21 +57,21 @@ export default function Home() {
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant (Whitehead Lab)</strong> — BYU Mathematics (Apr 2021–Aug 2021)</span>
+                <span><strong>Grader (Math 290)</strong> — BYU Mathematics (Aug 2023-Dec 2023)</span>
+                <span className="chevron" aria-hidden>▸</span>
+              </summary>
+              <p style={{color: 'var(--muted)'}}>
+                Graded and mentored students in proofs (logic, sets, discrete, number theory).
+              </p>
+            </details>
+            <details className="details-row">
+              <summary>
+                <span><strong>Research Assistant (Whitehead Lab)</strong> — BYU Mathematics (Apr 2021-Aug 2021)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
                 Authored documentation for Bayesian statistical sampling workflows with geologic computing software in Python. See results: 
                 <a href="https://tsunami.byu.edu/whitehead-lab" target="_blank" rel="noreferrer"> tsunami.byu.edu/whitehead-lab</a>.
-              </p>
-            </details>
-            <details className="details-row">
-              <summary>
-                <span><strong>Grader (Math 290)</strong> — BYU Mathematics (Aug 2023–Dec 2023)</span>
-                <span className="chevron" aria-hidden>▸</span>
-              </summary>
-              <p style={{color: 'var(--muted)'}}>
-                Graded and mentored students in proofs (logic, sets, discrete, number theory).
               </p>
             </details>
           </article>
@@ -82,7 +82,7 @@ export default function Home() {
               Education
             </h3>
             <p style={{margin: '6px 0 0'}}><strong>Brigham Young University</strong> — Provo, UT</p>
-            <p style={{margin: '4px 0', color: 'var(--muted)'}}>Jun 2020 – Apr 2026</p>
+            <p style={{margin: '4px 0', color: 'var(--muted)'}}>Jun 2020 - Apr 2026</p>
             <p style={{margin: '6px 0 0'}}>BS — <strong>Double Major:</strong> Applied & Computational Mathematics (ACME) + Economics</p>
             <p style={{margin: '6px 0 0'}}>
               <a href="https://wheatley.byu.edu/student-scholars" target="_blank" rel="noreferrer">Wheatley Scholar (2024 Cohort)</a> · Dean’s List (3×) · GPA 3.92
