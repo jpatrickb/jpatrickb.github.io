@@ -13,11 +13,11 @@ export default function Projects() {
               <div>
                 <h3>{p.title}</h3>
                 <p>{p.description}</p>
-                {url && (
+                {/* {url && (
                   <p style={{marginTop: 6, fontSize: 12, color: 'var(--muted)'}}>
                     {displayUrl}
                   </p>
-                )}
+                )} */}
               </div>
               <div className="tags">
                 {p.tech.map((t) => (
