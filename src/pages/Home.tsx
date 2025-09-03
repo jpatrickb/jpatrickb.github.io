@@ -30,7 +30,7 @@ export default function Home() {
             </h3>
             <details className="details-row">
               <summary>
-                <span><strong>GTM Strategy & AI Intern</strong> — Winning by Design (May 2025-Present)</span>
+                <span><strong>GTM Strategy & AI Intern</strong> — Winning by Design (May 2025-September 2025)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
@@ -39,7 +39,7 @@ export default function Home() {
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant</strong> — BYU Office of the President (Aug 2024-Present)</span>
+                <span><strong>Research Assistant (to President C. Shane Reese)</strong> — BYU Office of the President (Aug 2024-Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
@@ -48,7 +48,7 @@ export default function Home() {
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant (Jarvis Lab)</strong> — BYU Mathematics (Dec 2023-Present)</span>
+                <span><strong>Research Assistant (Jarvis Lab)</strong> — BYU Mathematics (Dec 2023-October 2024)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
