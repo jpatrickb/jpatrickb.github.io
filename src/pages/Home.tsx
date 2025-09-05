@@ -11,6 +11,11 @@ export default function Home() {
             <Link to="/projects" className="btn">View Projects</Link>
             <a href="https://github.com/jpatrickb" target="_blank" rel="noreferrer" className="btn secondary">GitHub</a>
           </div>
+          <div className="hero-cta" style={{marginTop:10}}>
+            <a href="mailto:jpatrickbeal@gmail.com" className="btn secondary">Email</a>
+            <a href="https://linkedin.com/in/jpatrickbeal" target="_blank" rel="noreferrer" className="btn secondary">LinkedIn</a>
+            <a href="/resume.pdf" target="_blank" rel="noreferrer" className="btn secondary">Resume (PDF)</a>
+          </div>
         </div>
         <div className="panel avatar-card">
           {/* Place your profile photo at public/profile.jpeg */}
@@ -30,49 +35,97 @@ export default function Home() {
             </h3>
             <details className="details-row">
               <summary>
-                <span><strong>GTM Strategy & AI Intern</strong> — Winning by Design (May 2025-September 2025)</span>
+                <span><strong>AI Consultant</strong> — TechForce Advisors (Remote) (Aug 2025–Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
-              <p style={{color: 'var(--muted)'}}>
-                Built “Archie,” an AI-powered GTM diagnostic platform. Full diagnostics in under 30 minutes; 20+ quantitative analyses; automated qualitative reviews.
-              </p>
+              <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
+                <li>Advise clients on AI adoption and workflow automation; join sales/discovery calls to assess business needs.</li>
+                <li>Research emerging AI tools and recommend scalable solutions for scheduling, engagement, and CRM integration.</li>
+                <li>Built a custom FAQ+scheduling chatbot and GHL CRM social automations as sole technical contributor.</li>
+              </ul>
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant (to President C. Shane Reese)</strong> — BYU Office of the President (Aug 2024-Present)</span>
+                <span><strong>GTM Strategy & AI Intern</strong> — Winning by Design (May–Sep 2025)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
-              <p style={{color: 'var(--muted)'}}>
-                Policy and strategy research to inform executive decision-making aligned with BYU’s Mission & Aims.
-              </p>
+              <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
+                <li>Engineered a full-stack GTM diagnostic (Python, Flask, SQL, Google APIs) standardizing CRM/finance/CS data into 20+ analyses.</li>
+                <li>Reduced diagnostic turnaround from 6–8 weeks to 5–15 minutes; presented results to executives.</li>
+                <li>Designed an LLM “Deep Dive” pipeline to analyze client call transcripts (scale: unlimited calls in &lt;30 minutes).</li>
+                <li>Automated slide-deck generation and Slack delivery to enable consistent, data-driven advisory.</li>
+              </ul>
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant (Jarvis Lab)</strong> — BYU Mathematics (Dec 2023-October 2024)</span>
+                <span><strong>Research Assistant</strong> — BYU Office of the President (Aug 2024–Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
-              <p style={{color: 'var(--muted)'}}>
-                Bayesian models for biomarker detection in noisy PPG signals; probabilistic inference and signal processing for robust detection.
-              </p>
+              <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
+                <li>Research and author reports for President Reese on student development and related topics.</li>
+                <li>Present findings monthly to BYU leadership; synthesize literature into actionable insights.</li>
+              </ul>
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Grader (Math 290)</strong> — BYU Mathematics (Aug 2023-Dec 2023)</span>
+                <span><strong>Research Assistant (Mathematics, Jarvis Lab)</strong> — BYU (Dec 2023–Oct 2024)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
-              <p style={{color: 'var(--muted)'}}>
-                Graded and mentored students in proofs (logic, sets, discrete, number theory).
-              </p>
+              <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
+                <li>Designed algorithms for biomarker detection in PPG signals: Bayesian modeling, peak detection, mixture-of-experts, notch detection.</li>
+                <li>Ran experiments in Jupyter; integrated methods into lab package; documented workflows for reproducibility.</li>
+              </ul>
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Research Assistant (Whitehead Lab)</strong> — BYU Mathematics (Apr 2021-Aug 2021)</span>
+                <span><strong>Opera Accompanist</strong> — BYU School of Music (May 2025–Present)</span>
+                <span className="chevron" aria-hidden>▸</span>
+              </summary>
+              <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
+                <li>Prepare and perform operatic repertoire; collaborate with conductors and vocalists for seamless performance.</li>
+                <li>Demonstrate attentive listening, precision, and teamwork in high-stakes environments.</li>
+              </ul>
+            </details>
+            <details className="details-row">
+              <summary>
+                <span><strong>Ballet Accompanist</strong> — BYU Department of Dance (Aug 2024–Present)</span>
+                <span className="chevron" aria-hidden>▸</span>
+              </summary>
+              <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
+                <li>Perform live accompaniment for 2–6 weekly classes (company groups), preparing, improvising, and sight‑reading across styles.</li>
+                <li>Adapt in real time to professor direction and dancer pacing.</li>
+              </ul>
+            </details>
+            <details className="details-row">
+              <summary>
+                <span><strong>Grader (Math 290)</strong> — BYU Mathematics (Aug 2023–Dec 2023)</span>
+                <span className="chevron" aria-hidden>▸</span>
+              </summary>
+              <p style={{color: 'var(--muted)'}}>Graded and mentored students in proofs (logic, sets, discrete, number theory).</p>
+            </details>
+            <details className="details-row">
+              <summary>
+                <span><strong>Research Assistant (Whitehead Lab)</strong> — BYU (Apr 2021–Aug 2021)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <p style={{color: 'var(--muted)'}}>
-                Authored documentation for Bayesian statistical sampling workflows with geologic computing software in Python. See results: 
+                Authored documentation for Bayesian statistical sampling workflows with geologic computing software in Python. See results:
                 <a href="https://tsunami.byu.edu/whitehead-lab" target="_blank" rel="noreferrer"> tsunami.byu.edu/whitehead-lab</a>.
               </p>
+            </details>
+            <details className="details-row">
+              <summary>
+                <span><strong>Additional Experience & Leadership</strong></span>
+                <span className="chevron" aria-hidden>▸</span>
+              </summary>
+              <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
+                <li>Mathematics Grader (Math 290), BYU (Aug–Dec 2023).</li>
+                <li>Volunteer Representative, The Church of Jesus Christ of Latter-day Saints (Aug 2021–Aug 2023): automated fleet management (Google Apps Script) for ~100 vehicles.</li>
+                <li>Research Assistant, BYU Whitehead Lab (Apr–Aug 2021): documented Bayesian sampling tests for geologic computing (Python).</li>
+                <li>Brass Salesperson / Software Developer, Summerhays Music Center (2018–2021): automated payment entry with PyWinAuto (−85% time).</li>
+                <li>Language: Proficient in American Sign Language (ASL).</li>
+                <li>Music Leadership: Principal/Lead Trombonist, BYU ensembles; led section rehearsals and mentored peers.</li>
+              </ul>
             </details>
           </article>
           
@@ -85,7 +138,7 @@ export default function Home() {
             <p style={{margin: '4px 0', color: 'var(--muted)'}}>Jun 2020 - Apr 2026</p>
             <p style={{margin: '6px 0 0'}}>BS — <strong>Double Major:</strong> Applied & Computational Mathematics (ACME) + Economics</p>
             <p style={{margin: '6px 0 0'}}>
-              <a href="https://wheatley.byu.edu/student-scholars" target="_blank" rel="noreferrer">Wheatley Scholar (2024 Cohort)</a> · Dean’s List (3×) · GPA 3.92
+              <a href="https://wheatley.byu.edu/student-scholars" target="_blank" rel="noreferrer">Wheatley Scholar (2024 Cohort)</a> · Dean’s List (4×) · GPA 3.92
             </p>
           </article>
 
@@ -107,6 +160,15 @@ export default function Home() {
               <span className="tag">Data Structures</span>
               <span className="tag">Algorithms</span>
             </div>
+            <p style={{margin: '8px 0 4px', color: 'var(--muted)', fontSize: 13}}>Data & Statistics</p>
+            <div className="tags" style={{marginTop: 4}}>
+              <span className="tag">NumPy</span>
+              <span className="tag">pandas</span>
+              <span className="tag">SciPy</span>
+              <span className="tag">Bayesian Modeling</span>
+              <span className="tag">Machine Learning</span>
+              <span className="tag">Econometrics</span>
+            </div>
             <p style={{margin: '8px 0 4px', color: 'var(--muted)', fontSize: 13}}>Economics</p>
             <div className="tags" style={{marginTop: 4}}>
               <span className="tag">Economic Modeling</span>
@@ -126,11 +188,6 @@ export default function Home() {
           </article>
         </div>
 
-        <div style={{marginTop: 12, color: 'var(--muted)'}}>
-          <span>
-            <a href="mailto:jpatrickbeal@gmail.com">Email</a> · <a href="https://linkedin.com/in/jpatrickbeal" target="_blank" rel="noreferrer">LinkedIn</a> · <a href="/resume.pdf" target="_blank" rel="noreferrer">Full resume (PDF)</a>
-          </span>
-        </div>
       </div>
     </section>
   )

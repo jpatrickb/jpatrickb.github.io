@@ -22,6 +22,9 @@ body {
               radial-gradient(800px 600px at 100% 0%, #0c1a33 0%, transparent 60%),
               var(--bg);
   color: var(--text);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 a { color: var(--brand); text-decoration: none; }
