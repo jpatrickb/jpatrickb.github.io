@@ -41,7 +41,7 @@ export default function Home() {
               <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
                 <li>Advise clients on AI adoption and workflow automation; join sales/discovery calls to assess business needs.</li>
                 <li>Research emerging AI tools and recommend scalable solutions for scheduling, engagement, and CRM integration.</li>
-                <li>Built a custom FAQ+scheduling chatbot and GHL CRM social automations as sole technical contributor.</li>
+                {/* <li>Built a custom FAQ+scheduling chatbot and GHL CRM social automations as sole technical contributor.</li> */}
               </ul>
             </details>
             <details className="details-row">
