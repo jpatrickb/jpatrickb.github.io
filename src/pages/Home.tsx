@@ -35,7 +35,7 @@ export default function Home() {
             </h3>
             <details className="details-row">
               <summary>
-                <span><strong>AI Consultant</strong> — TechForce Advisors (Remote) (Aug 2025–Present)</span>
+                <span><strong>Lead Engineer</strong> — TechForce Advisors (Remote) (Aug 2025–Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <ul style={{margin:'6px 10px', color:'var(--muted)'}}>
