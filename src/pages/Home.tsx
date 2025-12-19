@@ -5,15 +5,20 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="container">
-          <div className="hero-content">
-            <h1 id="home-heading" className="hero-title">Hi, I'm Patrick (jpatrickb)</h1>
-            <p className="hero-sub">I mix applied math, economics, and ML to model behavior, forecast outcomes, and optimize decisions—turning messy real‑world problems into measurable wins.</p>
-            <div className="hero-cta">
-              <Link to="/projects" className="btn">View Projects</Link>
-              <a href="https://github.com/jpatrickb" target="_blank" rel="noreferrer" className="btn secondary">GitHub</a>
-              <a href="mailto:jpatrickbeal@gmail.com" className="btn secondary">Email</a>
-              <a href="https://linkedin.com/in/jpatrickbeal" target="_blank" rel="noreferrer" className="btn secondary">LinkedIn</a>
-              <a href="/resume.pdf" target="_blank" rel="noreferrer" className="btn secondary">Resume (PDF)</a>
+          <div className="hero-wrapper">
+            <div className="hero-content">
+              <h1 id="home-heading" className="hero-title">Hi, I'm Patrick (jpatrickb)</h1>
+              <p className="hero-sub">I mix applied math, economics, and ML to model behavior, forecast outcomes, and optimize decisions—turning messy real‑world problems into measurable wins.</p>
+              <div className="hero-cta">
+                <Link to="/projects" className="btn">View Projects</Link>
+                <a href="https://github.com/jpatrickb" target="_blank" rel="noreferrer" className="btn secondary">GitHub</a>
+                <a href="mailto:jpatrickbeal@gmail.com" className="btn secondary">Email</a>
+                <a href="https://linkedin.com/in/jpatrickbeal" target="_blank" rel="noreferrer" className="btn secondary">LinkedIn</a>
+                <a href="/resume.pdf" target="_blank" rel="noreferrer" className="btn secondary">Resume (PDF)</a>
+              </div>
+            </div>
+            <div className="hero-avatar">
+              <Picture />
             </div>
           </div>
         </div>
@@ -183,5 +188,24 @@ export default function Home() {
         </div>
       </section>
     </>
+  )
+}
+
+function Picture() {
+  const src = '/profile.jpeg'
+  return (
+    <img
+      src={src}
+      className="avatar"
+      alt="Portrait of Patrick"
+      onError={(e) => {
+        const el = e.currentTarget
+        el.style.display = 'none'
+        const fallback = document.createElement('div')
+        fallback.className = 'avatar-fallback'
+        fallback.textContent = 'Add profile.jpeg in /public'
+        el.parentElement?.appendChild(fallback)
+      }}
+    />
   )
 }
