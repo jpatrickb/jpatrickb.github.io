@@ -9,6 +9,13 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: 'byu-econ-588',
+    title: 'DAGs and Causal Inference',
+    description: 'Advanced econometric methods for causal inference integrating Directed Acyclic Graphs (DAGs) with conventional econometric techniques; explores collider bias, frontdoor criterion, M-bias, and falsification testing through course notes, technical proofs, and presentations.',
+    tech: ['Econometrics', 'Causal Inference', 'DAGs', 'OLS', 'Instrumental Variables', 'Monte Carlo Simulations'],
+    externalUrl: 'https://jpatrickb.github.io/byu-econ-588/'
+  },
+  {
     slug: 'football-to-admissions',
     title: 'Football Performance and Admissions - 2025 BYU Statistics Case Competition Winning Presentation',
     description: 'Findings-first analysis of how NCAA football team win rates relate to admissions outcomes (enrollment, diversity, and student caliber) using XGBoost and SHAP; winning presentation for the 2025 BYU Statistics Case Competition.',
