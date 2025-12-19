@@ -23,18 +23,25 @@ export const projects: Project[] = [
     externalUrl: "https://jpatrickb.github.io/vol3_semester1_project_imdb"
   },
   {
-    slug: 'moonlander-optimal-control',
-    title: 'Fly Me To The Moon!',
-    description: 'Optimal control of a 2D Lunar Lander—formulation, results, and methods with curated figures',
-    tech: ['Python', 'SciPy', 'NumPy', 'Matplotlib', 'LaTeX'],
-    externalUrl: 'https://jpatrickb.github.io/moonlander_optimal_control'
-  },
-  {
     slug: 'vol3-housing-project',
     title: 'The Cost of Living: A Zillow Housing Forecast',
     description: 'State-level housing analysis (2000-2020) merging Zillow HPI with CPS/IPUMS; uses clustering, ARIMA/VARMAX, and a Bayesian hierarchical model to study regional dynamics and forecasting',
     tech: ['Python', 'Jupyter', 'pandas', 'NumPy', 'SciPy', 'statsmodels', 'scikit-learn', 'PyMC3'],
     externalUrl: 'https://jpatrickb.github.io/vol3_housing_project'
+  },
+  {
+    slug: 'esop-tax-credit-did',
+    title: 'ESOP Tax Credit: Evaluating Colorado\'s HB17-1214 with Difference-in-Differences Analysis',
+    description: 'Causal analysis of Colorado\'s ESOP tax credit policy using difference-in-differences and synthetic control methods; examined firm-level ESOP participation and asset accumulation using Department of Labor Form 5500 filings (2012-2025).',
+    tech: ['Difference-in-Differences', 'Synthetic Control', 'Causal Inference', 'Stata'],
+    externalUrl: 'https://jpatrickb.github.io/esop-tax-credit-did/'
+  },
+  {
+    slug: 'moonlander-optimal-control',
+    title: 'Fly Me To The Moon!',
+    description: 'Optimal control of a 2D Lunar Lander—formulation, results, and methods with curated figures',
+    tech: ['Python', 'SciPy', 'NumPy', 'Matplotlib', 'LaTeX'],
+    externalUrl: 'https://jpatrickb.github.io/moonlander_optimal_control'
   }
 ]
 
