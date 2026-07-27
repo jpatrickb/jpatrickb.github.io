@@ -34,16 +34,19 @@ export default function Home() {
               <svg className="card-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 7h12l2 4H4l2-4zm-2 6h16v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5z"/></svg>
               Experience
             </h3>
-            <details className="details-row">
+            <details className="details-row" open>
               <summary>
                 <span><strong>Founding Engineer</strong> — TechForce Advisors (Remote) (Aug 2025–Present)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <ul>
-                <li>Built and shipped a production agentic AI research system (Next.js, AWS Bedrock AgentCore, Claude) that turns a visitor's email into a personalized company report in ~78 seconds for $0.10 in LLM cost, with a verifier pass that strips unsupported claims before anything ships; extended it into an automated outbound pipeline (Apollo.io, Gmail API) that sources prospects, generates reports in parallel, and tracks engagement back into the CRM.</li>
-                <li>Built and shipped a native iOS app (SwiftUI) for door-to-door sales consultants that transcribes voice notes (AWS Transcribe), extracts company/contact details (Bedrock Claude), and writes them into the CRM; approved by Apple and live on TestFlight.</li>
-                <li>Designed and built a shared AWS test-infrastructure platform (Terraform, Aurora Serverless v2, host-based ALB routing) for three production apps; replaced managed NAT Gateways with EC2 NAT instances, eliminating that cost line entirely.</li>
-                <li>Migrated the company marketing site to Next.js on AWS Amplify and fixed a server-side tracking bug that raised Meta's Lead-event match quality from 0/10 to 8/10.</li>
+                <li>Built and shipped a production agentic AI research system (Next.js, AWS Bedrock AgentCore, Claude) that turns a visitor's email into a personalized company report in ~78 seconds for $0.10 in LLM cost, with a verifier pass that strips unsupported claims before anything ships.</li>
+                <li>Extended the system into an automated outbound pipeline (Apollo.io, Gmail API) that sources prospects, generates reports in parallel, and tracks engagement back into the CRM.</li>
+                <li>Built and shipped a native iOS app (SwiftUI) for door-to-door sales consultants that transcribes voice notes (AWS Transcribe), extracts company/contact details (Bedrock Claude), and writes them into the CRM. Approved by Apple and live on TestFlight.</li>
+                <li>Designed and built a shared AWS test-infrastructure platform (Terraform, Aurora Serverless v2, host-based ALB routing) for three production apps.</li>
+                <li>Replaced managed NAT Gateways with EC2 NAT instances on that platform, eliminating that cost line entirely.</li>
+                <li>Migrated the company marketing site to Next.js on AWS Amplify.</li>
+                <li>Fixed a server-side tracking bug on the marketing site that raised Meta's Lead-event match quality from 0/10 to 8/10.</li>
                 <li>Migrated a Slack-integrated AI CRM agent (LangGraph/LangChain) from HubSpot to GoHighLevel, rebuilding all 30 tool integrations and deploying via Terraform-managed AWS ECS.</li>
                 <li>Launched and ran an 8-campaign Meta ads system with a custom ad-creative generator, campaign management, and cost analytics.</li>
                 <li>Currently building an AI pipeline (Docling, AWS Bedrock) that extracts financial data from real-estate broker documents into acquisition underwriting models.</li>
@@ -83,26 +86,6 @@ export default function Home() {
             </details>
             <details className="details-row">
               <summary>
-                <span><strong>Opera Accompanist</strong> — BYU School of Music (May 2025–Apr 2026)</span>
-                <span className="chevron" aria-hidden>▸</span>
-              </summary>
-              <ul>
-                <li>Prepared and performed operatic repertoire; collaborated with conductors and vocalists for seamless performance.</li>
-                <li>Demonstrated attentive listening, precision, and teamwork in high-stakes environments.</li>
-              </ul>
-            </details>
-            <details className="details-row">
-              <summary>
-                <span><strong>Ballet Accompanist</strong> — BYU Department of Dance (Aug 2024–Apr 2026)</span>
-                <span className="chevron" aria-hidden>▸</span>
-              </summary>
-              <ul>
-                <li>Performed live accompaniment for 2–6 weekly classes (company groups), preparing, improvising, and sight‑reading across styles.</li>
-                <li>Adapted in real time to professor direction and dancer pacing.</li>
-              </ul>
-            </details>
-            <details className="details-row">
-              <summary>
                 <span><strong>Grader (Math 290)</strong> — BYU Mathematics (Aug 2023–Dec 2023)</span>
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
@@ -124,12 +107,8 @@ export default function Home() {
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <ul>
-                <li>Mathematics Grader (Math 290), BYU (Aug–Dec 2023).</li>
                 <li>Volunteer Representative, The Church of Jesus Christ of Latter-day Saints (Aug 2021–Aug 2023): automated fleet management (Google Apps Script) for ~100 vehicles.</li>
-                <li>Research Assistant, BYU Whitehead Lab (Apr–Aug 2021): documented Bayesian sampling tests for geologic computing (Python).</li>
                 <li>Brass Salesperson / Software Developer, Summerhays Music Center (2018–2021): automated payment entry with PyWinAuto (−85% time).</li>
-                <li>Language: Proficient in American Sign Language (ASL).</li>
-                <li>Music Leadership: Principal/Lead Trombonist, BYU ensembles; led section rehearsals and mentored peers.</li>
               </ul>
             </details>
           </article>
@@ -159,7 +138,6 @@ export default function Home() {
               <span className="tag">Optimization</span>
               <span className="tag">Functional Analysis</span>
               <span className="tag">Dynamical Systems</span>
-              <span className="tag">Machine Learning</span>
               <span className="tag">Latent Models</span>
               <span className="tag">Optimal Control</span>
               <span className="tag">Data Structures</span>
@@ -190,6 +168,38 @@ export default function Home() {
               <span className="tag">Java</span>
               <span className="tag">UNIX</span>
             </div>
+            <p style={{margin: '12px 0 4px', color: 'var(--medium-gray)', fontSize: 13}}>Languages</p>
+            <div className="tags">
+              <span className="tag">American Sign Language (ASL)</span>
+            </div>
+          </article>
+
+          <article className="card">
+            <h3>
+              <svg className="card-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              Beyond the Resume
+            </h3>
+            <details className="details-row">
+              <summary>
+                <span><strong>Opera Accompanist</strong> — BYU School of Music (May 2025–Apr 2026)</span>
+                <span className="chevron" aria-hidden>▸</span>
+              </summary>
+              <ul>
+                <li>Prepared and performed operatic repertoire; collaborated with conductors and vocalists for seamless performance.</li>
+                <li>Demonstrated attentive listening, precision, and teamwork in high-stakes environments.</li>
+              </ul>
+            </details>
+            <details className="details-row">
+              <summary>
+                <span><strong>Ballet Accompanist</strong> — BYU Department of Dance (Aug 2024–Apr 2026)</span>
+                <span className="chevron" aria-hidden>▸</span>
+              </summary>
+              <ul>
+                <li>Performed live accompaniment for 2–6 weekly classes (company groups), preparing, improvising, and sight‑reading across styles.</li>
+                <li>Adapted in real time to professor direction and dancer pacing.</li>
+              </ul>
+            </details>
+            <p>Principal/Lead Trombonist, BYU ensembles: led section rehearsals and mentored peers.</p>
           </article>
         </div>
       </section>
