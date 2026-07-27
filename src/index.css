@@ -216,6 +216,15 @@ main.container {
   }
 }
 
+.hero-role {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+}
+
 .hero-title {
   font-size: 3.5rem;
   font-weight: 700;

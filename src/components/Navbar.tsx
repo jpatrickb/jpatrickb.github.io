@@ -6,7 +6,7 @@ export default function Navbar() {
       <div className="navbar-inner">
         <Link to="/" className="brand" aria-label="Home">
           <span className="brand-logo" aria-hidden />
-          <span>jpatrickb</span>
+          <span>Patrick Beal</span>
         </Link>
         <nav className="nav-links" aria-label="Primary">
           <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Home</NavLink>

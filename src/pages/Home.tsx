@@ -7,8 +7,9 @@ export default function Home() {
         <div className="container">
           <div className="hero-wrapper">
             <div className="hero-content">
-              <h1 id="home-heading" className="hero-title">Hi, I'm Patrick (jpatrickb)</h1>
-              <p className="hero-sub">I mix applied math, economics, and ML to model behavior, forecast outcomes, and optimize decisions—turning messy real‑world problems into measurable wins.</p>
+              <p className="hero-role">AI/ML Engineer</p>
+              <h1 id="home-heading" className="hero-title">Patrick Beal</h1>
+              <p className="hero-sub">I mix applied math, economics, and ML to model behavior, forecast outcomes, and optimize decisions, turning messy real‑world problems into measurable wins.</p>
               <div className="hero-cta">
                 <Link to="/projects" className="btn">View Projects</Link>
                 <a href="https://github.com/jpatrickb" target="_blank" rel="noreferrer" className="btn secondary">GitHub</a>
