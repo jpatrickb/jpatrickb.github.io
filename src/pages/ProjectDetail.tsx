@@ -28,7 +28,10 @@ export default function ProjectDetail() {
         </div>
         <div className="project-actions">
           {project.externalUrl && (
-            <a className="btn" href={project.externalUrl} target="_blank" rel="noreferrer">Open Repository</a>
+            <a className="btn" href={project.externalUrl} target="_blank" rel="noreferrer">Open Project Page ↗</a>
+          )}
+          {project.repoUrl && (
+            <a className="btn secondary" href={project.repoUrl} target="_blank" rel="noreferrer">View Code ↗</a>
           )}
           <Link className="btn secondary" to="/projects">Back to Projects</Link>
         </div>

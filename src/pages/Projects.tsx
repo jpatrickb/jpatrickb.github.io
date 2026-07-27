@@ -6,7 +6,6 @@ export default function Projects() {
       <h2 id="projects-heading" className="section-title">Projects</h2>
       <div className="grid">
         {projects.map((p) => {
-          const url = p.externalUrl
           return (
             <article key={p.slug} className="card">
               <div className="card-content">
@@ -19,9 +18,14 @@ export default function Projects() {
                 ))}
               </div>
               <div className="card-actions">
-                {url && (
-                  <a className="btn" href={url} target="_blank" rel="noreferrer">
+                {p.externalUrl && (
+                  <a className="btn" href={p.externalUrl} target="_blank" rel="noreferrer">
                     Open Project Page ↗
+                  </a>
+                )}
+                {p.repoUrl && (
+                  <a className="btn secondary" href={p.repoUrl} target="_blank" rel="noreferrer">
+                    View Code ↗
                   </a>
                 )}
               </div>
