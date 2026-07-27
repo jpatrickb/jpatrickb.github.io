@@ -11,8 +11,8 @@
   --very-light-gray: #e5e5e5;
   --lightest-gray: #f8f9fa;
   --white: #ffffff;
-  --near-black: #a0a0a0;
-  --dark-near-black: #333;
+  --pale-gray: #a0a0a0;
+  --near-black: #333;
 }
 
 * {
@@ -500,9 +500,9 @@ main.container {
 /* Footer */
 .footer {
   background-color: var(--dark-gray);
-  color: var(--near-black);
+  color: var(--pale-gray);
   padding: 3rem 0;
-  border-top: 1px solid var(--dark-near-black);
+  border-top: 1px solid var(--near-black);
   text-align: center;
   margin-top: 5rem;
 }
@@ -520,7 +520,7 @@ main.container {
 .footer-note {
   font-size: 0.9rem;
   margin-top: 1rem;
-  color: var(--near-black);
+  color: var(--pale-gray);
 }
 
 /* Project Detail Styles */
