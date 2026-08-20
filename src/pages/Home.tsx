@@ -60,7 +60,7 @@ export default function Home() {
               <ul>
                 <li>Engineered a full-stack GTM diagnostic (Python, Flask, SQL, Google APIs) standardizing CRM/finance/CS data into 20+ analyses.</li>
                 <li>Reduced diagnostic turnaround from 6–8 weeks to 5–15 minutes; presented results to executives.</li>
-                <li>Designed an LLM "Deep Dive" pipeline to analyze client call transcripts (scale: unlimited calls in &lt;30 minutes).</li>
+                <li>Designed an LLM "Deep Dive" pipeline to analyze client call transcripts, scaling review capacity from about 20 calls over several weeks to as many calls as the model API could process in under 30 minutes.</li>
                 <li>Automated slide-deck generation and Slack delivery to enable consistent, data-driven advisory.</li>
               </ul>
             </details>
@@ -107,7 +107,7 @@ export default function Home() {
                 <span className="chevron" aria-hidden>▸</span>
               </summary>
               <ul>
-                <li>Volunteer Representative, The Church of Jesus Christ of Latter-day Saints (Aug 2021–Aug 2023): automated fleet management (Google Apps Script) for ~100 vehicles.</li>
+                <li>Volunteer Representative, The Church of Jesus Christ of Latter-day Saints, New York Syracuse Mission (Aug 2021–Aug 2023): automated monthly fuel-log reporting for the mission's roughly 100 vehicles (Google Apps Script).</li>
                 <li>Brass Salesperson / Software Developer, Summerhays Music Center (2018–2021): automated payment entry with PyWinAuto (−85% time).</li>
               </ul>
             </details>
