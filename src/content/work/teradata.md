@@ -1,7 +1,7 @@
 ---
 company: Teradata
 role: Details coming soon
-start: "2026"
+start: Sep 2026
 end: Present
 status: running
 kind: engineering
