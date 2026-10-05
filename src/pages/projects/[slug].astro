@@ -1,0 +1,47 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import Base from '@/layouts/Base.astro'
+import PipelineStrip from '@/components/PipelineStrip.astro'
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+  return projects.map((p, i) => ({ params: { slug: p.id }, props: { project: p, next: projects[(i + 1) % projects.length] } }))
+}
+interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'> }
+const { project, next } = Astro.props
+const p = project.data
+const { Content } = await render(project)
+---
+<Base title={p.title} description={p.summary}>
+  <article class="pt-14">
+    <a href="/projects/" class="font-mono text-xs text-muted-foreground hover:text-primary">← projects</a>
+    <p class="label mb-3 mt-8">{p.lane} lane{p.year ? ` · ${p.year}` : ''}</p>
+    <h1 class="text-3xl font-semibold tracking-tight">{p.title}</h1>
+    <p class="mt-3 max-w-[62ch] text-lg text-muted-foreground">{p.summary}</p>
+
+    <div class="mt-6 grid gap-4 rounded-lg border border-border p-4 sm:grid-cols-[auto_1fr] sm:gap-x-8">
+      <span class="font-mono text-[11px] text-muted-foreground">pipeline</span>
+      <PipelineStrip stages={p.stages} size="md" />
+      {p.outcome && <>
+        <span class="font-mono text-[11px] text-muted-foreground">result</span>
+        <p class="text-sm">{p.outcome}</p>
+      </>}
+      <span class="font-mono text-[11px] text-muted-foreground">stack</span>
+      <p class="flex flex-wrap gap-1.5">{p.tech.map((t) => <span class="rounded border border-border px-1.5 py-0.5 font-mono text-[11px]">{t}</span>)}</p>
+      {(p.liveUrl || p.repoUrl) && <>
+        <span class="font-mono text-[11px] text-muted-foreground">links</span>
+        <p class="flex gap-4 text-sm">
+          {p.liveUrl && <a class="link" href={p.liveUrl}>write-up / live ↗</a>}
+          {p.repoUrl && <a class="link" href={p.repoUrl}>source ↗</a>}
+        </p>
+      </>}
+    </div>
+
+    <div class="prose-site mt-8"><Content /></div>
+
+    <a href={`/projects/${next.id}/`} class="mt-12 flex items-center justify-between rounded-lg border border-border px-4 py-3 text-sm hover:border-primary">
+      <span class="text-muted-foreground">next</span>
+      <span>{next.data.title} →</span>
+    </a>
+  </article>
+</Base>

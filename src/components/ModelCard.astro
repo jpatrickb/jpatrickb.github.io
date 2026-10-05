@@ -1,0 +1,34 @@
+---
+import { site } from '@/data/site'
+// A Hugging Face style model card, standing in for an About section.
+const rows = [
+  ['Intended use', 'Taking ML from notebook to production: modeling, evaluation, serving, and keeping cost and correctness visible after launch.'],
+  ['Training data', 'BS in Applied & Computational Mathematics + Economics, BYU (GPA 3.92, Wheatley Scholar). A year as a founding engineer shipping AI systems on AWS. Now at Teradata.'],
+  ['Architecture', 'Probability, optimization, and Bayesian methods underneath; econometrics and causal inference in the middle; Terraform, AWS, and LLM pipelines on top.'],
+  ['Eval results', '78 s and $0.10 per generated report · GTM diagnostic 6–8 weeks → 15 minutes · 2025 BYU Statistics Case Competition winner'],
+  ['Known limitations', 'Will ask what the counterfactual is. Plays trombone at concert volume. Occasionally accompanies ballet instead of answering Slack.'],
+]
+---
+<figure class="overflow-hidden rounded-lg border border-border font-mono text-[13px] leading-relaxed" aria-label="Model card for Patrick Beal">
+  <figcaption class="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-card px-4 py-2.5">
+    <span class="flex items-center gap-2.5">
+      <img src="/profile.jpeg" alt="" width="22" height="22" class="size-[22px] rounded-full object-cover" />
+      <span><span class="text-muted-foreground">jpatrickb/</span>patrick-beal</span>
+    </span>
+    <span class="text-muted-foreground">v2026.10 · license: open to work</span>
+  </figcaption>
+  <dl class="grid sm:grid-cols-[150px_1fr]">
+    {rows.map(([k, v], i) => (
+      <>
+        <dt class:list={['px-4 pt-2.5 text-muted-foreground sm:pb-2.5', i < rows.length - 1 && 'sm:border-b sm:border-border']}>{k}</dt>
+        <dd class:list={['min-w-0 px-4 pb-2.5 pt-0.5 sm:pt-2.5', i < rows.length - 1 && 'border-b border-border']}>{v}</dd>
+      </>
+    ))}
+  </dl>
+  <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-border bg-card px-4 py-2.5 text-xs">
+    <a class="link" href={site.github}>github</a>
+    <a class="link" href={site.linkedin}>linkedin</a>
+    <a class="link" href={site.resume}>resume.pdf</a>
+    <button type="button" data-action="email" class="link">copy email <span class="kbd">c</span></button>
+  </div>
+</figure>

@@ -1,7 +1,11 @@
 name: Build & Deploy (GitHub Pages)
 
+# Keeps jpatrickb.github.io live while the site moves to Cloudflare.
+# Cloudflare builds separately (Workers Builds, see README).
+
 on:
   push: { branches: [main] }
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -10,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "pages-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -19,12 +23,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+        with: { node-version: 22, cache: npm }
       - run: npm ci
-      - run: npm run build           # outputs to "dist" by default
-      - uses: actions/upload-pages-artifact@v3
+      - run: npm run build           # astro check + astro build → dist/
+      - if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
         with: { path: dist }
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -33,4 +39,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-

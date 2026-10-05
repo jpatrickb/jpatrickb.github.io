@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '@/layouts/Base.astro'
+import ProjectRow from '@/components/ProjectRow.astro'
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+const groups = [
+  { lane: 'system', title: 'Systems', note: 'Production pipelines, infrastructure, and apps.' },
+  { lane: 'model', title: 'Models', note: 'Modeling, causal inference, and research.' },
+] as const
+---
+<Base title="Projects" description="Projects by Patrick Beal: production AI systems, AWS infrastructure, Bayesian and causal modeling.">
+  <header class="pb-6 pt-14">
+    <p class="label mb-3">projects</p>
+    <h1 class="text-3xl font-semibold tracking-tight">Models and the systems around them</h1>
+    <p class="mt-3 max-w-[60ch] text-muted-foreground">
+      The strip under each project shows which stages of the pipeline it covered:
+      <span class="font-mono text-sm">data → model → eval → serve → monitor</span>.
+    </p>
+  </header>
+  {groups.map((g) => (
+    <section class="border-t border-border py-8" aria-labelledby={`g-${g.lane}`}>
+      <h2 id={`g-${g.lane}`} class="font-medium">{g.title}</h2>
+      <p class="text-sm text-muted-foreground">{g.note}</p>
+      <ul class="mt-2">
+        {projects.filter((p) => p.data.lane === g.lane).map((p) => <ProjectRow project={p} />)}
+      </ul>
+    </section>
+  ))}
+</Base>

@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '@/layouts/Base.astro'
+import ModelCard from '@/components/ModelCard.astro'
+import RunsTable from '@/components/RunsTable.astro'
+import ProjectRow from '@/components/ProjectRow.astro'
+import { samples, site } from '@/data/site'
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+const featured = projects.filter((p) => p.data.featured)
+const lanes = {
+  model: projects.filter((p) => p.data.lane === 'model').slice(0, 5),
+  system: projects.filter((p) => p.data.lane === 'system').slice(0, 5),
+}
+const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind === 'engineering' || w.data.kind === 'research')))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4)
+---
+<Base>
+  <section class="pb-12 pt-16 sm:pt-24">
+    <p class="label mb-4">{site.role}</p>
+    <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">Patrick Beal</h1>
+    <p class="mt-4 max-w-[40ch] text-xl leading-snug sm:text-2xl">
+      I build the model <span class="text-primary">and</span> the system around it.
+    </p>
+    <button type="button" id="sample" class="group mt-5 flex max-w-full items-start gap-3 text-left font-mono text-[13px] text-muted-foreground" aria-label="Resample this line">
+      <span class="shrink-0 rounded border border-border px-1.5 py-0.5 text-[10.5px] group-hover:border-primary group-hover:text-primary">temp 0.7 ↻</span>
+      <span id="sample-text" class="min-h-[1.5em] pt-px">{samples[0]}</span>
+    </button>
+    <p class="mt-10 hidden font-mono text-xs text-muted-foreground sm:block">
+      <span class="kbd">⌘K</span> search · <span class="kbd">j</span><span class="kbd">k</span> move · <span class="kbd">t</span> theme · <span class="kbd">g</span> <span class="kbd">l</span> the lab
+    </p>
+  </section>
+
+  <section aria-labelledby="lanes" class="border-t border-border py-12">
+    <h2 id="lanes" class="label mb-6">Two lanes</h2>
+    <div class="grid gap-8 sm:grid-cols-2">
+      {(['model', 'system'] as const).map((lane) => (
+        <div class="min-w-0">
+          <h3 class="font-medium">{lane === 'model' ? 'Models' : 'Systems'}</h3>
+          <p class="mb-3 mt-1 text-sm text-muted-foreground">
+            {lane === 'model'
+              ? 'Bayesian, causal, and predictive modeling that holds up to scrutiny.'
+              : 'Pipelines, infrastructure, and LLM systems that run in production.'}
+          </p>
+          <ul class="space-y-1.5 text-sm">
+            {lanes[lane].map((p) => (
+              <li><a href={`/projects/${p.id}/`} class="hover:text-primary"><span class="mr-2 font-mono text-muted-foreground" aria-hidden="true">›</span>{p.data.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section aria-labelledby="about" class="border-t border-border py-12">
+    <h2 id="about" class="label mb-6">About · model card</h2>
+    <ModelCard />
+  </section>
+
+  <section aria-labelledby="runs" class="border-t border-border py-12">
+    <div class="mb-4 flex items-baseline justify-between">
+      <h2 id="runs" class="label">Recent runs</h2>
+      <a href="/work/" class="font-mono text-xs text-muted-foreground hover:text-primary">all work →</a>
+    </div>
+    <RunsTable runs={runs} link />
+  </section>
+
+  <section aria-labelledby="selected" class="border-t border-border py-12">
+    <div class="mb-2 flex items-baseline justify-between">
+      <h2 id="selected" class="label">Selected projects</h2>
+      <a href="/projects/" class="font-mono text-xs text-muted-foreground hover:text-primary">all projects →</a>
+    </div>
+    <ul>
+      {featured.slice(0, 5).map((p) => <ProjectRow project={p} />)}
+    </ul>
+  </section>
+
+  <section class="border-t border-border pt-12">
+    <a href="/lab/" class="group flex items-center justify-between gap-4 rounded-lg border border-dashed border-border px-5 py-4 transition-colors hover:border-primary">
+      <span>
+        <span class="font-mono text-sm text-foreground">/lab</span>
+        <span class="mt-0.5 block text-sm text-muted-foreground">A small desktop with a terminal, a local chatbot, and two ML games.</span>
+      </span>
+      <span class="font-mono text-xs text-muted-foreground group-hover:text-primary">g l →</span>
+    </a>
+  </section>
+</Base>
+
+<script>
+  import { samples } from '@/data/site'
+  const btn = document.getElementById('sample')
+  const out = document.getElementById('sample-text')
+  let i = 0
+  let timer: number | undefined
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  function resample() {
+    if (!out) return
+    // "temperature": mostly the next line, sometimes a jump
+    i = Math.random() < 0.7 ? (i + 1) % samples.length : Math.floor(Math.random() * samples.length)
+    const text = samples[i]
+    window.clearInterval(timer)
+    if (reduce) { out.textContent = text; return }
+    let n = 0
+    out.textContent = ''
+    timer = window.setInterval(() => {
+      n += 1 + Math.floor(Math.random() * 3)
+      out.textContent = text.slice(0, n)
+      if (n >= text.length) window.clearInterval(timer)
+    }, 22)
+  }
+  btn?.addEventListener('click', resample)
+  window.addEventListener('keydown', (e) => {
+    const t = e.target as HTMLElement
+    if (e.key === 's' && !e.metaKey && !e.ctrlKey && !t.closest('input, textarea')) resample()
+  })
+</script>

@@ -25,3 +25,6 @@ dist-ssr
 
 # Agent Files
 CLAUDE.md
+# Astro / Cloudflare
+.astro
+.wrangler

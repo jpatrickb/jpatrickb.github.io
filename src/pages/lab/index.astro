@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '@/layouts/Base.astro'
+import Desktop from '@/components/lab/Desktop'
+
+const runs = (await getCollection('work', (w) => !w.data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((w) => ({
+    id: w.id, name: w.data.company, role: w.data.role, status: w.data.status, start: w.data.start, end: w.data.end,
+    kind: w.data.kind, metrics: w.data.metrics, tags: w.data.tags,
+  }))
+const projects = (await getCollection('projects'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({ id: p.id, title: p.data.title, summary: p.data.summary, lane: p.data.lane }))
+---
+<Base title="Lab" description="patrick-os: a terminal, a local retrieval chatbot, Gradient Descent Golf, and Spot the Confounder, all running in your browser." bare>
+  <noscript>
+    <div class="mx-auto max-w-xl p-8">The lab needs JavaScript. The rest of the site works without it: <a class="link" href="/">go home</a>.</div>
+  </noscript>
+  <Desktop client:load runs={runs} projects={projects} />
+</Base>

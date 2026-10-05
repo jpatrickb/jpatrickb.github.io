@@ -1,42 +1,50 @@
-# Portfolio: jpatrickb.github.io
+# jpatrickb.github.io
 
-This is a Vite + React (TypeScript) portfolio site for GitHub Pages (user site).
+Personal site for Patrick Beal. Astro + React islands + Tailwind v4 + shadcn-style components.
+Quiet main site up front, a playful desktop ("patrick-os") at `/lab`.
 
-Key details
-- Router: HashRouter for safe deep linking on Pages
-- Build: GitHub Actions (upload-pages-artifact → deploy-pages)
-- Base path: default ("/") which is correct for a user site
-
-Local dev
 ```bash
 npm install
-npm run dev
+npm run dev       # http://localhost:4321
+npm run build     # astro check + static build into dist/
+npm run preview
 ```
 
-Deploy
-1) Commit and push to main. The GitHub Actions workflow will build and publish automatically.
-2) In GitHub → Settings → Pages, ensure Source = GitHub Actions.
+## Editing content
 
-First-time GitHub setup (if repo not created yet)
-- Create a new public repo named jpatrickb.github.io under your GitHub account (username: jpatrickb) and push this project to it.
+| What | Where |
+|---|---|
+| Projects | `src/content/projects/*.md` (one file each; front matter schema in `src/content.config.ts`) |
+| Work history | `src/content/work/*.md` (`teradata.md` is a placeholder to fill in) |
+| Name, links, hero lines | `src/data/site.ts` |
+| Ask Patrick answers | `src/data/ask.ts` |
+| Themes | `src/data/themes.ts` + matching `[data-theme]` block in `src/styles/global.css` |
+| Lab apps | `src/data/lab-apps.ts`, components in `src/components/lab/` |
+| Model card (About) | `src/components/ModelCard.astro` |
 
-Project data (easy to extend)
-- Edit src/data/projects.ts to add/remove/update projects. Each project supports:
-  - slug: string (used for the /project/:slug route)
-  - title: string
-  - description: string
-  - tech: string[] (tags)
-  - externalUrl?: string (optional link to GitHub or live site)
-  - image?: string (optional path for future use)
+Project front matter: `lane` (`model` or `system`) decides which column a project shows up in, and
+`stages` (`data`, `model`, `eval`, `serve`, `monitor`) lights up the pipeline strip.
 
-Profile photo
-- Place your image at public/profile.jpeg and it will appear on the home page. If missing, a friendly placeholder text is shown.
+## Keyboard
 
-Structure
-- src/pages: Home, Projects, ProjectDetail
-- src/components: Navbar, Footer
-- src/data/projects.ts: List of projects
+`⌘K` or `/` search · `t`/`T` theme · `j`/`k` move · `o` open · `g` then `h`/`w`/`p`/`l` go to a page ·
+`c` copy email · `?` help. In the lab: `1`–`7` open apps, `Esc` closes the front window.
 
-Notes
-- For a user site (https://jpatrickb.github.io/), the Vite base path can be omitted or set to "/". No repo subpath is needed.
-- If you prefer BrowserRouter, add an SPA 404 fallback (see github_pages.md).
+## Everything runs in the browser
+
+- Search: MiniSearch over `/search.json`, generated at build time.
+- Ask Patrick: TF-IDF retrieval (`src/lib/retrieval.ts`) over hand-written answers, with the real scores shown.
+- Gradient Descent Golf: `src/lib/golf.ts` (surfaces, SGD/momentum/Adam, scoring). Pars were tuned by grid search over learning rate and β.
+
+## Deploying
+
+**Cloudflare Workers (target).** `wrangler.jsonc` serves `dist/` as static assets.
+- One-off from your machine: `npx wrangler login`, then `npm run deploy`.
+- Automatic: Cloudflare dashboard → Workers & Pages → Create → Import a repository → pick this repo.
+  Build command `npm run build`, deploy command `npx wrangler deploy`. Every push to `main` then deploys,
+  and other branches get preview URLs.
+- When a custom domain is ready, add it under the Worker's Settings → Domains, and build with
+  `SITE_URL=https://your-domain` so canonical and Open Graph URLs point to it.
+
+**GitHub Pages (current).** `.github/workflows/pages.yml` still builds and deploys `main` to
+jpatrickb.github.io, and builds (without deploying) on pull requests.

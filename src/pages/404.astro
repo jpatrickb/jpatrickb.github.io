@@ -1,0 +1,10 @@
+---
+import Base from '@/layouts/Base.astro'
+---
+<Base title="Not found">
+  <section class="pt-24 font-mono">
+    <p class="text-sm text-muted-foreground">$ cat {Astro.url.pathname}</p>
+    <p class="mt-2 text-sm">cat: no such file or directory</p>
+    <p class="mt-8 text-sm text-muted-foreground">Try <a class="link" href="/">home</a>, or press <span class="kbd">/</span> to search.</p>
+  </section>
+</Base>
