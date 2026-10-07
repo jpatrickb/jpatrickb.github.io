@@ -42,6 +42,54 @@
   --secondary-accent: #df8e1d; --good: #40a02b; --bad: #d20f39;
   color-scheme: light;
 }
+[data-theme="catppuccin-mocha"] {
+  --background: #1e1e2e; --card: #27273a; --popover: #27273a; --muted: #313244; --border: #45475a;
+  --foreground: #cdd6f4; --muted-foreground: #a6adc8; --primary: #cba6f7; --primary-foreground: #1e1e2e;
+  --secondary-accent: #f9e2af; --good: #a6e3a1; --bad: #f38ba8;
+  color-scheme: dark;
+}
+[data-theme="dracula"] {
+  --background: #282a36; --card: #2f3142; --popover: #2f3142; --muted: #343746; --border: #44475a;
+  --foreground: #f8f8f2; --muted-foreground: #a4a9c4; --primary: #bd93f9; --primary-foreground: #282a36;
+  --secondary-accent: #f1fa8c; --good: #50fa7b; --bad: #ff5555;
+  color-scheme: dark;
+}
+[data-theme="everforest"] {
+  --background: #2d353b; --card: #343f44; --popover: #343f44; --muted: #3d484d; --border: #4f585e;
+  --foreground: #d3c6aa; --muted-foreground: #9da9a0; --primary: #a7c080; --primary-foreground: #2d353b;
+  --secondary-accent: #dbbc7f; --good: #83c092; --bad: #e67e80;
+  color-scheme: dark;
+}
+[data-theme="kanagawa"] {
+  --background: #1f1f28; --card: #2a2a37; --popover: #2a2a37; --muted: #2a2a37; --border: #363646;
+  --foreground: #dcd7ba; --muted-foreground: #9a9a8e; --primary: #7e9cd8; --primary-foreground: #1f1f28;
+  --secondary-accent: #e6c384; --good: #98bb6c; --bad: #e46876;
+  color-scheme: dark;
+}
+[data-theme="solarized-dark"] {
+  --background: #002b36; --card: #073642; --popover: #073642; --muted: #073642; --border: #1c4a56;
+  --foreground: #e4dfcc; --muted-foreground: #93a1a1; --primary: #2aa198; --primary-foreground: #002b36;
+  --secondary-accent: #b58900; --good: #859900; --bad: #dc322f;
+  color-scheme: dark;
+}
+[data-theme="github-light"] {
+  --background: #ffffff; --card: #f6f8fa; --popover: #ffffff; --muted: #f6f8fa; --border: #d0d7de;
+  --foreground: #1f2328; --muted-foreground: #59636e; --primary: #0969da; --primary-foreground: #ffffff;
+  --secondary-accent: #9a6700; --good: #1a7f37; --bad: #cf222e;
+  color-scheme: light;
+}
+[data-theme="solarized-light"] {
+  --background: #fdf6e3; --card: #eee8d5; --popover: #fdf6e3; --muted: #eee8d5; --border: #ddd6c1;
+  --foreground: #073642; --muted-foreground: #586e75; --primary: #1a6fb0; --primary-foreground: #fdf6e3;
+  --secondary-accent: #946f00; --good: #6b7d00; --bad: #c62b28;
+  color-scheme: light;
+}
+[data-theme="rose-pine-dawn"] {
+  --background: #faf4ed; --card: #f2e9e1; --popover: #faf4ed; --muted: #f2e9e1; --border: #dfdad9;
+  --foreground: #575279; --muted-foreground: #797593; --primary: #286983; --primary-foreground: #faf4ed;
+  --secondary-accent: #b4637a; --good: #286983; --bad: #b4637a;
+  color-scheme: light;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -100,6 +148,12 @@
   .prose-site h2 { font-size: 1.15rem; font-weight: 600; margin-block: 1.75rem .6rem; }
   .prose-site a { color: var(--primary); text-underline-offset: 3px; text-decoration: underline; }
   .prose-site code { font-family: var(--font-mono); font-size: .88em; background: var(--muted); padding: 1px 5px; border-radius: 4px; }
+  /* theme picker cards (site dialog and the lab's Appearance app) */
+  .theme-card { display: block; width: 100%; text-align: left; border: 1px solid var(--border); border-radius: 10px; padding: 6px; background: transparent; transition: border-color .15s ease; }
+  .theme-card:hover { border-color: var(--muted-foreground); }
+  .theme-card[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .theme-card .preview { display: block; height: 52px; border-radius: 6px; padding: 8px; border: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+  .theme-card .preview i { display: block; height: 5px; border-radius: 3px; margin-bottom: 5px; }
   /* j/k navigation target */
   [data-nav-item][data-current="true"] { box-shadow: inset 2px 0 0 var(--primary); background: color-mix(in srgb, var(--muted) 60%, transparent); }
 }
