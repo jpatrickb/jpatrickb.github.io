@@ -1,9 +1,9 @@
 ---
 title: Football Performance and Admissions
-summary: How NCAA football win rates relate to admissions outcomes (enrollment, diversity, and student caliber), modeled with XGBoost and explained with SHAP.
+summary: A four-person team project linking NCAA football records with College Scorecard admissions data to test the "Flutie effect," using XGBoost and SHAP.
 lane: model
 stages: [data, model, eval]
-outcome: Winning presentation, 2025 BYU Statistics Case Competition.
+outcome: 1st place out of 4 teams in the 2025 BYU Statistics Department Case Study Competition.
 tech: [Python, XGBoost, SHAP, scikit-learn, pandas]
 year: 2025
 liveUrl: https://jpatrickb.github.io/football-to-admissions
@@ -12,6 +12,8 @@ featured: true
 order: 11
 ---
 
-A findings-first analysis of whether winning football seasons change who applies to and enrolls at a university.
+As part of a four-person team, I built pipelines (Python, pandas, scikit-learn, XGBoost) linking NCAA football records with College Scorecard admissions data to test the "Flutie effect," which is the idea that a winning football season brings in more applications.
 
-Gradient-boosted models capture the nonlinear relationships, and SHAP values show which factors drive each prediction, so the story stays explainable to a non-technical audience.
+We implemented regression models, clustering, and engineered features like lagged win rates and tournament runs to evaluate how athletic success relates to application volumes. We also used SHAP values to show which factors were driving the predictions.
+
+We delivered interactive visualizations and a project site, and presented our findings to faculty judges.

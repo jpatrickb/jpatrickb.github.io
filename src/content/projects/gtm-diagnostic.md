@@ -1,20 +1,20 @@
 ---
 title: GTM Diagnostic Automation
-summary: Full-stack app that standardizes CRM, finance, and customer-success data into 20+ go-to-market analyses, plus an LLM pipeline for call transcripts.
+summary: A full-stack application that automated the Go-To-Market Diagnostic at Winning by Design, standardizing CRM, finance, and customer success data into 20+ analyses.
 lane: system
 stages: [data, model, serve]
-outcome: Diagnostic turnaround went from 6–8 weeks to 5–15 minutes. Call review went from about 20 calls over several weeks to as many as the API could process in under 30 minutes.
+outcome: Our three-person team reduced the diagnostic turnaround from 6–8 weeks to 5–15 minutes.
 tech: [Python, Flask, SQL, Google APIs, LLMs, Slack]
 year: 2025
 order: 5
 ---
 
-Built during my GTM Strategy & AI internship at Winning by Design, with a three-person team.
+I built this during my GTM Strategy & AI internship at Winning by Design, working with a three-person team.
 
-## What it does
+The diagnostic used to be a manual process that took 6–8 weeks. The application standardizes a client's CRM, finance, and customer success data and runs 20+ analyses on it, which brought the turnaround down to 5–15 minutes. That way the consultants could skip running each analysis by hand and spend their time interpreting the results for their clients.
 
-- Ingests client CRM, finance, and CS data and standardizes it into 20+ analyses.
-- An LLM "Deep Dive" pipeline reviews client call transcripts at scale.
-- Generates slide decks automatically and delivers insights through Slack, so consultants get consistent, data-driven outputs.
+The results are delivered as an interactive Google Sheet with 20+ tabs that consultants can sort and segment by vertical, along with automated slide-deck generation. Consultants run all of it through a Slack interface, where they upload the data and launch the analyses.
 
-Results were presented to executives.
+I also designed and deployed an LLM-based "Deep Dive" pipeline to analyze client call transcripts. Reviewing calls used to cover about 20 calls over several weeks, and the pipeline could get through as many calls as the model API could process in under 30 minutes.
+
+We presented the results to the company's executives.

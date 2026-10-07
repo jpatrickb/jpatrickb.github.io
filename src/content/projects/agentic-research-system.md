@@ -1,24 +1,19 @@
 ---
 title: Agentic Company Research System
-summary: Production agent that turns a visitor's email into a personalized company report, with a verifier pass that strips unsupported claims before anything ships.
+summary: A production agentic research system that turns a visitor's email into a personalized company report, with a verifier pass that strips unsupported claims before the report goes out.
 lane: system
 stages: [data, model, eval, serve, monitor]
-outcome: About 78 seconds and $0.10 in LLM cost per report, with full CI/CD and a cost-monitoring dashboard.
+outcome: Each report takes about 78 seconds and about $0.10 in LLM cost, with full CI/CD and a cost-monitoring dashboard.
 tech: [Next.js, AWS Bedrock AgentCore, Claude, TypeScript, CI/CD]
 year: 2025
 featured: true
 order: 1
 ---
 
-Built at TechForce Advisors as the founding engineer. A visitor enters a work email; the system researches the company, drafts a personalized report, and runs a separate verifier pass that removes any claim it can't ground in a source.
+I built this at TechForce Advisors as the founding engineer. A visitor enters their work email, and the system researches their company and sends them a personalized report.
 
-## What I built
+The research agent runs on AWS Bedrock AgentCore with Claude. It looks through the company's website and review sites, and then drafts the report from what it found. Before the report goes out, a separate verifier pass checks the claims against the sources and strips any that aren't supported, since these reports go to prospects and we didn't want to send them something the model made up.
 
-- The agent loop on AWS Bedrock AgentCore with Claude, from research through drafting.
-- A verifier stage that checks every claim against retrieved sources and strips the unsupported ones.
-- CI/CD and a cost-monitoring dashboard so per-report spend stays visible.
-- An extension into an automated outbound pipeline: it sources prospects (Apollo), pre-generates a report for each in parallel, emails them with bounce detection and suppression, and tracks engagement (dwell time, link clicks) back into the CRM.
+I also set up full CI/CD and a cost-monitoring dashboard, so we could see what each report was costing us.
 
-## Why it matters
-
-Grounding and cost were design constraints from day one, not afterthoughts. The verifier is what makes it safe to send generated reports to real prospects.
+Later on I extended the same system into an automated outbound pipeline. It sources prospects through Apollo and generates a personalized report for each of them in parallel. Then it emails them, with automated bounce detection and suppression to protect deliverability, and tracks engagement (dwell time and link clicks) back into the CRM.

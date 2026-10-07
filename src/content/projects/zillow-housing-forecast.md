@@ -1,6 +1,6 @@
 ---
 title: The Cost of Living, a Zillow Housing Forecast
-summary: State-level housing analysis (2000–2020) merging Zillow HPI with CPS/IPUMS, using clustering, ARIMA/VARMAX, and a Bayesian hierarchical model.
+summary: A three-person team project modeling housing-affordability trends across U.S. states from 2000 to 2020, using time-series methods and Bayesian hierarchical modeling on Zillow price and CPS demographic data.
 lane: model
 stages: [data, model, eval]
 tech: [Python, PyMC3, statsmodels, scikit-learn, pandas, NumPy, SciPy]
@@ -10,8 +10,6 @@ featured: true
 order: 12
 ---
 
-Studies regional housing dynamics and how well different model families forecast them.
+As part of a three-person team, I modeled housing-affordability trends using clustering, time-series methods (ARIMA and Kalman filtering), and Bayesian hierarchical modeling on Zillow price and CPS demographic data.
 
-- Clustering groups states with similar price trajectories.
-- ARIMA and VARMAX provide classical time-series baselines.
-- A Bayesian hierarchical model shares strength across states while allowing regional differences.
+I personally built the Bayesian-modeling and regression components, which we used to evaluate how demographics correlate with the variation between regional markets.

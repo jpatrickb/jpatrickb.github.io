@@ -10,5 +10,5 @@ tags: [Research synthesis, Executive reporting]
 order: 3
 ---
 
-- Researched and wrote reports for President Reese on student development and related topics, turning scholarship into actionable insights for university strategy.
-- Worked with six research assistants and presented findings regularly to the president's office.
+- Researched and authored reports for President Reese on student development and related topics, synthesizing scholarship and literature to inform university strategy
+- Collaborated with 6 research assistants and presented findings regularly to the president's office, strengthening the research through peer review and executive feedback
