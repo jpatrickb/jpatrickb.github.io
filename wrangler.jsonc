@@ -1,10 +1,27 @@
-// Cloudflare Workers (static assets). `npm run deploy` builds and uploads ./dist.
+// Cloudflare Workers (static assets). Two Workers, one per environment:
+//   prod (default)   patrick-beal       https://jpatrickbeal.com
+//   dev  (--env dev) patrick-beal-dev   https://dev.jpatrickbeal.com
+// scripts/deploy.sh <env> builds and deploys. Custom domains are managed by Terraform (infra/).
+// The default *.workers.dev URL is turned off so nothing is served, or indexed, under it.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "patrick-beal",
   "compatibility_date": "2026-10-01",
+  "workers_dev": false,
+  "preview_urls": false,
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
+  },
+  "env": {
+    "dev": {
+      "name": "patrick-beal-dev",
+      "workers_dev": false,
+      "preview_urls": false,
+      "assets": {
+        "directory": "./dist",
+        "not_found_handling": "404-page"
+      }
+    }
   }
 }

@@ -4,6 +4,7 @@ import CommandPalette from '@/components/CommandPalette'
 import { nav, site } from '@/data/site'
 import { themeBootScript } from '@/lib/theme'
 import { build } from '@/lib/build-info'
+import { indexable } from '@/lib/site-env'
 
 interface Props {
   title?: string
@@ -24,6 +25,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {!indexable && <meta name="robots" content="noindex, nofollow, noarchive" />}
     <link rel="canonical" href={new URL(path, Astro.site)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:type" content="website" />

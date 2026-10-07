@@ -28,3 +28,12 @@ CLAUDE.md
 # Astro / Cloudflare
 .astro
 .wrangler
+
+# Terraform (state and secrets stay out of this public repo)
+infra/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.tfvars.example
+backend.hcl

@@ -38,13 +38,10 @@ Project front matter: `lane` (`model` or `system`) decides which column a projec
 
 ## Deploying
 
-**Cloudflare Workers (target).** `wrangler.jsonc` serves `dist/` as static assets.
-- One-off from your machine: `npx wrangler login`, then `npm run deploy`.
-- Automatic: Cloudflare dashboard → Workers & Pages → Create → Import a repository → pick this repo.
-  Build command `npm run build`, deploy command `npx wrangler deploy`. Every push to `main` then deploys,
-  and other branches get preview URLs.
-- When a custom domain is ready, add it under the Worker's Settings → Domains, and build with
-  `SITE_URL=https://your-domain` so canonical and Open Graph URLs point to it.
+Branches, environments and release steps are in [`docs/DELIVERY.md`](docs/DELIVERY.md). In short:
+`develop` deploys to https://dev.jpatrickbeal.com (never indexed), and a release branch merged into `main`
+deploys to https://jpatrickbeal.com. Cloudflare resources (domains, DNS, redirects) are Terraform in
+[`infra/`](infra/README.md).
 
-**GitHub Pages (current).** `.github/workflows/pages.yml` still builds and deploys `main` to
-jpatrickb.github.io, and builds (without deploying) on pull requests.
+`scripts/deploy.sh <dev|prod>` builds and deploys one environment, and `scripts/smoke.sh <dev|prod>` checks it.
+CI normally runs both; run them yourself only with `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` exported.
