@@ -6,6 +6,10 @@ name: Deploy
 #   main    -> prod   https://jpatrickbeal.com       indexable (the prod gate refuses
 #                                                    anything that skipped the process)
 #
+# Each deploy publishes the Worker with wrangler, then applies the Cloudflare Terraform for that
+# environment (custom domain, and for prod the www redirect), then smoke-tests. Doing the Worker
+# first means the domain always has something to point at.
+#
 # Cloudflare has no OIDC federation like AWS, so the deploy token is a GitHub environment
 # secret. The `dev` and `prod` environments are restricted to the develop and main
 # branches, so a workflow on any other branch can't read either token.
@@ -62,14 +66,36 @@ jobs:
       - if: env.DEPLOY_ENV == 'prod'
         uses: ./.github/actions/verify-promotion
 
-      - uses: ./.github/actions/setup
+      # Logs are public and variables are not masked on their own.
+      - name: Mask identifiers
+        env:
+          ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+        run: |
+          echo "::add-mask::$ACCOUNT_ID"
+          echo "::add-mask::$ZONE_ID"
 
-      # The only step that sees the Cloudflare token, so setup actions and the smoke test never do.
+      - uses: ./.github/actions/setup
+        with:
+          terraform: "true"
+
+      # Each credential is set only on the step that needs it, so setup actions and the
+      # smoke test never see one.
       - name: Deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: scripts/deploy.sh "$DEPLOY_ENV"
+
+      - name: Terraform apply
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TF_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: scripts/terraform.sh apply "$DEPLOY_ENV"
 
       - name: Smoke test
         run: scripts/smoke.sh "$DEPLOY_ENV"

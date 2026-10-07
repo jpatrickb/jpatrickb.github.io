@@ -54,7 +54,9 @@ Read `docs/DELIVERY.md` before changing anything about branches, deploys or envi
 - **Workflows in `.github/` are vendored from the private `patea-devops` repo.** Third-party actions are pinned to
   commit SHAs. Pass untrusted values (branch names, tag inputs) through `env:`, never inside `${{ }}` in a `run:` block.
   Do not use `pull_request_target`.
-- **Terraform runs locally**, not in CI, because a plan needs credentials. See `infra/README.md`.
+- **Terraform runs in CI** (`deploy.yml` applies, `terraform-plan.yml` comments the plan). Apply credentials are
+  environment secrets; plan credentials are read-only repo secrets. Mask or redact account and zone ids, because
+  workflow logs and PR comments are public. See `infra/README.md`.
 - **No new third-party requests.** The footer says "static, no trackers". Self-host fonts and assets.
 - Tests are for pure logic (`src/lib`). Check a test can fail: break the code on purpose and watch it go red.
 

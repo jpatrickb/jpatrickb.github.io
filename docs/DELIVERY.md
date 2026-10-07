@@ -65,8 +65,9 @@ repos. The deploy checks still apply as a backstop.
 
 | Rule | Enforced by |
 |---|---|
-| Nobody pushes to `main` or `develop`; CI must pass | A ruleset on each branch (set up once, below) |
+| Nobody pushes to `main` or `develop`; CI must pass; no deleting either | Rulesets on each branch. An admin can bypass only through a pull request, because the automatic back-merge PR can't trigger CI |
 | PRs target the right branch | `ci.yml` `target` job, a red X on the PR |
+| `main` accepts only merge commits | The `main` ruleset (allowed merge methods), with `verify-promotion` as a backstop |
 | Prod ships only a merged release or hotfix PR, never a squashed release | `verify-promotion`, which refuses the deploy |
 | Only `develop` can read the dev token, only `main` the prod token | GitHub environment branch restrictions |
 | Only `main` code can run the rollback gate; the tag must be on `main` | `rollback.yml` checks out `main`, verifies, then the tag |
@@ -84,34 +85,22 @@ repos. The deploy checks still apply as a backstop.
 - **Workflows are vendored.** `patea-devops` is private and org-scoped, so a personal repo can't call it.
   `.github/actions/*` and `back-merge.yml` are copies. If `patea-devops` changes the gate, port it.
 - **No Vale.** The Patea prose style is not applied to this site's copy.
-- **Terraform runs locally.** See `infra/README.md`. A plan in Actions needs credentials, and this repo is public.
+- **Terraform runs in CI, with split credentials.** Apply runs in `deploy.yml` with environment secrets that only `develop` and `main` can read. Plans on PRs use separate read-only repo secrets. See `infra/README.md`. Workflow logs are public, so account and zone ids are masked and redacted.
 
 ## One-time setup
 
-Steps marked **(manual)** need you in a dashboard. Do them in order.
+Done once. Steps marked **(manual)** need you in a dashboard.
 
-1. **Tooling.** Run `pnpm install`, delete `package-lock.json`, and commit `pnpm-lock.yaml` (CI refuses
-   the npm lockfile). The `packageManager` field in `package.json` pins pnpm.
-2. **Branches.** Create `develop` from `main`. Set the default merge settings: allow squash and merge
-   commit, turn off rebase, turn on "Automatically delete head branches". The API does all of it:
-   `gh api -X PATCH repos/jpatrickb/jpatrickb.github.io -F allow_squash_merge=true -F allow_merge_commit=true -F allow_rebase_merge=false -F delete_branch_on_merge=true -f squash_merge_commit_title=PR_TITLE -f squash_merge_commit_message=PR_BODY`
-3. **(manual)** Settings, Actions, General: turn on "Allow GitHub Actions to create and approve pull
-   requests" (the back-merge needs it) and set fork pull request workflows to "Require approval for all
-   outside collaborators".
-4. **(manual)** Cloudflare API token: Workers Scripts: Edit, scoped to your account. A second token with the
-   Terraform scopes is in `infra/README.md`.
-5. **(manual)** Settings, Environments: create `dev` (deployment branches: `develop` only) and `prod`
-   (deployment branches: `main` only). Put `CLOUDFLARE_API_TOKEN` in each as an environment secret. Set
-   `CLOUDFLARE_ACCOUNT_ID` as a repo variable.
-6. **First deploys, by hand.** The custom domains need the Workers to exist, and the smoke test needs the
-   domains. Locally, with the token exported: `scripts/deploy.sh dev` and `scripts/deploy.sh prod`.
-   Skip the prod deploy if you want the old site to stay current until you cut over.
-7. **Domains.** Follow `infra/README.md`: `terraform apply` creates `jpatrickbeal.com`, `dev.jpatrickbeal.com`
-   and the `www` redirect.
-8. **Rulesets.** Add a tag ruleset that restricts who can create or move `v*` tags (the rollback trusts them). On `main` and `develop`: require a pull request, require the `target` and `checks / site` and
-   `checks / infra` status checks, block force pushes and deletion. Ask Claude to apply them with
-   `gh api repos/.../rulesets`, or use Settings, Rules.
-9. **Cutover.** Merge this work into `develop`, release it to `main`, then delete `.github/workflows/pages.yml`
-   so GitHub Pages stops deploying. Check the project links that point at `jpatrickb.github.io/<repo>`.
-10. **(manual)** Install the Renovate GitHub App on this repo. `renovate.json` sends its PRs to `develop`.
-11. **(manual, after launch)** Add the site in Google Search Console and submit the sitemap when there is one.
+1. Branches, merge settings and the `dev` and `prod` environments exist.
+2. **(manual)** Actions settings: allow Actions to create and approve pull requests (the back-merge needs it), and
+   require approval for fork pull request workflows.
+3. Rulesets on `main`, `develop` and `v*` tags are applied (see "What is enforced").
+4. **(manual)** Secrets and variables, in `infra/README.md`: the wrangler token, the Terraform and R2 credentials,
+   the read-only plan credentials, and the account, zone and state-bucket variables.
+5. Merge to `develop`. The deploy publishes the dev Worker, applies the dev domain and smoke-tests it.
+6. Cut the first release. The deploy from `main` publishes the prod Worker, applies `jpatrickbeal.com` and the
+   `www` redirect, tags `v1.0.0` and smoke-tests prod.
+7. Remove `pages.yml` (done) and check the project links that point at `jpatrickb.github.io/<repo>`. The old site
+   keeps serving its last build until Pages is turned off or replaced with a redirect.
+8. **(manual)** Install the Renovate GitHub App on this repo. `renovate.json` sends its PRs to `develop`.
+9. **(manual, after launch)** Add the site in Google Search Console and submit the sitemap when there is one.

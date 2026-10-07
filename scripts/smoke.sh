@@ -13,10 +13,10 @@ url="${SMOKE_URL:-$url}"
 
 fail() { echo "::error::smoke($env): $*"; exit 1; }
 
-# A fresh deploy can take a few seconds to reach every edge location.
+# A fresh deploy, and a new custom domain with its certificate, can take a minute to come up.
 fetch() {
   local path="$1" out="$2"
-  for _ in 1 2 3 4 5 6 7 8 9 10; do
+  for _ in $(seq 1 30); do
     if curl -fsS -D "$out.headers" -o "$out" "$url$path" 2>/dev/null; then return 0; fi
     sleep 3
   done

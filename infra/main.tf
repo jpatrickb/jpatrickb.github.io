@@ -1,25 +1,26 @@
 # The Worker itself (code and static assets) is deployed by wrangler, not Terraform.
-# Deploy it once before the first `terraform apply` so the custom domain has a target.
+# deploy.yml publishes it first, then applies this, so the custom domain has a target.
 
-# Serve the site on the apex domain. Cloudflare creates the DNS record and certificate.
-resource "cloudflare_workers_custom_domain" "apex" {
-  account_id = var.account_id
-  zone_id    = var.zone_id
-  hostname   = var.domain
-  service    = var.worker_name
+locals {
+  prod     = var.environment == "prod"
+  hostname = local.prod ? var.domain : "dev.${var.domain}"
+  service  = local.prod ? var.worker_name : var.dev_worker_name
 }
 
-# The dev environment: develop deploys here. It is not indexable (see scripts/smoke.sh).
-resource "cloudflare_workers_custom_domain" "dev" {
+# Serve the environment on its hostname. Cloudflare creates the DNS record and certificate.
+# dev is never indexable (see scripts/smoke.sh); prod is.
+resource "cloudflare_workers_custom_domain" "site" {
   account_id = var.account_id
   zone_id    = var.zone_id
-  hostname   = "dev.${var.domain}"
-  service    = var.dev_worker_name
+  hostname   = local.hostname
+  service    = local.service
 }
 
 # A proxied placeholder record so Cloudflare receives www requests and can redirect them.
-# 192.0.2.1 is a reserved documentation address; traffic never reaches it.
+# 192.0.2.1 is a reserved documentation address; traffic never reaches it. Prod only.
 resource "cloudflare_dns_record" "www" {
+  count = local.prod ? 1 : 0
+
   zone_id = var.zone_id
   name    = "www"
   type    = "A"
@@ -30,6 +31,8 @@ resource "cloudflare_dns_record" "www" {
 }
 
 resource "cloudflare_ruleset" "www_to_apex" {
+  count = local.prod ? 1 : 0
+
   zone_id     = var.zone_id
   name        = "www to apex"
   description = "Redirect www.${var.domain} to ${var.domain}"
