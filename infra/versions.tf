@@ -8,10 +8,9 @@ terraform {
     }
   }
 
-  # State lives in a private Cloudflare R2 bucket, never in this repo.
-  # Bucket, endpoint and credentials are supplied at init time (see README.md).
+  # State lives in a private Cloudflare R2 bucket, never in this repo, one file per environment.
+  # The bucket, key and endpoint are supplied at init time by scripts/terraform.sh.
   backend "s3" {
-    key                         = "jpatrickbeal-com/terraform.tfstate"
     region                      = "auto"
     skip_credentials_validation = true
     skip_region_validation      = true

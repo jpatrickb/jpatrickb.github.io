@@ -38,3 +38,4 @@ crash.log
 *.tfvars
 !*.tfvars.example
 backend.hcl
+!infra/env/*.tfvars
