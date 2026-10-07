@@ -23,8 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Agent Files
-CLAUDE.md
 # Astro / Cloudflare
 .astro
 .wrangler
