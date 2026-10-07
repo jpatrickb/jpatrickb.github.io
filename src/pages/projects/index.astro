@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content'
 import Base from '@/layouts/Base.astro'
 import ProjectRow from '@/components/ProjectRow.astro'
+import PipelineLegend from '@/components/PipelineLegend.astro'
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
 const groups = [
@@ -18,6 +19,7 @@ const groups = [
       The strip under the systems and models shows which stages of the pipeline each one covered, out of
       <span class="font-mono text-sm">data → model → eval → serve → monitor</span>.
     </p>
+    <div class="mt-3"><PipelineLegend /></div>
   </header>
   {groups.map((g) => (
     <section class="border-t border-border py-8" aria-labelledby={`g-${g.lane}`}>
