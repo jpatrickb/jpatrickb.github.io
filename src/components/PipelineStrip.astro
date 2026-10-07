@@ -6,7 +6,7 @@ const { stages, size = 'sm' } = Astro.props
 <ol class:list={['flex flex-wrap items-center font-mono', size === 'sm' ? 'gap-1 text-[10.5px]' : 'gap-1.5 text-xs']} aria-label={`Pipeline stages covered: ${stages.join(', ')}`}>
   {STAGES.map((s, i) => (
     <li class="flex items-center gap-1">
-      <span class:list={['rounded px-1.5 py-0.5', stages.includes(s) ? 'bg-primary/15 text-primary' : 'text-muted-foreground/60']}>{s}</span>
+      <span class:list={['rounded px-1.5 py-0.5', stages.includes(s) ? 'bg-primary/15 text-primary' : 'text-muted-foreground/80']}>{s}</span>
       {i < STAGES.length - 1 && <span class="text-muted-foreground/40" aria-hidden="true">→</span>}
     </li>
   ))}
