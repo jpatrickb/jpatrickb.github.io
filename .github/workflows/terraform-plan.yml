@@ -73,7 +73,8 @@ jobs:
             echo
             echo '```'
             if [ -s "$RUNNER_TEMP/plan.txt" ]; then
-              text="$(head -c 60000 "$RUNNER_TEMP/plan.txt")"
+              # drop the ::add-mask:: workflow commands that scripts/terraform.sh printed
+              text="$(head -c 60000 "$RUNNER_TEMP/plan.txt" | sed '/^::add-mask::/d')"
               for pair in "$ACCOUNT_ID=<account-id>" "$ZONE_ID=<zone-id>" "$BUCKET=<state-bucket>"; do
                 value="${pair%%=*}"
                 [ -z "$value" ] || text="${text//"$value"/${pair#*=}}"
