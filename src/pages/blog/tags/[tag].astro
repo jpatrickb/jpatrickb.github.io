@@ -1,0 +1,20 @@
+---
+import Base from '@/layouts/Base.astro'
+import PostList from '@/components/PostList.astro'
+import { getPosts, tagSlug, type Post } from '@/lib/blog'
+
+export async function getStaticPaths() {
+  const posts = await getPosts()
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))]
+  return tags.map((tag) => ({ params: { tag: tagSlug(tag) }, props: { tag, posts: posts.filter((p) => p.data.tags.includes(tag)) } }))
+}
+interface Props { tag: string; posts: Post[] }
+const { tag, posts } = Astro.props
+---
+<Base title={`Posts tagged ${tag}`} description={`Blog posts by Patrick Beal tagged ${tag}.`}>
+  <header class="pb-6 pt-14">
+    <a href="/blog/" class="font-mono text-xs text-muted-foreground hover:text-primary">← blog</a>
+    <h1 class="mt-8 text-3xl font-semibold tracking-tight">Posts tagged “{tag}”</h1>
+  </header>
+  <section class="border-t border-border py-6"><PostList posts={posts} /></section>
+</Base>

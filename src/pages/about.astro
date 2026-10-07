@@ -1,0 +1,67 @@
+---
+import Base from '@/layouts/Base.astro'
+import { site } from '@/data/site'
+---
+<Base title="About" description="More about Patrick Beal, including music, his mission, and the things he likes to do outside of work.">
+  <header class="grid gap-6 pb-8 pt-14 sm:grid-cols-[auto_1fr] sm:items-center">
+    <img src="/profile.jpeg" alt="Patrick Beal" width="128" height="128" class="size-32 rounded-2xl object-cover" />
+    <div>
+      <p class="label mb-3">about</p>
+      <h1 class="text-3xl font-semibold tracking-tight">Hi, I'm Patrick!</h1>
+      <p class="mt-3 max-w-[60ch] text-muted-foreground">
+        I'm a data scientist and economist who builds production systems, and I work at Teradata right now. The{' '}
+        <a class="link" href="/work/">work page</a> covers that side of things, so this page is about the rest.
+      </p>
+    </div>
+  </header>
+
+  <div class="prose-site border-t border-border pt-8">
+    <h2 id="background">Where I'm from</h2>
+    <p>
+      I grew up in Cedar Hills, Utah, and went to Lone Peak High School. I studied Applied and Computational Mathematics
+      (ACME) and Economics at BYU, and I graduated in April 2026. I still live in Utah.
+    </p>
+
+    <h2 id="music">Music</h2>
+    <p>
+      I grew up playing piano and trombone, and I originally intended to study trombone performance in college. I ended
+      up choosing applied math, but I kept playing. I've been the principal or lead trombonist in the BYU Symphony
+      Orchestra, the Lyceum Philharmonic, and the Jazz Ensemble.
+    </p>
+    <p>
+      In the spring of my junior year I started taking piano more seriously, and that led to accompanying ballet classes
+      for BYU's Department of Dance and later opera for the School of Music. Ballet classes meant a lot of improvising
+      and sight-reading while following the professor and the dancers in real time.
+    </p>
+    <p>I'm sorting through my recordings and videos right now, and I'll add some of them here once I've picked a few.</p>
+
+    <h2 id="mission">Faith and my mission</h2>
+    <p>
+      I'm a member of The Church of Jesus Christ of Latter-day Saints. From August 2021 to August 2023 I served as a
+      missionary in the New York Syracuse Mission, which covers upstate New York and Vermont.
+    </p>
+    <p>
+      I learned American Sign Language right before I left, through six weeks of daily classes over Zoom. I spent about
+      nine months of my mission in Rochester, where I worked with the Deaf community, and I later went back there with a
+      Deaf companion.
+    </p>
+
+    <h2 id="outside">Outside of work</h2>
+    <p>
+      I like building apps for myself and for my friends and family, like <a href="/projects/lumen-list/">Lumen List</a>,
+      which is a family gift registry. I also like playing pickleball, hiking, rock climbing, mountain biking, and going
+      to the gym.
+    </p>
+    <p>
+      I cook a lot too, and I'll probably write about that on the <a href="/blog/">blog</a>. More than anything, I'm a
+      big fan of time with my family.
+    </p>
+
+    <h2 id="more">More places to look</h2>
+    <p>
+      If you're curious about my editor and terminal setup, I keep that on the <a href="/uses/">uses page</a>. The{' '}
+      <a href="/lab/">lab</a> has a few games and a small desktop to play around with. And if you'd like to get in touch,
+      you can email me at <a href={`mailto:${site.email}`}>{site.email}</a> or find me on <a href={site.linkedin}>LinkedIn</a>.
+    </p>
+  </div>
+</Base>

@@ -147,6 +147,12 @@
   .prose-site li::marker { color: var(--muted-foreground); }
   .prose-site h2 { font-size: 1.15rem; font-weight: 600; margin-block: 1.75rem .6rem; }
   .prose-site a { color: var(--primary); text-underline-offset: 3px; text-decoration: underline; }
+  .prose-site pre { background: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; margin-block: 0 1rem; overflow-x: auto; font-size: .85rem; line-height: 1.6; }
+  .prose-site pre code { background: none; padding: 0; font-size: inherit; }
+  .prose-site h3 { font-weight: 600; margin-block: 1.25rem .5rem; }
+  .prose-site ol { list-style: decimal; padding-left: 1.25rem; margin-block: 0 .9rem; }
+  .prose-site img { border-radius: 8px; margin-block: 0 1rem; }
+  .prose-site blockquote { border-left: 2px solid var(--border); padding-left: 1rem; color: var(--muted-foreground); margin-block: 0 .9rem; }
   .prose-site code { font-family: var(--font-mono); font-size: .88em; background: var(--muted); padding: 1px 5px; border-radius: 4px; }
   /* theme picker cards (site dialog and the lab's Appearance app) */
   .theme-card { display: block; width: 100%; text-align: left; border: 1px solid var(--border); border-radius: 10px; padding: 6px; background: transparent; transition: border-color .15s ease; }

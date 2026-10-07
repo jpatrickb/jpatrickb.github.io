@@ -14,13 +14,16 @@ npm run preview
 
 | What | Where |
 |---|---|
+| Blog posts | `src/content/blog/*.md` (copy `example-draft.md`; `draft: true` keeps a post off the published site) |
+| About page | `src/pages/about.astro` |
+| Uses page | `src/pages/uses.astro` |
 | Projects | `src/content/projects/*.md` (one file each; front matter schema in `src/content.config.ts`) |
 | Work history | `src/content/work/*.md` (`teradata.md` is a placeholder to fill in) |
 | Name, links, hero lines | `src/data/site.ts` |
 | Ask Patrick answers | `src/data/ask.ts` |
 | Themes | `src/data/themes.ts` + matching `[data-theme]` block in `src/styles/global.css` |
 | Lab apps | `src/data/lab-apps.ts`, components in `src/components/lab/` |
-| Model card (About) | `src/components/ModelCard.astro` |
+| About section | `src/components/About.astro` |
 
 Project front matter: `lane` (`model` or `system`) decides which column a project shows up in, and
 `stages` (`data`, `model`, `eval`, `serve`, `monitor`) lights up the pipeline strip.
@@ -28,7 +31,7 @@ Project front matter: `lane` (`model` or `system`) decides which column a projec
 ## Keyboard
 
 `⌘K` or `/` search · `t`/`T` theme · `j`/`k` move · `o` open · `g` then `h`/`w`/`p`/`l` go to a page ·
-`c` copy email · `?` help. In the lab: `1`–`7` open apps, `Esc` closes the front window.
+`c` copy email · `?` help. In the lab, `Esc` leaves a text box and then closes the front window.
 
 ## Everything runs in the browser
 

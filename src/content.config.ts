@@ -10,10 +10,14 @@ const projects = defineCollection({
     title: z.string(),
     summary: z.string(),
     // Which half of "model + system" this project proves. Drives the lanes on the home page.
-    lane: z.enum(['model', 'system']),
+    // 'tool' is for open source tools people can install; those skip the pipeline strip.
+    lane: z.enum(['model', 'system', 'tool']),
     // Pipeline stages this project covered, highlighted in the strip on each project.
-    stages: z.array(z.enum(STAGES)),
+    stages: z.array(z.enum(STAGES)).default([]),
     outcome: z.string().optional(),
+    // a recording or screenshot under public/, shown on the project page (see demos/ for how they are made)
+    demo: z.string().optional(),
+    install: z.string().optional(),
     tech: z.array(z.string()),
     year: z.number().optional(),
     liveUrl: z.url().optional(),
@@ -42,4 +46,16 @@ const work = defineCollection({
   }),
 })
 
-export const collections = { projects, work }
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+    // drafts show up in `npm run dev` and are left out of the published site
+    draft: z.boolean().default(false),
+  }),
+})
+
+export const collections = { projects, work, blog }

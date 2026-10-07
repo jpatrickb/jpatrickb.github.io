@@ -3,6 +3,8 @@ import '@/styles/global.css'
 import CommandPalette from '@/components/CommandPalette'
 import { nav, site } from '@/data/site'
 import { themeBootScript } from '@/lib/theme'
+import { themes } from '@/data/themes'
+import { getPosts } from '@/lib/blog'
 import { build } from '@/lib/build-info'
 import { indexable } from '@/lib/site-env'
 
@@ -16,6 +18,9 @@ const { title, description = site.description, bare = false } = Astro.props
 const fullTitle = title ? `${title} · ${site.name}` : site.title
 const path = Astro.url.pathname
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href))
+// the Blog link only shows up in the header once there is at least one post to read
+const hasPosts = (await getPosts()).length > 0
+const headerNav = nav.slice(1).filter((n) => n.href !== '/blog/' || hasPosts)
 const ogImage = new URL('/profile.jpeg', Astro.site).toString()
 ---
 <!doctype html>
@@ -28,6 +33,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
     {!indexable && <meta name="robots" content="noindex, nofollow, noarchive" />}
     <link rel="canonical" href={new URL(path, Astro.site)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} · Blog`} href="/rss.xml" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -47,7 +53,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
             <span class="text-foreground">~/{site.handle}</span>{path !== '/' && path.replace(/\/$/, '')}
           </a>
           <nav aria-label="Primary" class="flex items-center gap-1 text-sm">
-            {nav.slice(1).map((n) => (
+            {headerNav.map((n) => (
               <a href={n.href} class:list={['group relative rounded px-2 py-1 transition-colors hover:text-foreground', isActive(n.href) ? 'text-foreground' : 'text-muted-foreground']} aria-current={isActive(n.href) ? 'page' : undefined}>
                 {n.label}
                 <span class="pointer-events-none absolute -bottom-5 left-1/2 hidden -translate-x-1/2 whitespace-nowrap font-mono text-[10px] text-muted-foreground group-hover:block">g {n.key}</span>
@@ -57,6 +63,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
               search <span class="kbd">⌘K</span>
             </button>
             <button type="button" data-action="palette" class="ml-1 rounded px-2 py-1 font-mono text-xs text-muted-foreground sm:hidden" aria-label="Open search">⌘K</button>
+            <button type="button" data-action="themes" class="ml-1 rounded-md border border-border px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground" aria-label="Choose a theme" title="Choose a theme">◐</button>
           </nav>
         </div>
       </header>
@@ -71,7 +78,9 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
         <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-5 font-mono text-[11px] text-muted-foreground sm:px-6">
           <span>build {build.sha} · {build.date} · static, no trackers</span>
           <span class="flex flex-wrap gap-4">
-            <button type="button" data-action="theme" class="hover:text-foreground"><span class="kbd">t</span> <span data-theme-name>theme</span></button>
+            <a href="/uses/" class="hover:text-foreground">uses</a>
+            <a href="/rss.xml" class="hover:text-foreground">rss</a>
+            <button type="button" data-action="themes" class="hover:text-foreground">theme: <span data-theme-name>theme</span></button>
             <button type="button" data-action="help" class="hover:text-foreground"><span class="kbd">?</span> keys</button>
           </span>
         </div>
@@ -86,12 +95,39 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
       <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2.5 px-5 py-4 text-sm">
         <dt><span class="kbd">⌘K</span> <span class="kbd">/</span></dt><dd>Search and commands</dd>
         <dt><span class="kbd">t</span> <span class="kbd">T</span></dt><dd>Next / previous theme</dd>
-        <dt><span class="kbd">j</span> <span class="kbd">k</span></dt><dd>Move through items on the page</dd>
+        <dt><span class="kbd">j</span> <span class="kbd">k</span></dt><dd>Move through items on the page (<span class="kbd">k</span> on the first one goes back to the top)</dd>
         <dt><span class="kbd">o</span></dt><dd>Open the selected item</dd>
-        <dt><span class="kbd">g</span> then <span class="kbd">h</span> <span class="kbd">w</span> <span class="kbd">p</span> <span class="kbd">l</span></dt><dd>Home, Work, Projects, Lab</dd>
+        <dt><span class="kbd">g</span> then <span class="kbd">h</span> <span class="kbd">w</span> <span class="kbd">p</span> <span class="kbd">b</span> <span class="kbd">a</span> <span class="kbd">l</span></dt><dd>Home, Work, Projects, Blog, About, Lab</dd>
         <dt><span class="kbd">c</span></dt><dd>Copy email</dd>
         <dt><span class="kbd">?</span></dt><dd>This list</dd>
       </dl>
+    </dialog>
+
+    <dialog id="theme-dialog" class="m-auto w-[calc(100%-2rem)] max-w-lg rounded-xl border border-border bg-popover p-0 text-foreground shadow-2xl backdrop:bg-background/60 backdrop:backdrop-blur-[3px]">
+      <div class="flex items-center justify-between border-b border-border px-5 py-3">
+        <h2 class="text-sm font-medium">Choose a theme</h2>
+        <form method="dialog"><button class="font-mono text-xs text-muted-foreground hover:text-foreground">esc</button></form>
+      </div>
+      <div class="max-h-[70vh] space-y-4 overflow-y-auto px-5 py-4">
+        {[{ title: 'Dark', dark: true }, { title: 'Light', dark: false }].map((group) => (
+          <section>
+            <h3 class="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{group.title}</h3>
+            <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+              {themes.filter((t) => t.dark === group.dark).map((t) => (
+                <button type="button" class="theme-card" data-set-theme={t.id} aria-pressed="false">
+                  <span class="preview" style={`background:${t.swatch[0]};color:${t.swatch[1]}`}>
+                    <i style={`background:${t.swatch[1]};width:62%`} />
+                    <i style={`background:${t.swatch[2]};width:44%`} />
+                    <i style={`background:${t.swatch[3]};width:28%`} />
+                  </span>
+                  <span class="mt-1.5 block px-0.5 text-xs">{t.name}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        ))}
+        <p class="text-xs text-muted-foreground">You can also press <span class="kbd">t</span> to step through them.</p>
+      </div>
     </dialog>
 
     <CommandPalette client:idle />
