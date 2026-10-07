@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from '@/components/ui/command'
 import { themes } from '@/data/themes'
 import { nav, site } from '@/data/site'
-import { labApps } from '@/data/lab-apps'
+import { labApps, labGames } from '@/data/lab-apps'
 import { copyEmail, setTheme, toast } from '@/lib/theme'
 import type { SearchDoc } from '@/lib/search'
 
@@ -20,6 +20,8 @@ const actions: Action[] = [
   { id: 'linkedin', label: 'Open LinkedIn', group: 'Actions', run: () => go(site.linkedin) },
   { id: 'keys', label: 'Show keyboard shortcuts', hint: '?', group: 'Actions', keywords: 'help keys', run: () => window.dispatchEvent(new Event('site:help')) },
   ...labApps.map((a) => ({ id: `lab-${a.id}`, label: `Open ${a.name}`, group: 'Lab', keywords: a.blurb, run: () => openLab(a.id) })),
+  ...labGames.map((g) => ({ id: `game-${g.id}`, label: `Play ${g.name}`, group: 'Lab', keywords: `game ${g.blurb} ${g.teaches}`, run: () => openLab(`games/${g.id}`) })),
+  { id: 'theme-picker', label: 'Choose a theme…', group: 'Actions', keywords: 'appearance color colors dark light', run: () => window.dispatchEvent(new Event('site:themes')) },
   ...themes.map((t) => ({ id: `theme-${t.id}`, label: `Theme: ${t.name}`, group: 'Theme', keywords: t.dark ? 'dark' : 'light', run: () => { setTheme(t.id); toast(`theme → ${t.name}`) } })),
 ]
 
@@ -107,7 +109,6 @@ export default function CommandPalette() {
             <span><span className="kbd">↑</span> <span className="kbd">↓</span> move</span>
             <span><span className="kbd">↵</span> open</span>
             <span><span className="kbd">esc</span> close</span>
-            <span className="ml-auto">search runs in your browser</span>
           </div>
         </Command>
       </DialogContent>

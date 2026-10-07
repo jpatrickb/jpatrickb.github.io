@@ -1,55 +1,94 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { labApps, type LabAppId } from '@/data/lab-apps'
-import { cycleTheme } from '@/lib/theme'
+import { labApps, resolveLabTarget, type LabAppId, type LabGameId } from '@/data/lab-apps'
 import { cn } from '@/lib/utils'
 import Readme from './Readme'
 import Terminal, { type TermProject } from './Terminal'
 import AskPatrick from './AskPatrick'
-import GradientGolf from './GradientGolf'
-import Confounder from './Confounder'
-import Experiments, { type Run } from './Experiments'
+import Games from './Games'
+import WorkHistory, { type WorkEntry } from './WorkHistory'
 import Photos from './Photos'
+import Appearance from './Appearance'
+import { LabIcon, Wallpaper } from './icons'
 
-type Win = { id: LabAppId; x: number; y: number; w: number; h: number; z: number }
+type Rect = { x: number; y: number; w: number; h: number }
+type Win = Rect & { id: LabAppId; z: number; min?: boolean; restore?: Rect }
+type Edge = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
 const SIZES: Record<LabAppId, [number, number]> = {
-  readme: [520, 460], terminal: [640, 400], ask: [520, 540], golf: [780, 700],
-  confounder: [640, 560], experiments: [720, 440], photos: [520, 400],
+  readme: [540, 610], terminal: [700, 500], ask: [480, 600], games: [980, 720],
+  experience: [900, 520], photos: [720, 460], appearance: [760, 560],
 }
-const isLabApp = (s: string): s is LabAppId => labApps.some((a) => a.id === s)
+const MIN_W = 320
+const MIN_H = 220
+const DOCK_SPACE = 84
 
-export default function Desktop({ runs, projects }: { runs: Run[]; projects: TermProject[] }) {
+// each handle is a thin strip on an edge or a small square on a corner
+const HANDLES: { edge: Edge; className: string }[] = [
+  { edge: 'n', className: 'inset-x-3 -top-1 h-2 cursor-ns-resize' },
+  { edge: 's', className: 'inset-x-3 -bottom-1 h-2 cursor-ns-resize' },
+  { edge: 'w', className: 'inset-y-3 -left-1 w-2 cursor-ew-resize' },
+  { edge: 'e', className: 'inset-y-3 -right-1 w-2 cursor-ew-resize' },
+  { edge: 'nw', className: '-left-1 -top-1 size-4 cursor-nwse-resize' },
+  { edge: 'se', className: '-bottom-1 -right-1 size-4 cursor-nwse-resize' },
+  { edge: 'ne', className: '-right-1 -top-1 size-4 cursor-nesw-resize' },
+  { edge: 'sw', className: '-bottom-1 -left-1 size-4 cursor-nesw-resize' },
+]
+
+export default function Desktop({ work, projects }: { work: WorkEntry[]; projects: TermProject[] }) {
   const [wins, setWins] = useState<Win[]>([])
+  const [game, setGame] = useState<LabGameId | null>(null)
   const [mobile, setMobile] = useState(false)
   const [clock, setClock] = useState('')
-  const [theme, setThemeName] = useState('')
+  const [menu, setMenu] = useState<'lab' | 'window' | null>(null)
   const zTop = useRef(10)
   const area = useRef<HTMLDivElement>(null)
 
-  const focused = wins.reduce<Win | null>((top, w) => (!top || w.z > top.z ? w : top), null)
+  const focused = wins.reduce<Win | null>((top, w) => (w.min || (top && w.z <= top.z) ? top : w), null)
+  const bounds = () => {
+    const b = area.current?.getBoundingClientRect()
+    return { W: b?.width ?? 1200, H: b?.height ?? 800 }
+  }
 
-  const open = useCallback((id: LabAppId) => {
+  const open = useCallback((id: LabAppId, g?: LabGameId) => {
+    if (id === 'games' && g) setGame(g)
     setWins((ws) => {
       const z = ++zTop.current
-      const existing = ws.find((w) => w.id === id)
-      if (existing) return ws.map((w) => (w.id === id ? { ...w, z } : w))
-      const bounds = area.current?.getBoundingClientRect()
+      if (ws.some((w) => w.id === id)) return ws.map((w) => (w.id === id ? { ...w, z, min: false } : w))
+      const { W, H } = bounds()
       const [w0, h0] = SIZES[id]
-      const W = bounds?.width ?? 1200
-      const H = bounds?.height ?? 800
       const w = Math.min(w0, W - 24)
-      const h = Math.min(h0, H - 24)
+      const h = Math.min(h0, H - DOCK_SPACE - 12)
       const n = ws.length
       const x = Math.max(12, Math.min(W - w - 12, (W - w) / 2 + (n % 5) * 28 - 56))
-      const y = Math.max(12, Math.min(H - h - 12, (H - h) / 2.6 + (n % 5) * 24 - 24))
+      const y = Math.max(12, Math.min(H - DOCK_SPACE - h, (H - DOCK_SPACE - h) / 2.6 + (n % 5) * 24))
       return [...ws, { id, x, y, w, h, z }]
     })
-    history.replaceState(null, '', `#${id}`)
+    history.replaceState(null, '', `#${id === 'games' && g ? `games/${g}` : id}`)
   }, [])
 
   const close = useCallback((id: LabAppId) => {
     setWins((ws) => ws.filter((w) => w.id !== id))
+    if (id === 'games') setGame(null)
     history.replaceState(null, '', location.pathname)
+  }, [])
+
+  const minimize = useCallback((id: LabAppId) => {
+    setWins((ws) => ws.map((w) => (w.id === id ? { ...w, min: true } : w)))
+  }, [])
+
+  // the green button: fill the space between the menu bar and the dock, or go back to the old size
+  const zoom = useCallback((id: LabAppId) => {
+    setWins((ws) => ws.map((w) => {
+      if (w.id !== id) return w
+      if (w.restore) return { ...w, ...w.restore, restore: undefined }
+      const { W, H } = bounds()
+      return { ...w, restore: { x: w.x, y: w.y, w: w.w, h: w.h }, x: 0, y: 0, w: W, h: H - DOCK_SPACE }
+    }))
+  }, [])
+
+  const pickGame = useCallback((g: LabGameId | null) => {
+    setGame(g)
+    history.replaceState(null, '', g ? `#games/${g}` : '#games')
   }, [])
 
   useEffect(() => {
@@ -57,59 +96,101 @@ export default function Desktop({ runs, projects }: { runs: Run[]; projects: Ter
     const upd = () => setMobile(mq.matches)
     upd()
     mq.addEventListener('change', upd)
-    const tick = () => setClock(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+    const tick = () => {
+      const d = new Date()
+      setClock(`${d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}  ${d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`)
+    }
     tick()
     const t = window.setInterval(tick, 15000)
-    const th = () => setThemeName(document.documentElement.dataset.theme ?? '')
-    th()
-    window.addEventListener('site:theme', th)
-    const onOpen = (e: Event) => { const id = (e as CustomEvent<string>).detail; if (isLabApp(id)) open(id) }
+    const go = (raw: string) => { const target = resolveLabTarget(raw); if (target) open(target.app, target.game) }
+    const onOpen = (e: Event) => go((e as CustomEvent<string>).detail)
     window.addEventListener('lab:open', onOpen)
-    const fromHash = () => { const h = location.hash.slice(1); if (isLabApp(h)) open(h) }
+    const fromHash = () => go(location.hash)
     fromHash()
     if (!location.hash && !mq.matches) open('readme')
     window.addEventListener('hashchange', fromHash)
     return () => {
       mq.removeEventListener('change', upd)
       window.clearInterval(t)
-      window.removeEventListener('site:theme', th)
       window.removeEventListener('lab:open', onOpen)
       window.removeEventListener('hashchange', fromHash)
     }
   }, [open])
 
-  // lab-only keys: 1–7 open apps, Esc closes the focused window
+  // Esc first leaves a text field, and then closes the front window.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement
-      if (e.metaKey || e.ctrlKey || e.altKey || t.closest('input, textarea, [data-own-keys]')) return
+      if (e.metaKey || e.ctrlKey || e.altKey) return
       if (document.querySelector('[role="dialog"][data-state="open"], dialog[open]')) return
-      const n = Number(e.key)
-      if (n >= 1 && n <= labApps.length) open(labApps[n - 1].id)
-      else if (e.key === 'Escape' && focused) close(focused.id)
+      const t = e.target as HTMLElement
+      const typing = !!t.closest('input, textarea')
+      if (e.key === 'Escape') {
+        if (menu) setMenu(null)
+        else if (typing) t.blur()
+        else if (focused) close(focused.id)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, close, focused])
+  }, [close, focused, menu])
 
-  const startDrag = (id: LabAppId, e: React.PointerEvent) => {
-    if (mobile || (e.target as HTMLElement).closest('button')) return
-    const win = wins.find((w) => w.id === id)
-    const bounds = area.current?.getBoundingClientRect()
-    if (!win || !bounds) return
-    open(id)
-    const sx = e.clientX - win.x
-    const sy = e.clientY - win.y
+  useEffect(() => {
+    if (!menu) return
+    const away = () => setMenu(null)
+    window.addEventListener('pointerdown', away)
+    return () => window.removeEventListener('pointerdown', away)
+  }, [menu])
+
+  // shared pointer-drag plumbing for moving and resizing
+  const track = (e: React.PointerEvent, onMove: (dx: number, dy: number) => void) => {
     const el = e.currentTarget as HTMLElement
+    const sx = e.clientX
+    const sy = e.clientY
     el.setPointerCapture(e.pointerId)
-    const move = (ev: PointerEvent) => {
-      const x = Math.max(-win.w + 80, Math.min(bounds.width - 80, ev.clientX - sx))
-      const y = Math.max(0, Math.min(bounds.height - 36, ev.clientY - sy))
-      setWins((ws) => ws.map((w) => (w.id === id ? { ...w, x, y } : w)))
+    const move = (ev: PointerEvent) => onMove(ev.clientX - sx, ev.clientY - sy)
+    const up = () => {
+      el.removeEventListener('pointermove', move)
+      el.removeEventListener('pointerup', up)
+      el.removeEventListener('pointercancel', up)
     }
-    const up = () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up) }
     el.addEventListener('pointermove', move)
     el.addEventListener('pointerup', up)
+    el.addEventListener('pointercancel', up)
+  }
+  const patch = (id: LabAppId, r: Partial<Win>) => setWins((ws) => ws.map((w) => (w.id === id ? { ...w, ...r } : w)))
+
+  const startDrag = (win: Win, e: React.PointerEvent) => {
+    if (mobile || (e.target as HTMLElement).closest('button')) return
+    open(win.id)
+    const { W, H } = bounds()
+    track(e, (dx, dy) => patch(win.id, {
+      x: Math.max(-win.w + 80, Math.min(W - 80, win.x + dx)),
+      y: Math.max(0, Math.min(H - 36, win.y + dy)),
+      restore: undefined,
+    }))
+  }
+
+  const startResize = (win: Win, edge: Edge, e: React.PointerEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    open(win.id)
+    const { W, H } = bounds()
+    track(e, (dx, dy) => {
+      let { x, y, w, h } = win
+      if (edge.includes('e')) w = Math.max(MIN_W, Math.min(W - win.x, win.w + dx))
+      if (edge.includes('s')) h = Math.max(MIN_H, Math.min(H - win.y, win.h + dy))
+      if (edge.includes('w')) {
+        const nx = Math.max(0, Math.min(win.x + win.w - MIN_W, win.x + dx))
+        w = win.w + (win.x - nx)
+        x = nx
+      }
+      if (edge.includes('n')) {
+        const ny = Math.max(0, Math.min(win.y + win.h - MIN_H, win.y + dy))
+        h = win.h + (win.y - ny)
+        y = ny
+      }
+      patch(win.id, { x, y, w, h, restore: undefined })
+    })
   }
 
   const render = (id: LabAppId): ReactNode => {
@@ -117,51 +198,77 @@ export default function Desktop({ runs, projects }: { runs: Run[]; projects: Ter
       case 'readme': return <Readme onOpen={open} />
       case 'terminal': return <Terminal onOpen={open} projects={projects} />
       case 'ask': return <AskPatrick />
-      case 'golf': return <GradientGolf />
-      case 'confounder': return <Confounder />
-      case 'experiments': return <Experiments runs={runs} />
+      case 'games': return <Games game={game} onGame={pickGame} />
+      case 'experience': return <WorkHistory work={work} />
       case 'photos': return <Photos />
+      case 'appearance': return <Appearance />
     }
   }
 
-  const visible = mobile ? (focused ? [focused] : []) : wins
+  const appOf = (id: LabAppId) => labApps.find((a) => a.id === id)!
+  const visible = mobile ? (focused ? [focused] : []) : wins.filter((w) => !w.min)
+  const menuItem = 'block w-full rounded px-2.5 py-1 text-left hover:bg-primary hover:text-primary-foreground disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-foreground'
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-background text-foreground">
+      <Wallpaper />
+
       {/* menu bar */}
-      <div className="flex h-8 shrink-0 items-center justify-between gap-3 border-b border-border bg-card/80 px-3 font-mono text-xs backdrop-blur">
-        <div className="flex min-w-0 items-center gap-4">
-          <a href="/" className="whitespace-nowrap font-medium hover:text-primary" title="Back to the site">◆ patrick-os</a>
-          <span className="truncate text-muted-foreground">{focused ? labApps.find((a) => a.id === focused.id)?.name : 'Desktop'}</span>
+      <div className="relative z-[1000] flex h-7 shrink-0 items-center justify-between gap-3 bg-card/60 px-2 text-[13px] backdrop-blur-xl">
+        <div className="flex min-w-0 items-center">
+          <div className="relative" onPointerDown={(e) => e.stopPropagation()}>
+            <button type="button" aria-haspopup="menu" aria-expanded={menu === 'lab'} onClick={() => setMenu(menu === 'lab' ? null : 'lab')} className={cn('rounded px-2 py-0.5 font-semibold', menu === 'lab' && 'bg-foreground/15')}>◆</button>
+            {menu === 'lab' && (
+              <div role="menu" className="absolute left-0 top-full mt-1 w-52 rounded-lg border border-border bg-popover/95 p-1 shadow-2xl backdrop-blur-xl">
+                <button type="button" role="menuitem" className={menuItem} onClick={() => { setMenu(null); open('readme') }}>About This Lab</button>
+                <button type="button" role="menuitem" className={menuItem} onClick={() => { setMenu(null); open('appearance') }}>Appearance…</button>
+                <button type="button" role="menuitem" className={menuItem} onClick={() => { setMenu(null); window.dispatchEvent(new Event('site:palette')) }}>Search…</button>
+                <hr className="my-1 border-border" />
+                <a role="menuitem" href="/" className={menuItem}>Back to the main site</a>
+              </div>
+            )}
+          </div>
+          <span className="truncate px-2 font-semibold">{focused ? appOf(focused.id).name : 'Lab'}</span>
+          <div className="relative max-md:hidden" onPointerDown={(e) => e.stopPropagation()}>
+            <button type="button" aria-haspopup="menu" aria-expanded={menu === 'window'} onClick={() => setMenu(menu === 'window' ? null : 'window')} className={cn('rounded px-2 py-0.5', menu === 'window' && 'bg-foreground/15')}>Window</button>
+            {menu === 'window' && (
+              <div role="menu" className="absolute left-0 top-full mt-1 w-52 rounded-lg border border-border bg-popover/95 p-1 shadow-2xl backdrop-blur-xl">
+                <button type="button" role="menuitem" disabled={!focused} className={menuItem} onClick={() => { setMenu(null); if (focused) minimize(focused.id) }}>Minimize</button>
+                <button type="button" role="menuitem" disabled={!focused} className={menuItem} onClick={() => { setMenu(null); if (focused) zoom(focused.id) }}>Zoom</button>
+                <button type="button" role="menuitem" disabled={!focused} className={menuItem} onClick={() => { setMenu(null); if (focused) close(focused.id) }}>Close</button>
+                {wins.length > 0 && <hr className="my-1 border-border" />}
+                {wins.map((w) => (
+                  <button key={w.id} type="button" role="menuitem" className={menuItem} onClick={() => { setMenu(null); open(w.id) }}>
+                    <span className="mr-1.5 inline-block w-3">{focused?.id === w.id ? '✓' : ''}</span>{appOf(w.id).name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-3 text-muted-foreground">
-          <button type="button" onClick={() => cycleTheme()} className="hidden hover:text-foreground sm:inline">{theme} <span className="kbd">t</span></button>
-          <button type="button" onClick={() => window.dispatchEvent(new Event('site:palette'))} className="hover:text-foreground"><span className="kbd">⌘K</span></button>
-          <span className="hidden whitespace-nowrap tabular-nums sm:inline">{clock}</span>
+        <div className="flex items-center gap-1">
+          <button type="button" onClick={() => open('appearance')} aria-label="Appearance" title="Appearance" className="rounded px-1.5 py-0.5 hover:bg-foreground/15">◐</button>
+          <button type="button" onClick={() => window.dispatchEvent(new Event('site:palette'))} aria-label="Search" title="Search (⌘K)" className="rounded px-1.5 py-0.5 hover:bg-foreground/15">⌕</button>
+          <span className="hidden whitespace-pre px-1.5 tabular-nums sm:inline">{clock}</span>
         </div>
       </div>
 
       {/* desktop */}
       <div ref={area} className="relative flex-1 overflow-hidden">
-        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:radial-gradient(var(--border)_1px,transparent_1px)] [background-size:22px_22px]" />
-        <ul className="relative grid w-max grid-flow-row grid-cols-3 gap-1 p-4 md:grid-cols-1" aria-label="Apps">
-          {labApps.map((a, i) => (
-            <li key={a.id}>
-              <button
-                type="button"
-                onClick={() => open(a.id)}
-                className="flex w-24 flex-col items-center gap-1.5 rounded-lg p-2 text-center text-[11px] leading-tight hover:bg-muted/70 focus-visible:bg-muted"
-              >
-                <span className="flex size-12 items-center justify-center rounded-xl border border-border bg-card font-mono text-base text-primary shadow-sm">{a.glyph}</span>
+        {/* on a phone there is no dock, so the apps sit on the desktop like a home screen */}
+        <ul className="relative grid grid-cols-4 gap-x-2 gap-y-4 p-5 md:hidden" aria-label="Apps">
+          {labApps.map((a) => (
+            <li key={a.id} className="flex justify-center">
+              <button type="button" onClick={() => open(a.id)} className="flex w-[4.5rem] flex-col items-center gap-1.5 text-center text-[11px] leading-tight">
+                <LabIcon id={a.id} className="size-14" />
                 <span>{a.name}</span>
-                <span className="font-mono text-[10px] text-muted-foreground max-md:hidden">{i + 1}</span>
               </button>
             </li>
           ))}
         </ul>
 
         {visible.map((w) => {
-          const app = labApps.find((a) => a.id === w.id)!
+          const app = appOf(w.id)
           const isTop = focused?.id === w.id
           return (
             <section
@@ -170,36 +277,64 @@ export default function Desktop({ runs, projects }: { runs: Run[]; projects: Ter
               aria-label={app.name}
               onPointerDown={() => !isTop && open(w.id)}
               className={cn(
-                'absolute flex flex-col overflow-hidden border border-border bg-background shadow-2xl',
-                mobile ? 'inset-0 rounded-none' : 'rounded-xl',
-                isTop ? 'ring-1 ring-primary/30' : 'opacity-[0.97]',
+                'absolute flex flex-col border border-border bg-background',
+                mobile ? 'inset-0' : 'rounded-xl',
+                isTop ? 'shadow-[0_22px_70px_rgba(0,0,0,.45)]' : 'shadow-[0_10px_30px_rgba(0,0,0,.25)]',
               )}
               style={mobile ? { zIndex: w.z } : { left: w.x, top: w.y, width: w.w, height: w.h, zIndex: w.z }}
             >
-              <header onPointerDown={(e) => startDrag(w.id, e)} className={cn('flex h-9 shrink-0 select-none items-center gap-3 border-b border-border bg-card px-3', !mobile && 'cursor-grab active:cursor-grabbing')}>
-                <button type="button" onClick={() => close(w.id)} aria-label={`Close ${app.name}`} className="size-3 rounded-full bg-bad/80 hover:bg-bad" />
-                <span className="flex-1 truncate text-center font-mono text-xs text-muted-foreground">{app.name.toLowerCase().replace(/ /g, '-')}</span>
-                <span className="w-3" />
+              <header
+                onPointerDown={(e) => startDrag(w, e)}
+                onDoubleClick={(e) => { if (!mobile && !(e.target as HTMLElement).closest('button')) zoom(w.id) }}
+                className={cn('group/bar relative flex h-9 shrink-0 select-none items-center border-b border-border bg-card px-3', !mobile && 'rounded-t-xl')}
+              >
+                <div className="flex items-center gap-2">
+                  <TrafficLight label={`Close ${app.name}`} color="#ff5f57" glyph="×" active={isTop} onClick={() => close(w.id)} />
+                  {!mobile && <TrafficLight label={`Minimize ${app.name}`} color="#febc2e" glyph="−" active={isTop} onClick={() => minimize(w.id)} />}
+                  {!mobile && <TrafficLight label={`Zoom ${app.name}`} color="#28c840" glyph="+" active={isTop} onClick={() => zoom(w.id)} />}
+                </div>
+                <span className={cn('pointer-events-none absolute inset-x-20 truncate text-center text-[13px] font-medium', !isTop && 'text-muted-foreground')}>{app.name}</span>
               </header>
-              <div className="min-h-0 flex-1 overflow-auto">{render(w.id)}</div>
+              <div className={cn('min-h-0 flex-1 overflow-auto', !mobile && 'rounded-b-xl')}>{render(w.id)}</div>
+              {!mobile && HANDLES.map((h) => (
+                <div key={h.edge} aria-hidden onPointerDown={(e) => startResize(w, h.edge, e)} className={cn('absolute touch-none', h.className)} />
+              ))}
             </section>
           )
         })}
       </div>
 
       {/* dock */}
-      <nav aria-label="Dock" className="pointer-events-none absolute inset-x-0 bottom-3 z-[999] flex justify-center max-md:hidden">
-        <ul className="pointer-events-auto flex gap-1.5 rounded-2xl border border-border bg-card/85 p-1.5 shadow-xl backdrop-blur">
-          {labApps.map((a) => (
-            <li key={a.id}>
-              <button type="button" onClick={() => open(a.id)} title={a.name} aria-label={`Open ${a.name}`} className="relative flex size-10 items-center justify-center rounded-xl font-mono text-sm text-primary transition-transform hover:-translate-y-1 hover:bg-muted">
-                {a.glyph}
-                {wins.some((w) => w.id === a.id) && <span className="absolute -bottom-0.5 size-1 rounded-full bg-foreground" />}
-              </button>
-            </li>
-          ))}
+      <nav aria-label="Dock" className="pointer-events-none absolute inset-x-0 bottom-2 z-[999] flex justify-center max-md:hidden">
+        <ul className="pointer-events-auto flex items-end gap-2 rounded-[22px] border border-foreground/10 bg-card/55 px-2.5 pb-2 pt-2 shadow-2xl backdrop-blur-xl">
+          {labApps.map((a) => {
+            const win = wins.find((w) => w.id === a.id)
+            return (
+              <li key={a.id} className="group relative flex flex-col items-center">
+                <span className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-border bg-popover px-2 py-1 text-xs opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">{a.name}</span>
+                <button type="button" onClick={() => open(a.id)} aria-label={`Open ${a.name}`} className="origin-bottom transition-transform duration-150 hover:scale-[1.22] focus-visible:scale-[1.22]">
+                  <LabIcon id={a.id} className="size-[52px]" />
+                </button>
+                <span className={cn('mt-1 size-1 rounded-full', win ? 'bg-foreground/70' : 'bg-transparent')} />
+              </li>
+            )
+          })}
         </ul>
       </nav>
     </div>
+  )
+}
+
+function TrafficLight({ label, color, glyph, active, onClick }: { label: string; color: string; glyph: string; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="flex size-3 items-center justify-center rounded-full text-[9px] font-bold leading-none text-black/60 ring-1 ring-inset ring-black/10"
+      style={{ background: active ? color : 'var(--border)' }}
+    >
+      <span className="opacity-0 group-hover/bar:opacity-100">{glyph}</span>
+    </button>
   )
 }

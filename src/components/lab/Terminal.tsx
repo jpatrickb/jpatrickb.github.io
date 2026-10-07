@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { labApps, type LabAppId } from '@/data/lab-apps'
+import { labApps, labGames, resolveLabTarget, type LabAppId, type LabGameId } from '@/data/lab-apps'
 import { themes } from '@/data/themes'
 import { site } from '@/data/site'
 import { setTheme, copyEmail } from '@/lib/theme'
@@ -15,7 +15,7 @@ const COMMANDS = ['help', 'whoami', 'ls', 'cat', 'open', 'ask', 'theme', 'neofet
 
 let lineId = 0
 
-export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId) => void; projects: TermProject[] }) {
+export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId, game?: LabGameId) => void; projects: TermProject[] }) {
   const [lines, setLines] = useState<Line[]>([])
   const [input, setInput] = useState('')
   const [hist, setHist] = useState<string[]>([])
@@ -27,7 +27,7 @@ export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId) 
 
   useEffect(() => {
     print(
-      <span className="text-muted-foreground">patrick-os 1.0 · type <b className="text-foreground">help</b> to see commands, tab to complete</span>,
+      <span className="text-muted-foreground">Type <b className="text-foreground">help</b> to see the commands. Tab completes, and esc leaves typing mode.</span>,
     )
     inputRef.current?.focus()
   }, [])
@@ -53,8 +53,8 @@ export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId) 
             ['whoami', 'one-line bio'],
             ['ls [projects|lab]', 'list files'],
             ['cat <file|project>', 'print a file or project summary'],
-            ['open <project|app|resume|github|linkedin>', 'open something'],
-            ['ask <question>', 'query the local Ask Patrick retriever'],
+            ['open <project|app|game|resume|github|linkedin>', 'open something'],
+            ['ask <question>', 'ask a question about Patrick'],
             ['theme [name]', 'list or set the color theme'],
             ['neofetch', 'system info'],
             ['clear · history · date · echo · exit', ''],
@@ -62,7 +62,7 @@ export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId) 
         )
         break
       case 'whoami':
-        print(`${site.name}: ${site.role.toLowerCase()}. Builds the model and the system around it.`)
+        print(`${site.name}, a data scientist and economist who builds production systems.`)
         break
       case 'pwd':
         print('/home/patrick')
@@ -74,16 +74,16 @@ export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId) 
         const dir = arg.replace(/\/$/, '')
         if (!dir) print(<Cols items={FILES} />)
         else if (dir === 'projects') print(<Cols items={projects.map((p) => p.id)} />)
-        else if (dir === 'lab') print(<Cols items={labApps.map((a) => `${a.id}.app`)} />)
+        else if (dir === 'lab') print(<Cols items={[...labApps.map((a) => `${a.id}.app`), ...labGames.map((g) => `games/${g.id}`)]} />)
         else print(`ls: cannot access '${arg}': No such file or directory`)
         break
       }
       case 'cat': {
         if (!arg) { print('cat: missing operand'); break }
-        if (arg === 'about.txt') print(<Pre>{`Data scientist & ML engineer. BS in Applied & Computational Math + Economics (BYU).
-Founding engineer at TechForce Advisors: agentic research system, voice-to-CRM iOS app,
-Terraform AWS platform, grounded document extraction. Now at Teradata.
-Plays trombone and accompanies opera and ballet on piano.`}</Pre>)
+        if (arg === 'about.txt') print(<Pre>{`I'm a data scientist and economist who builds production systems. I studied Applied and
+Computational Math and Economics at BYU, and then spent a year as the founding engineer at
+TechForce Advisors, where I built an agentic research system, an iOS app, and a shared AWS
+test platform. I'm at Teradata now. I also play trombone and piano.`}</Pre>)
         else if (arg === 'contact.txt') print(<Pre>{`email     ${site.email}\ngithub    ${site.github}\nlinkedin  ${site.linkedin}`}</Pre>)
         else if (arg === 'resume.pdf') print(<span className="text-muted-foreground">cat: resume.pdf is binary. Try <b>open resume</b>.</span>)
         else {
@@ -95,9 +95,9 @@ Plays trombone and accompanies opera and ballet on piano.`}</Pre>)
       }
       case 'open': {
         const a = arg.toLowerCase().replace(/\.app$/, '')
-        const app = labApps.find((x) => x.id === a || x.name.toLowerCase() === a)
-        if (!a) print('open: what should I open? Try open golf, open resume, or open <project>.')
-        else if (app) { onOpen(app.id); print(`opening ${app.name}…`) }
+        const target = resolveLabTarget(a) ?? resolveLabTarget(labApps.find((x) => x.name.toLowerCase() === a)?.id ?? '')
+        if (!a) print('open: what should I open? Try open games, open resume, or open <project>.')
+        else if (target) { onOpen(target.app, target.game); print(`opening ${a}…`) }
         else if (a === 'resume' || a === 'resume.pdf') { window.open(site.resume, '_blank'); print('opening resume.pdf…') }
         else if (a === 'github') { window.open(site.github, '_blank'); print('opening GitHub…') }
         else if (a === 'linkedin') { window.open(site.linkedin, '_blank'); print('opening LinkedIn…') }
@@ -110,10 +110,7 @@ Plays trombone and accompanies opera and ballet on piano.`}</Pre>)
       case 'ask': {
         if (!arg) { print('usage: ask <question>'); break }
         const [best] = retrieve(arg)
-        print(
-          <span className="text-muted-foreground">[retriever] top match {best.score.toFixed(3)}: “{best.entry.q}”</span>,
-          best.score >= THRESHOLD ? best.entry.a : fallback,
-        )
+        print(best.score >= THRESHOLD ? best.entry.a : fallback)
         break
       }
       case 'theme': {
@@ -157,7 +154,8 @@ Plays trombone and accompanies opera and ballet on piano.`}</Pre>)
         print(<span className="text-bad">rm: nice try.</span>)
         break
       default:
-        if (labApps.some((a) => a.id === cmd)) { onOpen(cmd as LabAppId); print(`opening ${cmd}…`) }
+        const target = resolveLabTarget(cmd)
+        if (target) { onOpen(target.app, target.game); print(`opening ${cmd}…`) }
         else print(`${cmd}: command not found. Type help.`)
     }
   }
@@ -168,7 +166,7 @@ Plays trombone and accompanies opera and ballet on piano.`}</Pre>)
       ? COMMANDS
       : parts[0] === 'theme' ? themes.map((t) => t.id)
       : parts[0] === 'ls' ? ['projects', 'lab']
-      : [...FILES.filter((f) => !f.endsWith('/')), ...projects.map((p) => p.id), ...labApps.map((a) => a.id), 'resume', 'github', 'linkedin']
+      : [...FILES.filter((f) => !f.endsWith('/')), ...projects.map((p) => p.id), ...labApps.map((a) => a.id), ...labGames.map((g) => g.id), 'resume', 'github', 'linkedin']
     const last = parts[parts.length - 1]
     const matches = pool.filter((c) => c.startsWith(last))
     if (matches.length === 1) setInput([...parts.slice(0, -1), matches[0]].join(' ') + ' ')
@@ -196,6 +194,8 @@ Plays trombone and accompanies opera and ballet on piano.`}</Pre>)
             else if (e.key === 'ArrowUp') { e.preventDefault(); const i = hIdx < 0 ? hist.length - 1 : Math.max(0, hIdx - 1); if (hist[i]) { setHIdx(i); setInput(hist[i]) } }
             else if (e.key === 'ArrowDown') { e.preventDefault(); const i = hIdx + 1; if (hIdx >= 0 && i < hist.length) { setHIdx(i); setInput(hist[i]) } else { setHIdx(-1); setInput('') } }
             else if (e.key === 'l' && e.ctrlKey) { e.preventDefault(); setLines([]) }
+            // Esc leaves typing mode; the desktop then treats the next Esc as "close this window"
+            else if (e.key === 'Escape') { e.currentTarget.blur() }
           }}
           autoComplete="off"
           spellCheck={false}
@@ -220,21 +220,40 @@ function Table({ rows }: { rows: string[][] }) {
 }
 function Neofetch({ projects }: { projects: number }) {
   const theme = typeof document !== 'undefined' ? document.documentElement.dataset.theme : ''
-  const art = ['   ◆◆◆   ', '  ◆   ◆  ', ' ◆  ∇  ◆ ', '  ◆   ◆  ', '   ◆◆◆   ']
+  // the same piano keys as my real fastfetch config: white keys filled in, black keys dark
+  const W = 5
+  const blackOver = [0, 1, 3, 4, 5].map((k) => k * W + 4)
+  const keyRow = (top: boolean) => Array.from({ length: 7 * W - 1 }, (_, c) => {
+    if (top && blackOver.some((g) => Math.abs(c - g) <= 1)) return 'b'
+    return c % W === 4 ? ' ' : 'w'
+  })
+  const rows = [...Array(5).fill(keyRow(true)), ...Array(3).fill(keyRow(false))] as string[][]
   const info = [
     ['', 'patrick@lab'],
-    ['OS', 'patrick-os 1.0 (Astro + React)'],
-    ['Host', 'your browser'],
-    ['Kernel', 'applied-math 3.92'],
-    ['Shell', 'tsh (tiny shell)'],
-    ['Theme', theme ?? ''],
-    ['Packages', `${projects} projects`],
-    ['Uptime', 'since 2018 (first automation script)'],
+    ['os', 'patrick-os 1.0'],
+    ['shell', 'zsh, with a Starship prompt'],
+    ['editor', 'Neovim'],
+    ['terminal', 'Otty and tmux'],
+    ['theme', theme ?? ''],
+    ['projects', String(projects)],
+    ['plays', 'trombone and piano'],
+    ['speaks', 'English and ASL'],
+    ['outside', 'pickleball, hiking, climbing, biking, cooking'],
+    ['home', 'Utah'],
   ]
   return (
-    <span className="flex gap-6">
-      <span className="text-primary">{art.join('\n')}</span>
-      <span>{info.map(([k, v]) => <span key={k + v} className="block">{k ? <><span className="text-primary">{k}</span>: {v}</> : <b>{v}</b>}</span>)}</span>
+    <span className="flex flex-wrap gap-x-8 gap-y-3">
+      <span className="block whitespace-pre leading-none" aria-hidden>
+        {rows.map((row, i) => (
+          <span key={i} className="block">{row.map((k, j) => <span key={j} className={k === 'b' ? 'text-muted-foreground/60' : 'text-foreground'}>{k === ' ' ? ' ' : '█'}</span>)}</span>
+        ))}
+      </span>
+      <span className="min-w-0">
+        {info.map(([k, v]) => <span key={k + v} className="block">{k ? <><span className="inline-block w-20 text-primary">{k}</span>{v}</> : <b>{v}</b>}</span>)}
+        <span className="mt-2 flex" aria-hidden>
+          {['bg-bad', 'bg-secondary-accent', 'bg-good', 'bg-primary', 'bg-foreground', 'bg-muted-foreground'].map((c) => <span key={c} className={`h-3 w-6 ${c}`} />)}
+        </span>
+      </span>
     </span>
   )
 }

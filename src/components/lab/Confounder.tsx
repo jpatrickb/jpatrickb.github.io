@@ -28,7 +28,7 @@ const scenarios: Scenario[] = [
     ],
     edges: [['temp', 'ice'], ['temp', 'drown'], ['lifeguards', 'drown']],
     treatment: 'ice', outcome: 'drown', answer: 'temp', kind: 'confounder',
-    why: 'Temperature causes both. Hot days sell ice cream and send people swimming. Adjusting for it closes the backdoor path ice ← temp → drownings, and the association disappears. Lifeguards only affect the outcome, so adjusting for them is harmless but unnecessary.',
+    why: 'Temperature causes both, since hot days sell more ice cream and also send more people swimming. Adjusting for it closes the backdoor path ice ← temp → drownings, and the association disappears. Lifeguards only affect the outcome, so adjusting for them is harmless but unnecessary.',
   },
   {
     title: 'Football wins and applications',
@@ -42,7 +42,7 @@ const scenarios: Scenario[] = [
     ],
     edges: [['budget', 'wins'], ['budget', 'apps'], ['wins', 'media'], ['media', 'apps']],
     treatment: 'wins', outcome: 'apps', answer: 'budget', kind: 'confounder',
-    why: 'A big athletics budget buys wins and also signals a large, well-funded school that attracts applicants on its own. TV coverage is a mediator: it is part of how winning works, so you should not adjust for it. (This is the question behind my case-competition project.)',
+    why: 'A big athletics budget buys wins and also signals a large, well-funded school that attracts applicants on its own. TV coverage is a mediator, since it is part of how winning brings in applications, so you should not adjust for it. (This is the question my team looked at for our case competition project.)',
   },
   {
     title: 'Talent and looks in Hollywood',
@@ -56,7 +56,7 @@ const scenarios: Scenario[] = [
     ],
     edges: [['talent', 'cast'], ['looks', 'cast'], ['training', 'talent']],
     treatment: 'talent', outcome: 'looks', answer: 'cast', kind: 'collider',
-    why: 'Getting cast is a collider: both talent and looks cause it. Looking only at actors who were cast means anyone with less of one trait must have more of the other, which induces a correlation that does not exist in the population. Never adjust for a collider.',
+    why: 'Getting cast is a collider, since both talent and looks cause it. Looking only at actors who were cast means anyone with less of one trait must have more of the other, which induces a correlation that does not exist in the population. This is why you should not adjust for a collider.',
   },
   {
     title: 'Job training and earnings',
@@ -88,7 +88,7 @@ const scenarios: Scenario[] = [
   },
 ]
 
-export default function Confounder() {
+export default function Confounder({ onLearn }: { onLearn?: () => void }) {
   const [i, setI] = useState(0)
   const [pick, setPick] = useState<string | null>(null)
   const [score, setScore] = useState<boolean[]>([])
@@ -173,7 +173,10 @@ export default function Confounder() {
           </button>
         </div>
       ) : (
-        <p className="font-mono text-[11px] text-muted-foreground">Click a node. X is the treatment, Y the outcome. Dashed means unobserved.</p>
+        <p className="text-xs text-muted-foreground">
+          Click a bubble to answer. X is the treatment and Y is the outcome, and a dashed bubble is something we can't measure.{' '}
+          {onLearn && <button type="button" onClick={onLearn} className="link">What do these words mean?</button>}
+        </p>
       )}
     </div>
   )
