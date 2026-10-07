@@ -66,33 +66,25 @@ jobs:
       - if: env.DEPLOY_ENV == 'prod'
         uses: ./.github/actions/verify-promotion
 
-      # Logs are public and variables are not masked on their own.
-      - name: Mask identifiers
-        env:
-          ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
-        run: |
-          echo "::add-mask::$ACCOUNT_ID"
-          echo "::add-mask::$ZONE_ID"
-
       - uses: ./.github/actions/setup
         with:
           terraform: "true"
 
       # Each credential is set only on the step that needs it, so setup actions and the
-      # smoke test never see one.
+      # smoke test never see one. The account id, zone id and state bucket are secrets, not
+      # variables, because GitHub masks secrets in the public logs and never masks variables.
       - name: Deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: scripts/deploy.sh "$DEPLOY_ENV"
 
       - name: Terraform apply
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TF_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
-          TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: scripts/terraform.sh apply "$DEPLOY_ENV"

@@ -99,9 +99,10 @@ Done once. Steps marked **(manual)** need you in a dashboard.
    exact names in `infra/README.md` ("Credentials: the whole list", with click paths and `gh` commands). In short:
    - environment secrets in `dev` and `prod`: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_TF_TOKEN`, `R2_ACCESS_KEY_ID`,
      `R2_SECRET_ACCESS_KEY`
-   - repository secrets (read-only credentials): `CLOUDFLARE_PLAN_TOKEN`, `R2_PLAN_ACCESS_KEY_ID`,
+   - repository secrets, the read-only credentials: `CLOUDFLARE_PLAN_TOKEN`, `R2_PLAN_ACCESS_KEY_ID`,
      `R2_PLAN_SECRET_ACCESS_KEY`
-   - repository variables: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `TF_STATE_BUCKET`
+   - repository secrets, the identifiers: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `TF_STATE_BUCKET`
+     (secrets and not variables, because the logs are public and GitHub only masks secrets)
 5. Merge to `develop`. The deploy publishes the dev Worker, applies the dev domain and smoke-tests it.
 6. Cut the first release. The deploy from `main` publishes the prod Worker, applies `jpatrickbeal.com` and the
    `www` redirect, tags `v1.0.0` and smoke-tests prod.
