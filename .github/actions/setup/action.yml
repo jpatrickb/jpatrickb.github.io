@@ -24,7 +24,8 @@ runs:
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
-        cache: pnpm
+        # Only cache when installing: without an install there is no store to save.
+        cache: ${{ inputs.install == 'true' && 'pnpm' || '' }}
 
     - if: inputs.terraform == 'true'
       uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
