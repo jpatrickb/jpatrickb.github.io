@@ -1,14 +1,14 @@
 ---
 company: Teradata
-role: Details coming soon
+role: Software Engineer
 start: Sep 2026
 end: Present
 status: running
 kind: engineering
 lane: both
 order: 0
-# hidden everywhere until the role, dates and bullets are filled in; then remove this line
-draft: true
 ---
 
-<!-- TODO(patrick): add role, real start date, metrics, tags, and bullets. -->
+Details of the work are forthcoming.
+
+<!-- TODO(patrick): add detail once the team has agreed what can be shared. -->
