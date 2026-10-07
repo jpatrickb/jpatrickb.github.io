@@ -7,10 +7,10 @@ const { runs, link = false } = Astro.props
   <table class="w-full min-w-[540px] border-collapse text-sm">
     <thead>
       <tr class="border-b border-border text-left font-mono text-[11px] text-muted-foreground">
-        <th class="py-2 pr-3 font-normal">run</th>
-        <th class="py-2 pr-3 font-normal">status</th>
-        <th class="py-2 pr-3 font-normal">span</th>
-        <th class="py-2 font-normal">key metric</th>
+        <th class="py-2 pr-3 font-normal">role</th>
+        <th class="py-2 pr-3 font-normal"><span class="sr-only">status</span></th>
+        <th class="py-2 pr-3 font-normal">dates</th>
+        <th class="py-2 font-normal">highlight</th>
       </tr>
     </thead>
     <tbody>
@@ -21,10 +21,12 @@ const { runs, link = false } = Astro.props
             <div class="text-[13px] text-muted-foreground">{r.data.role}</div>
           </td>
           <td class="py-2.5 pr-3">
-            <span class:list={['inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[11px]', r.data.status === 'running' ? 'border-secondary-accent/50 text-secondary-accent' : 'border-border text-muted-foreground']}>
-              <span class:list={['size-1.5 rounded-full', r.data.status === 'running' ? 'bg-secondary-accent animate-pulse' : 'bg-muted-foreground/60']} />
-              {r.data.status}
-            </span>
+            {r.data.status === 'running' && (
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-secondary-accent/50 px-2 py-0.5 font-mono text-[11px] text-secondary-accent">
+                <span class="size-1.5 rounded-full bg-secondary-accent" />
+                current
+              </span>
+            )}
           </td>
           <td class="whitespace-nowrap py-2.5 pr-3 font-mono text-xs tabular-nums text-muted-foreground">{r.data.start} – {r.data.end}</td>
           <td class="py-2.5 font-mono text-xs tabular-nums">

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 import Base from '@/layouts/Base.astro'
-import ModelCard from '@/components/ModelCard.astro'
+import About from '@/components/About.astro'
 import RunsTable from '@/components/RunsTable.astro'
 import ProjectRow from '@/components/ProjectRow.astro'
 import { samples, site } from '@/data/site'
@@ -21,10 +21,10 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
     <p class="label mb-4">{site.role}</p>
     <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">Patrick Beal</h1>
     <p class="mt-4 max-w-[40ch] text-xl leading-snug sm:text-2xl">
-      I build the model <span class="text-primary">and</span> the system around it.
+      I build models, <span class="text-primary">and</span> I also build the systems that run them.
     </p>
-    <button type="button" id="sample" class="group mt-5 flex max-w-full items-start gap-3 text-left font-mono text-[13px] text-muted-foreground" aria-label="Resample this line">
-      <span class="shrink-0 rounded border border-border px-1.5 py-0.5 text-[10.5px] group-hover:border-primary group-hover:text-primary">temp 0.7 ↻</span>
+    <button type="button" id="sample" class="group mt-5 flex max-w-full items-start gap-3 text-left font-mono text-[13px] text-muted-foreground" aria-label="Show another line">
+      <span class="shrink-0 rounded border border-border px-1.5 py-0.5 text-[10.5px] group-hover:border-primary group-hover:text-primary">↻ more</span>
       <span id="sample-text" class="min-h-[1.5em] pt-px">{samples[0]}</span>
     </button>
     <p class="mt-10 hidden font-mono text-xs text-muted-foreground sm:block">
@@ -40,8 +40,8 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
           <h3 class="font-medium">{lane === 'model' ? 'Models' : 'Systems'}</h3>
           <p class="mb-3 mt-1 text-sm text-muted-foreground">
             {lane === 'model'
-              ? 'Bayesian, causal, and predictive modeling that holds up to scrutiny.'
-              : 'Pipelines, infrastructure, and LLM systems that run in production.'}
+              ? 'Bayesian modeling, causal inference, and forecasting, mostly from my research and team projects at BYU.'
+              : 'The apps, pipelines, and AWS infrastructure I have built, mostly as a founding engineer.'}
           </p>
           <ul class="space-y-1.5 text-sm">
             {lanes[lane].map((p) => (
@@ -54,13 +54,13 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
   </section>
 
   <section aria-labelledby="about" class="border-t border-border py-12">
-    <h2 id="about" class="label mb-6">About · model card</h2>
-    <ModelCard />
+    <h2 id="about" class="label mb-6">About</h2>
+    <About />
   </section>
 
   <section aria-labelledby="runs" class="border-t border-border py-12">
     <div class="mb-4 flex items-baseline justify-between">
-      <h2 id="runs" class="label">Recent runs</h2>
+      <h2 id="runs" class="label">Recent work</h2>
       <a href="/work/" class="font-mono text-xs text-muted-foreground hover:text-primary">all work →</a>
     </div>
     <RunsTable runs={runs} link />
@@ -80,7 +80,7 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
     <a href="/lab/" class="group flex items-center justify-between gap-4 rounded-lg border border-dashed border-border px-5 py-4 transition-colors hover:border-primary">
       <span>
         <span class="font-mono text-sm text-foreground">/lab</span>
-        <span class="mt-0.5 block text-sm text-muted-foreground">A small desktop with a terminal, a local chatbot, and two ML games.</span>
+        <span class="mt-0.5 block text-sm text-muted-foreground">A small desktop with a terminal, a chat that answers questions about me, and a few games that teach ML ideas.</span>
       </span>
       <span class="font-mono text-xs text-muted-foreground group-hover:text-primary">g l →</span>
     </a>
@@ -96,8 +96,7 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
   function resample() {
     if (!out) return
-    // "temperature": mostly the next line, sometimes a jump
-    i = Math.random() < 0.7 ? (i + 1) % samples.length : Math.floor(Math.random() * samples.length)
+    i = (i + 1) % samples.length
     const text = samples[i]
     window.clearInterval(timer)
     if (reduce) { out.textContent = text; return }
