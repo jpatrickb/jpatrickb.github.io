@@ -1,5 +1,8 @@
 ---
 import '@/styles/global.css'
+// self-hosted variable fonts: no request leaves the site
+import '@fontsource-variable/geist'
+import '@fontsource-variable/geist-mono'
 import CommandPalette from '@/components/CommandPalette'
 import { nav, site } from '@/data/site'
 import { themeBootScript } from '@/lib/theme'
@@ -39,9 +42,6 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <script is:inline set:html={themeBootScript} />
   </head>
   <body class="min-h-dvh">
