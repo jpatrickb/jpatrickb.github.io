@@ -5,16 +5,17 @@ import ProjectRow from '@/components/ProjectRow.astro'
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
 const groups = [
-  { lane: 'system', title: 'Systems', note: 'Production pipelines, infrastructure, and apps.' },
-  { lane: 'model', title: 'Models', note: 'Modeling, causal inference, and research.' },
+  { lane: 'system', title: 'Systems', note: 'Apps, pipelines, and infrastructure.' },
+  { lane: 'model', title: 'Models', note: 'Modeling, causal inference, and research projects.' },
+  { lane: 'tool', title: 'Tools', note: 'Open source tools I have made that you can install and use.' },
 ] as const
 ---
-<Base title="Projects" description="Projects by Patrick Beal: production AI systems, AWS infrastructure, Bayesian and causal modeling.">
+<Base title="Projects" description="Projects by Patrick Beal, including production AI systems, AWS infrastructure, and Bayesian and causal modeling.">
   <header class="pb-6 pt-14">
     <p class="label mb-3">projects</p>
     <h1 class="text-3xl font-semibold tracking-tight">Models and the systems around them</h1>
     <p class="mt-3 max-w-[60ch] text-muted-foreground">
-      The strip under each project shows which stages of the pipeline it covered:
+      The strip under the systems and models shows which stages of the pipeline each one covered, out of
       <span class="font-mono text-sm">data → model → eval → serve → monitor</span>.
     </p>
   </header>

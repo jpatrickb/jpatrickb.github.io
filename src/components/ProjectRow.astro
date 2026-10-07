@@ -12,5 +12,5 @@ const p = project.data
   </div>
   <p class="mt-1 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">{p.summary}</p>
   {p.outcome && <p class="mt-1.5 max-w-[62ch] text-sm"><span class="font-mono text-[11px] text-secondary-accent">result</span> {p.outcome}</p>}
-  <div class="mt-2.5"><PipelineStrip stages={p.stages} /></div>
+  {p.stages.length > 0 && <div class="mt-2.5"><PipelineStrip stages={p.stages} /></div>}
 </li>
