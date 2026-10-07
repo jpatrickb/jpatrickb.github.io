@@ -1,0 +1,53 @@
+name: CI
+
+# Every pull request, to develop, a release branch or main.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Fails a PR aimed at the wrong branch, so the mistake shows on the PR and not after a merge.
+  #   into main      only from release/* or hotfix/*
+  #   into develop   from anything except those
+  #   into release/* only a fix for that release, or a back-merge from main
+  target:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the PR's branches
+        env:
+          BASE: ${{ github.event.pull_request.base.ref }}
+          HEAD: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$*"; exit 1; }
+          case "$BASE" in
+            main)
+              case "$HEAD" in
+                release/* | hotfix/*) ;;
+                *) fail "PRs into main come from release/* or hotfix/*, not '$HEAD'. Open it against develop." ;;
+              esac
+              ;;
+            develop)
+              case "$HEAD" in
+                release/* | hotfix/*) fail "'$HEAD' goes into main, not develop." ;;
+              esac
+              ;;
+            release/*)
+              case "$HEAD" in
+                main | feature/* | fix/* | hotfix/*) ;;
+                *) fail "Only fixes go into a release. '$HEAD' doesn't look like one." ;;
+              esac
+              ;;
+            *) fail "Nothing should open a PR into '$BASE'." ;;
+          esac
+          echo "$HEAD into $BASE is fine."
+
+  checks:
+    uses: ./.github/workflows/checks.yml

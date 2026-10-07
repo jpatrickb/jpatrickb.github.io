@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Mirrors the shared Patea preset (patea-devops is private, so it can't be extended from here).",
+  "extends": ["config:recommended", ":semanticCommits", "helpers:pinGitHubActionDigests"],
+  "baseBranches": ["develop"],
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "timezone": "America/Denver",
+  "schedule": ["before 6am on monday"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    { "matchManagers": ["github-actions"], "groupName": "github actions" },
+    { "matchDatasources": ["terraform-provider"], "groupName": "terraform providers" },
+    { "matchPackageNames": ["node"], "allowedVersions": "/^(24|26|28)\\./" }
+  ]
+}

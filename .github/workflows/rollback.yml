@@ -1,0 +1,57 @@
+name: Roll back prod
+
+# Re-deploys an earlier prod release tag. Run it from main (the default): the prod
+# environment only accepts the main branch, so a dispatch from any other branch can't
+# read the deploy token.
+#
+# The gate runs from main's code, before the tag is checked out, so an old tag can't
+# bring its own (weaker) copy of it. The tag must already be an ancestor of main, so
+# the code deployed afterwards went through the normal release process.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to restore (an earlier prod release, e.g. v1.4.0).
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: prod
+    permissions:
+      contents: read
+    concurrency:
+      group: deploy-prod
+      cancel-in-progress: false
+    env:
+      TAG: ${{ inputs.tag }}
+    steps:
+      # The default ref (main): the gate below is trusted code.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/verify-promotion
+        with:
+          mode: rollback
+          tag: ${{ inputs.tag }}
+
+      # Only after the gate passes: switch to the verified release.
+      - name: Check out the tag
+        run: git checkout --detach "refs/tags/$TAG"
+
+      - uses: ./.github/actions/setup
+
+      - name: Deploy the tag
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: scripts/deploy.sh prod
+
+      - name: Smoke test
+        run: scripts/smoke.sh prod

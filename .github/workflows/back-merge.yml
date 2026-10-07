@@ -1,0 +1,57 @@
+name: Back-merge
+
+# Reusable, vendored from patea-devops. After a prod deploy (a release or a hotfix landed
+# on main), open a PR from main into develop so develop never falls behind.
+#
+# GitHub doesn't run workflows on pull requests created with the default token, so CI
+# won't start on this PR by itself. Close and reopen it by hand, or pass a token secret.
+# The repo setting "Allow GitHub Actions to create and approve pull requests" must be on.
+
+on:
+  workflow_call:
+    inputs:
+      from:
+        type: string
+        default: main
+      into:
+        type: string
+        default: develop
+    secrets:
+      token:
+        required: false
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Open the back-merge PR
+        env:
+          GH_TOKEN: ${{ secrets.token || github.token }}
+          FROM: ${{ inputs.from }}
+          INTO: ${{ inputs.into }}
+        run: |
+          set -euo pipefail
+          git fetch --quiet origin "$FROM" "$INTO"
+
+          if git merge-base --is-ancestor "origin/$FROM" "origin/$INTO"; then
+            echo "$INTO already contains $FROM. Nothing to do."
+            exit 0
+          fi
+
+          open="$(gh pr list --base "$INTO" --head "$FROM" --state open --json number --jq length)"
+          if [ "$open" != 0 ]; then
+            echo "A $FROM into $INTO PR is already open."
+            exit 0
+          fi
+
+          gh pr create --base "$INTO" --head "$FROM" \
+            --title "Back-merge $FROM into $INTO" \
+            --body "Automatic. Brings what shipped to prod back into \`$INTO\` so the two don't drift. Merge it with a merge commit; resolve conflicts here rather than rewriting history."

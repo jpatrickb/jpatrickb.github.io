@@ -1,0 +1,76 @@
+name: Verify promotion
+description: >
+  The prod gate, vendored from patea-devops and simplified (no staging).
+  Run it first in every prod deploy, after a checkout with fetch-depth 0. The
+  job needs contents read and pull-requests read.
+
+  promotion (default): the commit on main must come from a merged PR whose head
+  branch is release/* or hotfix/*, and a release must have been merged with a
+  merge commit, never squashed. rollback: the tag must already be on main.
+
+inputs:
+  mode:
+    description: promotion or rollback.
+    default: promotion
+  allowed-head-patterns:
+    description: Space-separated globs of PR head branches allowed to ship to prod.
+    default: "release/* hotfix/*"
+  tag:
+    description: rollback mode only. The release tag to redeploy.
+    default: ""
+  token:
+    description: Token that can read PRs.
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        REPO: ${{ github.repository }}
+        SHA: ${{ github.sha }}
+        MODE: ${{ inputs.mode }}
+        PATTERNS: ${{ inputs.allowed-head-patterns }}
+        TAG: ${{ inputs.tag }}
+      run: |
+        set -euo pipefail
+        fail() { echo "::error::$*"; exit 1; }
+
+        if [ "$MODE" = rollback ]; then
+          [ -n "$TAG" ] || fail "Rollback needs a release tag."
+          git fetch --quiet --tags origin main
+          git rev-parse -q --verify "refs/tags/$TAG" >/dev/null || fail "No such tag: $TAG."
+          git merge-base --is-ancestor "refs/tags/$TAG" origin/main \
+            || fail "$TAG is not on main, so it was never a prod release."
+          echo "Rollback to $TAG is allowed."
+          exit 0
+        fi
+        [ "$MODE" = promotion ] || fail "mode must be promotion or rollback."
+
+        # Which merged PR produced this commit on main?
+        pr="$(gh api "repos/$REPO/commits/$SHA/pulls" --jq \
+          "[.[] | select(.merged_at != null and .base.ref == \"main\" and .merge_commit_sha == \"$SHA\")][0] // empty")"
+        [ -n "$pr" ] || fail "Commit $SHA on main did not come from a merged pull request. A direct push to main must not reach prod, so nothing was deployed."
+
+        num="$(jq -r .number <<<"$pr")"
+        head="$(jq -r .head.ref <<<"$pr")"
+        echo "Commit $SHA came from PR #$num ($head)."
+
+        allowed=false
+        for p in $PATTERNS; do
+          # shellcheck disable=SC2053  # the pattern is meant to be a glob
+          if [[ "$head" == $p ]]; then allowed=true; fi
+        done
+        [ "$allowed" = true ] || fail "PR #$num is from '$head'. Only branches matching [$PATTERNS] may ship to prod."
+
+        # A release must land as a MERGE commit. Squashing it drops the release branch's
+        # history from main, and develop and main then diverge.
+        case "$head" in
+          release/*)
+            parents="$(gh api "repos/$REPO/commits/$SHA" --jq '.parents | length')"
+            [ "$parents" = 2 ] || fail "PR #$num (a release) was merged with $parents parent commit(s). It must be merged with a merge commit, never squashed or rebased."
+            ;;
+        esac
+
+        echo "Promotion verified: PR #$num from $head."
