@@ -4,6 +4,7 @@ import Base from '@/layouts/Base.astro'
 import About from '@/components/About.astro'
 import RunsTable from '@/components/RunsTable.astro'
 import ProjectRow from '@/components/ProjectRow.astro'
+import PipelineLegend from '@/components/PipelineLegend.astro'
 import { samples, site } from '@/data/site'
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
@@ -71,6 +72,7 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
       <h2 id="selected" class="label">Selected projects</h2>
       <a href="/projects/" class="font-mono text-xs text-muted-foreground hover:text-primary">all projects →</a>
     </div>
+    <PipelineLegend />
     <ul>
       {featured.slice(0, 5).map((p) => <ProjectRow project={p} />)}
     </ul>
