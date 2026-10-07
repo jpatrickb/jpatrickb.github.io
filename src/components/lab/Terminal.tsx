@@ -62,7 +62,7 @@ export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId, 
         )
         break
       case 'whoami':
-        print(`${site.name}, a data scientist and economist who builds production systems.`)
+        print(`${site.name}, a software engineer focused on machine learning and platforms.`)
         break
       case 'pwd':
         print('/home/patrick')
@@ -80,10 +80,11 @@ export default function Terminal({ onOpen, projects }: { onOpen: (id: LabAppId, 
       }
       case 'cat': {
         if (!arg) { print('cat: missing operand'); break }
-        if (arg === 'about.txt') print(<Pre>{`I'm a data scientist and economist who builds production systems. I studied Applied and
-Computational Math and Economics at BYU, and then spent a year as the founding engineer at
-TechForce Advisors, where I built an agentic research system, an iOS app, and a shared AWS
-test platform. I'm at Teradata now. I also play trombone and piano.`}</Pre>)
+        if (arg === 'about.txt') print(<Pre>{`I'm a software engineer focused on machine learning and platforms, with a background in
+data science and economics. I studied Applied and Computational Math and Economics at
+BYU, and then spent a year as the founding engineer at TechForce Advisors, where I built
+an agentic research system, an iOS app, and a shared AWS test platform. I'm at Teradata
+now. I also play trombone and piano.`}</Pre>)
         else if (arg === 'contact.txt') print(<Pre>{`email     ${site.email}\ngithub    ${site.github}\nlinkedin  ${site.linkedin}`}</Pre>)
         else if (arg === 'resume.pdf') print(<span className="text-muted-foreground">cat: resume.pdf is binary. Try <b>open resume</b>.</span>)
         else {

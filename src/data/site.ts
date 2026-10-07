@@ -1,10 +1,10 @@
 export const site = {
   name: 'Patrick Beal',
   handle: 'patrick',
-  title: 'Patrick Beal · Data Scientist & ML Engineer',
+  title: 'Patrick Beal · Software Engineer, ML & Platforms',
   description:
-    'Patrick Beal is a data scientist and economist who builds production systems. He works across machine learning, Bayesian methods, and econometrics, and spent a year as a founding engineer building AI systems on AWS.',
-  role: 'Data scientist & ML engineer',
+    'Patrick Beal is a software engineer focused on machine learning and platforms, with a data science and economics background. He builds production AI systems on AWS and the models behind them.',
+  role: 'Software engineer · ML & platforms',
   email: 'jpatrickbeal@gmail.com',
   github: 'https://github.com/jpatrickb',
   linkedin: 'https://linkedin.com/in/jpatrickbeal',
@@ -22,7 +22,7 @@ export const nav = [
 
 // Short lines under the hero. Click the line (or press s) to see the next one.
 export const samples = [
-  "I'm a data scientist and economist who builds production systems.",
+  "I'm a software engineer focused on machine learning and platforms, with a background in data science and economics.",
   'I work across optimization, machine learning, Bayesian methods, and econometrics.',
   'I spent the past year as a founding engineer, taking products from a first idea to working software.',
   'I try to pair careful analysis with clear explanation, for research teams and executives alike.',
