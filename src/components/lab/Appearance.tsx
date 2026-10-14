@@ -22,7 +22,7 @@ export function ThemeCard({ theme, active, onPick }: { theme: Theme; active: boo
 export default function Appearance({ wallpapers, wallpaper, onSetWallpaper }: { wallpapers: LabPhoto[]; wallpaper: string; onSetWallpaper: (id: string) => void }) {
   const [current, setCurrent] = useState('')
   const [pane, setPane] = useState<'appearance' | 'wallpaper' | 'about'>('appearance')
-  const credits = [...new Set(wallpapers.map((p) => p.credit))].join(', ')
+  const credits = [...new Set(wallpapers.flatMap((p) => p.credit ?? []))].join(', ')
   useEffect(() => {
     const read = () => setCurrent(document.documentElement.dataset.theme ?? '')
     read()

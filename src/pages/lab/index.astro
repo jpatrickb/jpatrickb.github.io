@@ -23,7 +23,8 @@ const photos: LabPhoto[] = await Promise.all(labPhotos.map(async ({ src, ...phot
     getImage({ src, widths, format: 'avif' }),
     getImage({ src, widths, format: 'jpeg' }),
   ])
-  return { ...photo, width: src.width, height: src.height, thumb: thumb.src, full: { avif: avif.srcSet.attribute, jpeg: jpeg.srcSet.attribute, src: jpeg.src } }
+  // src is only ever handed to getImage: reading a property off it here would make Astro ship the original file too
+  return { ...photo, thumb: thumb.src, full: { avif: avif.srcSet.attribute, jpeg: jpeg.srcSet.attribute, src: jpeg.src } }
 }))
 ---
 <Base title="Lab" description="A small desktop with a terminal, a chat that answers questions about Patrick, and a few games that teach ideas from machine learning and statistics." bare>

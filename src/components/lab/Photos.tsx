@@ -43,7 +43,7 @@ export default function Photos({ photos, wallpaper, onSetWallpaper }: { photos: 
             <figcaption className="flex items-center justify-between gap-3 border-t border-border px-4 py-2 text-sm">
               <span>
                 <span className="font-semibold">{open.title}</span>
-                <span className="text-muted-foreground"> · Photo by {open.credit}</span>
+                {open.credit && <span className="text-muted-foreground"> · Photo by {open.credit}</span>}
               </span>
               {open.wallpaper && (
                 <button type="button" disabled={wallpaper === open.id} onClick={() => onSetWallpaper(open.id)} className="shrink-0 rounded-md border border-border px-2.5 py-1 text-xs hover:border-muted-foreground disabled:opacity-60">
@@ -54,12 +54,12 @@ export default function Photos({ photos, wallpaper, onSetWallpaper }: { photos: 
           </figure>
         ) : shown.length ? (
           <div className="overflow-auto p-3">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-2 items-start gap-2 sm:grid-cols-3">
               {shown.map((p) => (
                 <button key={p.id} type="button" onClick={() => setOpenId(p.id)} className="group text-left">
                   <img src={p.thumb} alt={p.title} loading="lazy" draggable={false} className="aspect-[4/3] w-full rounded-md object-cover ring-1 ring-border group-hover:ring-muted-foreground" />
                   <span className="mt-1 block truncate text-xs">{p.title}</span>
-                  <span className="block truncate text-[11px] text-muted-foreground">Photo by {p.credit}</span>
+                  {p.credit && <span className="block truncate text-[11px] text-muted-foreground">Photo by {p.credit}</span>}
                 </button>
               ))}
             </div>
