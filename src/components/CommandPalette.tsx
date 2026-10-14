@@ -12,8 +12,8 @@ type Action = { id: string; label: string; hint?: string; group: string; keyword
 
 const go = (url: string) => { window.location.href = url }
 
-const actions: Action[] = [
-  ...nav.map((n) => ({ id: `nav-${n.key}`, label: n.label, hint: `g ${n.key}`, group: 'Go to', run: () => go(n.href) })),
+const buildActions = (hasPosts: boolean): Action[] => [
+  ...nav.filter((n) => n.href !== '/blog/' || hasPosts).map((n) => ({ id: `nav-${n.key}`, label: n.label, hint: `g ${n.key}`, group: 'Go to', run: () => go(n.href) })),
   { id: 'copy-email', label: 'Copy email address', hint: 'c', group: 'Actions', keywords: 'contact mail', run: () => copyEmail(site.email) },
   { id: 'resume', label: 'Open resume (PDF)', group: 'Actions', keywords: 'cv', run: () => go(site.resume) },
   { id: 'github', label: 'Open GitHub', group: 'Actions', keywords: 'code repos', run: () => go(site.github) },
@@ -30,7 +30,8 @@ function openLab(id: string) {
   else go(`/lab/#${id}`)
 }
 
-export default function CommandPalette() {
+export default function CommandPalette({ hasPosts = false }: { hasPosts?: boolean }) {
+  const actions = useMemo(() => buildActions(hasPosts), [hasPosts])
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [docs, setDocs] = useState<SearchDoc[] | null>(null)

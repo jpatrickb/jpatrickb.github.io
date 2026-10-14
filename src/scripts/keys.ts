@@ -42,7 +42,8 @@ window.addEventListener('keydown', (e) => {
 
   if (pendingG && Date.now() - pendingG < 1200) {
     pendingG = 0
-    const dest = nav.find((n) => n.key === e.key)
+    const hasPosts = document.documentElement.dataset.hasPosts === 'true'
+    const dest = nav.find((n) => n.key === e.key && (n.href !== '/blog/' || hasPosts))
     if (dest) { e.preventDefault(); window.location.href = dest.href }
     return
   }

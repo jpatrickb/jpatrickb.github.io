@@ -36,7 +36,7 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
   <section aria-labelledby="lanes" class="border-t border-border py-12">
     <h2 id="lanes" class="label mb-6">Two lanes</h2>
     <div class="grid gap-8 sm:grid-cols-2">
-      {(['model', 'system'] as const).map((lane) => (
+      {(['system', 'model'] as const).map((lane) => (
         <div class="min-w-0">
           <h3 class="font-medium">{lane === 'model' ? 'Models' : 'Systems'}</h3>
           <p class="mb-3 mt-1 text-sm text-muted-foreground">

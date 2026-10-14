@@ -1,6 +1,9 @@
 ---
 import Base from '@/layouts/Base.astro'
 import { site } from '@/data/site'
+import { getPosts } from '@/lib/blog'
+
+const hasPosts = (await getPosts()).length > 0
 ---
 <Base title="About" description="More about Patrick Beal, including music, his mission, and the things he likes to do outside of work.">
   <header class="grid gap-6 pb-8 pt-14 sm:grid-cols-[auto_1fr] sm:items-center">
@@ -53,7 +56,7 @@ import { site } from '@/data/site'
       to the gym.
     </p>
     <p>
-      I cook a lot too, and I'll probably write about that on the <a href="/blog/">blog</a>. More than anything, I'm a
+      I cook a lot too, and I'll probably write about that on the {hasPosts ? <a href="/blog/">blog</a> : 'blog'}. More than anything, I'm a
       big fan of time with my family.
     </p>
 
