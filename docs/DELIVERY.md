@@ -1,7 +1,6 @@
 # Delivery
 
-How this site is branched, checked, previewed and released. It follows the Patea standards
-(`patea-devops/STANDARDS.md`), a little less strictly: there is no data service, so there is no
+How this site is branched, checked, previewed and released. There is no data service, so there is no
 staging environment and no schema rule.
 
 ```mermaid
@@ -74,17 +73,16 @@ repos. The deploy checks still apply as a backstop.
 | Third-party actions can't change under us | Pinned to commit SHAs (Renovate keeps them current) |
 | Fork PRs get no secrets | Workflows use `pull_request`, never `pull_request_target` |
 
-### Deviations from the Patea standards
+### Design choices
 
 - **No staging.** `release/x.y` does not deploy anywhere. The release is verified on dev, because it is
-  cut from `develop`. `verify-promotion` therefore skips the staging-deployment check.
+  cut from `develop`. `verify-promotion` therefore has no staging-deployment check.
 - **Deploy token is a GitHub environment secret, not OIDC.** Cloudflare can't federate with GitHub the way
-  AWS can. The `dev` and `prod` environments are limited to their own branch, which does the job of the
-  branch-pinned role. Jobs here use `environment:`, which `patea-devops` forbids because its gate reads
-  deployment records. This gate does not.
-- **Workflows are vendored.** `patea-devops` is private and org-scoped, so a personal repo can't call it.
-  `.github/actions/*` and `back-merge.yml` are copies. If `patea-devops` changes the gate, port it.
-- **No Vale.** The Patea prose style is not applied to this site's copy.
+  AWS can. The `dev` and `prod` environments are limited to their own branch, so a workflow on any other
+  branch can't read either token. Jobs use `environment:`, which is safe because there is no staging for the
+  prod gate to confuse with a prod deployment record.
+- **The workflows and actions are owned here.** `.github/` is edited in this repo, including the composite
+  actions and `back-merge.yml`, and nothing needs to stay in step with another repo.
 - **Terraform runs in CI, with split credentials.** Apply runs in `deploy.yml` with environment secrets that only `develop` and `main` can read. Plans on PRs use separate read-only repo secrets. See `infra/README.md`. Workflow logs are public, so account and zone ids are masked and redacted.
 
 ## One-time setup
@@ -106,7 +104,9 @@ Done once. Steps marked **(manual)** need you in a dashboard.
 5. Merge to `develop`. The deploy publishes the dev Worker, applies the dev domain and smoke-tests it.
 6. Cut the first release. The deploy from `main` publishes the prod Worker, applies `jpatrickbeal.com` and the
    `www` redirect, tags `v1.0.0` and smoke-tests prod.
-7. Remove `pages.yml` (done) and check the project links that point at `jpatrickb.github.io/<repo>`. The old site
-   keeps serving its last build until Pages is turned off or replaced with a redirect.
+7. The old `jpatrickb.github.io` site is replaced by a redirect to jpatrickbeal.com (`redirect/`, published by
+   `pages-redirect.yml` when it changes on `main`, or by hand from the Actions tab). The BYU project pages are separate
+   repos with their own Pages, so they are untouched, and the project pages here link to them at
+   `jpatrickb.github.io/<repo>`.
 8. **(manual)** Install the Renovate GitHub App on this repo. `renovate.json` sends its PRs to `develop`.
 9. **(manual, after launch)** Add the site in Google Search Console and submit the sitemap when there is one.

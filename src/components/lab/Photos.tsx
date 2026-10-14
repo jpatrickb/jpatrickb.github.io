@@ -15,7 +15,7 @@ export default function Photos({ photos, wallpaper, onSetWallpaper }: { photos: 
   const pick = (v: string) => { setView(v); setOpenId(null) }
 
   return (
-    <SidebarLayout
+    <SidebarLayout label="Photo albums"
       sidebar={
         <>
           <SidebarHeading>Photos</SidebarHeading>
@@ -57,7 +57,7 @@ export default function Photos({ photos, wallpaper, onSetWallpaper }: { photos: 
             <div className="grid grid-cols-2 items-start gap-2 sm:grid-cols-3">
               {shown.map((p) => (
                 <button key={p.id} type="button" onClick={() => setOpenId(p.id)} className="group text-left">
-                  <img src={p.thumb} alt={p.title} loading="lazy" draggable={false} className="aspect-[4/3] w-full rounded-md object-cover ring-1 ring-border group-hover:ring-muted-foreground" />
+                  <img src={p.thumb} alt="" loading="lazy" draggable={false} className="aspect-[4/3] w-full rounded-md object-cover ring-1 ring-border group-hover:ring-muted-foreground" />
                   <span className="mt-1 block truncate text-xs">{p.title}</span>
                   {p.credit && <span className="block truncate text-[11px] text-muted-foreground">Photo by {p.credit}</span>}
                 </button>

@@ -29,7 +29,7 @@ export default function WorkHistory({ work }: { work: WorkEntry[] }) {
   const points = active ? bullets(active.body) : []
 
   return (
-    <SidebarLayout
+    <SidebarLayout label="Work history"
       sidebar={
         <>
           <SidebarHeading>Experience</SidebarHeading>
@@ -46,7 +46,7 @@ export default function WorkHistory({ work }: { work: WorkEntry[] }) {
             <li key={r.id}>
               <button type="button" onClick={() => setSel(r.id)} className={cn('block w-full rounded-lg px-3 py-2 text-left', active?.id === r.id ? 'bg-[#f5c518]/35' : 'hover:bg-foreground/5')}>
                 <span className="block truncate font-semibold">{r.name}</span>
-                <span className="block truncate text-xs"><span className="tabular-nums">{r.end === 'Present' ? 'Now' : r.end}</span> <span className="text-muted-foreground">{r.role}</span></span>
+                <span className="block truncate text-xs"><span className="tabular-nums">{r.end === 'Present' ? 'Now' : r.end}</span> <span className={active?.id === r.id ? 'text-foreground' : 'text-muted-foreground'}>{r.role}</span></span>
               </button>
             </li>
           ))}

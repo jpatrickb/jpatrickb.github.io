@@ -50,7 +50,8 @@ text meets WCAG AA contrast, so a new palette that is too faint fails CI.
 `?` help.
 `g` then a letter goes to a page: `h` home, `w` work, `p` projects, `b` blog, `a` about, `l` lab.
 In the lab, `Esc` leaves a text box and then closes the front window.
-Shortcuts are off while you type or while a dialog is open.
+Shortcuts are off while you type or while a dialog is open, and the `?` dialog has a switch that turns all the
+single-key ones off (`⌘K` still works). The choice is kept in the browser.
 
 ## Everything runs in the browser
 

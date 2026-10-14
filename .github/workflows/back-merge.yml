@@ -1,6 +1,6 @@
 name: Back-merge
 
-# Reusable, vendored from patea-devops. After a prod deploy (a release or a hotfix landed
+# Reusable. After a prod deploy (a release or a hotfix landed
 # on main), open a PR from main into develop so develop never falls behind.
 #
 # GitHub doesn't run workflows on pull requests created with the default token, so CI

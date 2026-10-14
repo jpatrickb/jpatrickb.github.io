@@ -1,6 +1,6 @@
 name: Tag release
 description: >
-  Tag the commit that just deployed to prod, vendored from patea-devops (semver
+  Tag the commit that just deployed to prod (semver
   only). A merge from release/X.Y is tagged vX.Y.0, or the next patch if that tag
   exists. A merge from hotfix/* bumps the patch of the highest tag. The job needs
   contents write and pull-requests read.

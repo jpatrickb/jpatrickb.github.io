@@ -1,0 +1,50 @@
+name: Pages redirect
+
+# jpatrickb.github.io used to serve the portfolio. The site now lives at jpatrickbeal.com, so this publishes a
+# tiny page that sends visitors there. It only touches the root of the user site: the BYU project pages are
+# separate repos with their own GitHub Pages (jpatrickb.github.io/<repo>/) and keep working as before.
+#
+# Runs when the redirect files change on main, or by hand (Actions, Pages redirect, Run workflow).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - redirect/**
+      - public/resume.pdf
+      - .github/workflows/pages-redirect.yml
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # The github-pages environment only accepts main, so nothing else can publish to the root.
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Old links to /resume.pdf keep working. Everything else that 404s is sent to the same path on the new site.
+      - name: Assemble the page
+        run: |
+          mkdir out
+          cp redirect/index.html redirect/404.html out/
+          cp public/resume.pdf out/
+
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: out
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

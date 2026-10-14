@@ -5,7 +5,7 @@ import { site } from '@/data/site'
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
 export const GET: APIRoute = async (ctx) => {
-  const base = ctx.site ?? new URL('https://jpatrickb.github.io')
+  const base = ctx.site ?? new URL('https://jpatrickbeal.com')
   const posts = (await getPosts()).filter((p) => !p.data.draft)
   const items = posts.map((p) => {
     const url = new URL(`/blog/${p.id}/`, base).toString()

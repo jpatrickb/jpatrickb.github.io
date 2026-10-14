@@ -55,6 +55,9 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
     setWallpaperId(id)
     try { localStorage.setItem(WALLPAPER_KEY, id) } catch { /* private mode */ }
   }
+  // Keyboard users: a window you open from the dock or the palette takes focus, and closing or minimizing it
+  // hands focus back to its dock icon.
+  const focusWin = useRef<LabAppId | null>(null)
   const zTop = useRef(10)
   const area = useRef<HTMLDivElement>(null)
 
@@ -81,13 +84,22 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
     history.replaceState(null, '', `#${id === 'games' && g ? `games/${g}` : id}`)
   }, [])
 
+  const backToDock = (id: LabAppId) => {
+    const a = document.activeElement
+    const inside = !a || a === document.body || !!document.querySelector(`[data-win="${id}"]`)?.contains(a)
+    // the dock and the phone's app grid both carry data-dock, and only one of them is showing
+    if (inside) requestAnimationFrame(() => [...document.querySelectorAll<HTMLElement>(`[data-dock="${id}"]`)].find((el) => el.offsetParent !== null)?.focus())
+  }
+
   const close = useCallback((id: LabAppId) => {
+    backToDock(id)
     setWins((ws) => ws.filter((w) => w.id !== id))
     if (id === 'games') setGame(null)
     history.replaceState(null, '', location.pathname)
   }, [])
 
   const minimize = useCallback((id: LabAppId) => {
+    backToDock(id)
     setWins((ws) => ws.map((w) => (w.id === id ? { ...w, min: true } : w)))
   }, [])
 
@@ -118,7 +130,11 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
     tick()
     const t = window.setInterval(tick, 15000)
     const go = (raw: string) => { const target = resolveLabTarget(raw); if (target) open(target.app, target.game) }
-    const onOpen = (e: Event) => go((e as CustomEvent<string>).detail)
+    const onOpen = (e: Event) => {
+      const target = resolveLabTarget((e as CustomEvent<string>).detail)
+      if (target) focusWin.current = target.app
+      go((e as CustomEvent<string>).detail)
+    }
     window.addEventListener('lab:open', onOpen)
     const fromHash = () => go(location.hash)
     fromHash()
@@ -131,6 +147,13 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
       window.removeEventListener('hashchange', fromHash)
     }
   }, [open])
+
+  useEffect(() => {
+    const id = focusWin.current
+    if (!id) return
+    const el = document.querySelector<HTMLElement>(`[data-win="${id}"]`)
+    if (el) { el.focus({ preventScroll: true }); focusWin.current = null }
+  }, [wins])
 
   // Esc first leaves a text field, and then closes the front window.
   useEffect(() => {
@@ -274,7 +297,7 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
         <ul className="relative grid grid-cols-4 gap-x-2 gap-y-4 p-5 md:hidden" aria-label="Apps">
           {labApps.map((a) => (
             <li key={a.id} className="flex justify-center">
-              <button type="button" onClick={() => open(a.id)} className="flex w-[4.5rem] flex-col items-center gap-1.5 text-center text-[11px] leading-tight">
+              <button type="button" onClick={() => { focusWin.current = a.id; open(a.id) }} data-dock={a.id} className="flex w-[4.5rem] flex-col items-center gap-1.5 text-center text-[11px] leading-tight">
                 <LabIcon id={a.id} className="size-14" />
                 <span>{a.name}</span>
               </button>
@@ -290,9 +313,11 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
               key={w.id}
               role="dialog"
               aria-label={app.name}
+              data-win={w.id}
+              tabIndex={-1}
               onPointerDown={() => !isTop && open(w.id)}
               className={cn(
-                'absolute flex flex-col border border-border bg-background',
+                'absolute flex flex-col border border-border bg-background outline-none',
                 mobile ? 'inset-0' : 'rounded-xl',
                 isTop ? 'shadow-[0_22px_70px_rgba(0,0,0,.45)]' : 'shadow-[0_10px_30px_rgba(0,0,0,.25)]',
               )}
@@ -303,7 +328,7 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
                 onDoubleClick={(e) => { if (!mobile && !(e.target as HTMLElement).closest('button')) zoom(w.id) }}
                 className={cn('group/bar relative flex h-9 shrink-0 select-none items-center border-b border-border bg-card px-3', !mobile && 'rounded-t-xl')}
               >
-                <div className="flex items-center gap-2">
+                <div className="-ml-1.5 flex items-center">
                   <TrafficLight label={`Close ${app.name}`} color="#ff5f57" glyph="×" active={isTop} onClick={() => close(w.id)} />
                   {!mobile && <TrafficLight label={`Minimize ${app.name}`} color="#febc2e" glyph="−" active={isTop} onClick={() => minimize(w.id)} />}
                   {!mobile && <TrafficLight label={`Zoom ${app.name}`} color="#28c840" glyph="+" active={isTop} onClick={() => zoom(w.id)} />}
@@ -327,7 +352,7 @@ export default function Desktop({ work, projects, photos }: { work: WorkEntry[];
             return (
               <li key={a.id} className="group relative flex flex-col items-center">
                 <span className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-border bg-popover px-2 py-1 text-xs opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">{a.name}</span>
-                <button type="button" onClick={() => open(a.id)} aria-label={`Open ${a.name}`} className="origin-bottom transition-transform duration-150 hover:scale-[1.22] focus-visible:scale-[1.22]">
+                <button type="button" onClick={() => { focusWin.current = a.id; open(a.id) }} aria-label={`Open ${a.name}`} data-dock={a.id} className="origin-bottom transition-transform duration-150 hover:scale-[1.22] focus-visible:scale-[1.22]">
                   <LabIcon id={a.id} className="size-[52px]" />
                 </button>
                 <span className={cn('mt-1 size-1 rounded-full', win ? 'bg-foreground/70' : 'bg-transparent')} />
@@ -346,10 +371,15 @@ function TrafficLight({ label, color, glyph, active, onClick }: { label: string;
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="flex size-3 items-center justify-center rounded-full text-[9px] font-bold leading-none text-black/60 ring-1 ring-inset ring-black/10"
-      style={{ background: active ? color : 'var(--border)' }}
+      className="flex size-6 items-center justify-center rounded-full"
     >
-      <span className="opacity-0 group-hover/bar:opacity-100">{glyph}</span>
+      {/* The button is 24px so it is an easy target (WCAG 2.5.8). The visible light stays 12px. */}
+      <span
+        className="flex size-3 items-center justify-center rounded-full text-[9px] font-bold leading-none text-black/60 ring-1 ring-inset ring-black/10"
+        style={{ background: active ? color : 'var(--border)' }}
+      >
+        <span className="opacity-0 group-hover/bar:opacity-100">{glyph}</span>
+      </span>
     </button>
   )
 }
