@@ -6,8 +6,8 @@ export const labApps = [
   { id: 'ask', name: 'Ask Patrick', blurb: 'A small chat that answers questions about me' },
   { id: 'games', name: 'Games', blurb: 'Short games that each teach an idea from ML or statistics' },
   { id: 'experience', name: 'Experience', blurb: 'My work, research, and music experience' },
-  { id: 'photos', name: 'Photos', blurb: 'Some highlights (coming soon)' },
-  { id: 'appearance', name: 'Appearance', blurb: 'Pick a color theme' },
+  { id: 'photos', name: 'Photos', blurb: 'Photos from hikes and trips' },
+  { id: 'appearance', name: 'Appearance', blurb: 'Pick a color theme and a wallpaper' },
 ] as const
 
 export type LabAppId = (typeof labApps)[number]['id']

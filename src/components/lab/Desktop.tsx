@@ -8,7 +8,9 @@ import Games from './Games'
 import WorkHistory, { type WorkEntry } from './WorkHistory'
 import Photos from './Photos'
 import Appearance from './Appearance'
-import { LabIcon, Wallpaper } from './icons'
+import { LabIcon } from './icons'
+import { Wallpaper } from './Wallpaper'
+import type { LabPhoto } from '@/data/lab-photos'
 
 type Rect = { x: number; y: number; w: number; h: number }
 type Win = Rect & { id: LabAppId; z: number; min?: boolean; restore?: Rect }
@@ -34,12 +36,25 @@ const HANDLES: { edge: Edge; className: string }[] = [
   { edge: 'sw', className: '-bottom-1 -left-1 size-4 cursor-nesw-resize' },
 ]
 
-export default function Desktop({ work, projects }: { work: WorkEntry[]; projects: TermProject[] }) {
+const WALLPAPER_KEY = 'lab-wallpaper'
+
+export default function Desktop({ work, projects, photos }: { work: WorkEntry[]; projects: TermProject[]; photos: LabPhoto[] }) {
   const [wins, setWins] = useState<Win[]>([])
   const [game, setGame] = useState<LabGameId | null>(null)
   const [mobile, setMobile] = useState(false)
   const [clock, setClock] = useState('')
   const [menu, setMenu] = useState<'lab' | 'window' | null>(null)
+  // the desktop background: the visitor's pick if they've made one, otherwise the first wallpaper photo
+  const wallpapers = photos.filter((p) => p.wallpaper)
+  const [wallpaperId, setWallpaperId] = useState(wallpapers[0].id)
+  const wallpaper = wallpapers.find((p) => p.id === wallpaperId) ?? wallpapers[0]
+  useEffect(() => {
+    try { const saved = localStorage.getItem(WALLPAPER_KEY); if (saved) setWallpaperId(saved) } catch { /* private mode */ }
+  }, [])
+  const pickWallpaper = (id: string) => {
+    setWallpaperId(id)
+    try { localStorage.setItem(WALLPAPER_KEY, id) } catch { /* private mode */ }
+  }
   const zTop = useRef(10)
   const area = useRef<HTMLDivElement>(null)
 
@@ -200,8 +215,8 @@ export default function Desktop({ work, projects }: { work: WorkEntry[]; project
       case 'ask': return <AskPatrick />
       case 'games': return <Games game={game} onGame={pickGame} />
       case 'experience': return <WorkHistory work={work} />
-      case 'photos': return <Photos />
-      case 'appearance': return <Appearance />
+      case 'photos': return <Photos photos={photos} wallpaper={wallpaper.id} onSetWallpaper={pickWallpaper} />
+      case 'appearance': return <Appearance wallpapers={wallpapers} wallpaper={wallpaper.id} onSetWallpaper={pickWallpaper} />
     }
   }
 
@@ -211,7 +226,7 @@ export default function Desktop({ work, projects }: { work: WorkEntry[]; project
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-background text-foreground">
-      <Wallpaper />
+      <Wallpaper photo={wallpaper} />
 
       {/* menu bar */}
       <div className="relative z-[1000] flex h-7 shrink-0 items-center justify-between gap-3 bg-card/60 px-2 text-[13px] backdrop-blur-xl">

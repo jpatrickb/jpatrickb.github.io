@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { themes, type Theme } from '@/data/themes'
 import { setTheme } from '@/lib/theme'
+import type { LabPhoto } from '@/data/lab-photos'
 import { SidebarItem, SidebarLayout } from './mac'
 
 export function ThemeCard({ theme, active, onPick }: { theme: Theme; active: boolean; onPick: (id: string) => void }) {
@@ -18,9 +19,10 @@ export function ThemeCard({ theme, active, onPick }: { theme: Theme; active: boo
   )
 }
 
-export default function Appearance() {
+export default function Appearance({ wallpapers, wallpaper, onSetWallpaper }: { wallpapers: LabPhoto[]; wallpaper: string; onSetWallpaper: (id: string) => void }) {
   const [current, setCurrent] = useState('')
-  const [pane, setPane] = useState<'appearance' | 'about'>('appearance')
+  const [pane, setPane] = useState<'appearance' | 'wallpaper' | 'about'>('appearance')
+  const credits = [...new Set(wallpapers.flatMap((p) => p.credit ?? []))].join(', ')
   useEffect(() => {
     const read = () => setCurrent(document.documentElement.dataset.theme ?? '')
     read()
@@ -33,6 +35,7 @@ export default function Appearance() {
       sidebar={
         <>
           <SidebarItem icon="◐" active={pane === 'appearance'} onClick={() => setPane('appearance')}>Appearance</SidebarItem>
+          <SidebarItem icon="▣" active={pane === 'wallpaper'} onClick={() => setPane('wallpaper')}>Wallpaper</SidebarItem>
           <SidebarItem icon="ⓘ" active={pane === 'about'} onClick={() => setPane('about')}>About</SidebarItem>
         </>
       }
@@ -51,11 +54,24 @@ export default function Appearance() {
             ))}
             <p className="text-xs text-muted-foreground">The theme applies to the whole site, and your choice is remembered for next time.</p>
           </div>
+        ) : pane === 'wallpaper' ? (
+          <div className="space-y-4">
+            <h2 className="text-[15px] font-bold">Wallpaper</h2>
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+              {wallpapers.map((p) => (
+                <button key={p.id} type="button" className="theme-card" aria-pressed={p.id === wallpaper} onClick={() => onSetWallpaper(p.id)}>
+                  <img src={p.thumb} alt="" draggable={false} className="aspect-[16/10] w-full rounded-md object-cover" style={{ objectPosition: p.position }} />
+                  <span className="mt-1.5 block truncate px-0.5 text-xs">{p.title}</span>
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">Photos by {credits}, taken on Timpanogos hikes. Your choice is remembered for next time.</p>
+          </div>
         ) : (
           <div className="space-y-4">
             <h2 className="text-[15px] font-bold">About</h2>
             <dl className="divide-y divide-border rounded-xl border border-border bg-card/50 px-3">
-              {[['Name', 'Patrick\u2019s Lab'], ['Made by', 'Patrick Beal'], ['Built with', 'Astro and React'], ['Theme', themes.find((t) => t.id === current)?.name ?? current]].map(([k, v]) => (
+              {[['Name', 'Patrick\u2019s Lab'], ['Made by', 'Patrick Beal'], ['Built with', 'Astro and React'], ['Wallpaper photos', credits.charAt(0).toUpperCase() + credits.slice(1)], ['Theme', themes.find((t) => t.id === current)?.name ?? current]].map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 py-2"><dt>{k}</dt><dd className="text-muted-foreground">{v}</dd></div>
               ))}
             </dl>
