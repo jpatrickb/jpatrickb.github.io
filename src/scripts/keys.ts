@@ -5,6 +5,10 @@ import { copyEmail, cycleTheme, setTheme, themeName } from '@/lib/theme'
 const isTyping = (t: EventTarget | null) =>
   t instanceof HTMLElement && (t.isContentEditable || !!t.closest('input, textarea, select, [data-own-keys]'))
 
+// WCAG 2.1.4: single-character shortcuts can be turned off. The choice is kept in this browser.
+const KEYS_OFF = 'keys-off'
+const shortcutsOn = () => { try { return localStorage.getItem(KEYS_OFF) !== '1' } catch { return true } }
+
 let pendingG = 0
 let current = -1
 
@@ -37,7 +41,7 @@ function move(step: number) {
 }
 
 window.addEventListener('keydown', (e) => {
-  if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target)) return
+  if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target) || !shortcutsOn()) return
   if (document.querySelector('[role="dialog"][data-state="open"], dialog[open]')) return
 
   if (pendingG && Date.now() - pendingG < 1200) {
@@ -59,6 +63,15 @@ window.addEventListener('keydown', (e) => {
     case '?': window.dispatchEvent(new Event('site:help')); break
   }
 })
+
+// the switch in the help dialog
+const toggle = document.getElementById('shortcuts-toggle') as HTMLInputElement | null
+if (toggle) {
+  toggle.checked = shortcutsOn()
+  toggle.addEventListener('change', () => {
+    try { toggle.checked ? localStorage.removeItem(KEYS_OFF) : localStorage.setItem(KEYS_OFF, '1') } catch { /* private mode */ }
+  })
+}
 
 // help dialog
 window.addEventListener('site:help', () => {

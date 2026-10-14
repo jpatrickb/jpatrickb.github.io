@@ -36,15 +36,19 @@ export default function CommandPalette({ hasPosts = false }: { hasPosts?: boolea
   const [query, setQuery] = useState('')
   const [docs, setDocs] = useState<SearchDoc[] | null>(null)
   const loading = useRef(false)
+  // Whatever had focus when the palette opened gets it back when it closes.
+  const returnTo = useRef<HTMLElement | null>(null)
+  const remember = () => { returnTo.current = document.activeElement instanceof HTMLElement ? document.activeElement : null }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
+        remember()
         setOpen((o) => !o)
       }
     }
-    const onOpen = () => setOpen(true)
+    const onOpen = () => { remember(); setOpen(true) }
     window.addEventListener('keydown', onKey)
     window.addEventListener('site:palette', onOpen)
     return () => {
@@ -79,7 +83,7 @@ export default function CommandPalette({ hasPosts = false }: { hasPosts?: boolea
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent aria-describedby={undefined}>
+      <DialogContent aria-describedby={undefined} onCloseAutoFocus={(e) => { if (returnTo.current?.isConnected && returnTo.current !== document.body) { e.preventDefault(); returnTo.current.focus() } }}>
         <DialogTitle className="sr-only">Search and commands</DialogTitle>
         <Command shouldFilter={false} loop>
           <CommandInput value={query} onValueChange={setQuery} placeholder="Search projects, work, the lab, or type a command…" />

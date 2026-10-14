@@ -31,7 +31,7 @@ export default function Appearance({ wallpapers, wallpaper, onSetWallpaper }: { 
   }, [])
 
   return (
-    <SidebarLayout
+    <SidebarLayout label="Appearance settings"
       sidebar={
         <>
           <SidebarItem icon="◐" active={pane === 'appearance'} onClick={() => setPane('appearance')}>Appearance</SidebarItem>

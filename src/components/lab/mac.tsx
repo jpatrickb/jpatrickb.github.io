@@ -3,10 +3,11 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
-export function SidebarLayout({ sidebar, children, className }: { sidebar: ReactNode; children: ReactNode; className?: string }) {
+// `label` names the sidebar landmark. Several windows can be open at once, so each app gives its own.
+export function SidebarLayout({ label, sidebar, children, className }: { label: string; sidebar: ReactNode; children: ReactNode; className?: string }) {
   return (
     <div className={cn('flex h-full min-h-0 text-[13px]', className)}>
-      <nav className="hidden w-[190px] shrink-0 overflow-y-auto border-r border-border bg-card/70 p-2 md:block">{sidebar}</nav>
+      <nav aria-label={label} className="hidden w-[190px] shrink-0 overflow-y-auto border-r border-border bg-card/70 p-2 md:block">{sidebar}</nav>
       <div className="min-w-0 flex-1">{children}</div>
     </div>
   )
@@ -31,7 +32,7 @@ export function SidebarItem({ active, onClick, icon, count, children, tone = 'pr
     >
       {icon && <span className={cn('w-4 shrink-0 text-center', !active && (tone === 'notes' ? 'text-[#d9a300]' : 'text-primary'))} aria-hidden>{icon}</span>}
       <span className="min-w-0 flex-1 truncate">{children}</span>
-      {count !== undefined && <span className={cn('text-xs tabular-nums', active && tone !== 'notes' ? 'opacity-80' : 'text-muted-foreground')}>{count}</span>}
+      {count !== undefined && <span className={cn('text-xs tabular-nums', active ? (tone === 'notes' ? 'text-foreground' : 'opacity-80') : 'text-muted-foreground')}>{count}</span>}
     </button>
   )
 }
