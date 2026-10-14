@@ -13,8 +13,8 @@ name: Deploy
 # Cloudflare has no OIDC federation like AWS, so the deploy token is a GitHub environment
 # secret. The `dev` and `prod` environments are restricted to the develop and main
 # branches, so a workflow on any other branch can't read either token.
-# Unlike patea-devops, jobs here do use `environment:`, because there is no staging
-# record for the prod gate to confuse them with.
+# Jobs here use `environment:`. That is safe because there is no staging, so the prod
+# gate has no deployment record to confuse with a prod one.
 
 on:
   push:

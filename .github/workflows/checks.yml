@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # One package manager, the same as the Patea repos.
+      # One package manager, so the lockfile is the only source of truth.
       - name: Only pnpm
         run: |
           for f in package-lock.json yarn.lock npm-shrinkwrap.json; do

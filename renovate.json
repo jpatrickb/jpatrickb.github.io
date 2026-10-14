@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Mirrors the shared Patea preset (patea-devops is private, so it can't be extended from here).",
+  "description": "Renovate settings for this repo. Pull requests go to develop, and GitHub Actions are pinned to commit digests.",
   "extends": ["config:recommended", ":semanticCommits", "helpers:pinGitHubActionDigests"],
   "baseBranches": ["develop"],
   "minimumReleaseAge": "3 days",

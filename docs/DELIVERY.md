@@ -1,7 +1,6 @@
 # Delivery
 
-How this site is branched, checked, previewed and released. It follows the Patea standards
-(`patea-devops/STANDARDS.md`), a little less strictly: there is no data service, so there is no
+How this site is branched, checked, previewed and released. There is no data service, so there is no
 staging environment and no schema rule.
 
 ```mermaid
@@ -74,17 +73,16 @@ repos. The deploy checks still apply as a backstop.
 | Third-party actions can't change under us | Pinned to commit SHAs (Renovate keeps them current) |
 | Fork PRs get no secrets | Workflows use `pull_request`, never `pull_request_target` |
 
-### Deviations from the Patea standards
+### Design choices
 
 - **No staging.** `release/x.y` does not deploy anywhere. The release is verified on dev, because it is
-  cut from `develop`. `verify-promotion` therefore skips the staging-deployment check.
+  cut from `develop`. `verify-promotion` therefore has no staging-deployment check.
 - **Deploy token is a GitHub environment secret, not OIDC.** Cloudflare can't federate with GitHub the way
-  AWS can. The `dev` and `prod` environments are limited to their own branch, which does the job of the
-  branch-pinned role. Jobs here use `environment:`, which `patea-devops` forbids because its gate reads
-  deployment records. This gate does not.
-- **Workflows are vendored.** `patea-devops` is private and org-scoped, so a personal repo can't call it.
-  `.github/actions/*` and `back-merge.yml` are copies. If `patea-devops` changes the gate, port it.
-- **No Vale.** The Patea prose style is not applied to this site's copy.
+  AWS can. The `dev` and `prod` environments are limited to their own branch, so a workflow on any other
+  branch can't read either token. Jobs use `environment:`, which is safe because there is no staging for the
+  prod gate to confuse with a prod deployment record.
+- **The workflows and actions are owned here.** `.github/` is edited in this repo, including the composite
+  actions and `back-merge.yml`, and nothing needs to stay in step with another repo.
 - **Terraform runs in CI, with split credentials.** Apply runs in `deploy.yml` with environment secrets that only `develop` and `main` can read. Plans on PRs use separate read-only repo secrets. See `infra/README.md`. Workflow logs are public, so account and zone ids are masked and redacted.
 
 ## One-time setup
