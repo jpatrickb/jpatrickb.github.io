@@ -55,14 +55,3 @@ resource "cloudflare_ruleset" "www_to_apex" {
     }
   }]
 }
-
-# Cloudflare Web Analytics: cookieless page views, referrers and Core Web Vitals, with no code on the site.
-# auto_install lets Cloudflare add its beacon to HTML served through the proxied hostname, so there is nothing to
-# ship or keep in sync. Prod only: dev is never indexed, and its traffic would only add noise.
-resource "cloudflare_web_analytics_site" "site" {
-  count = local.prod ? 1 : 0
-
-  account_id   = var.account_id
-  host         = var.domain
-  auto_install = true
-}

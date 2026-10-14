@@ -60,7 +60,7 @@ Shortcuts are off while you type or while a dialog is open.
   over learning rate and β.
 
 Fonts and assets are self-hosted. The one third-party request is the Cloudflare Web Analytics beacon on prod: it is
-cookieless, and Terraform turns it on (`infra/`). Dev has none.
+cookieless, and it is enabled in the Cloudflare dashboard rather than in `infra/`. Dev has none.
 
 ## Tests
 
