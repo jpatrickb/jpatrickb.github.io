@@ -5,7 +5,7 @@ Terraform for the Cloudflare side of jpatrickbeal.com. It runs in CI, not by han
 | Environment | Applies when | Manages | State file |
 |---|---|---|---|
 | `dev` | `develop` deploys (`deploy.yml`) | `dev.jpatrickbeal.com` pointed at the `patrick-beal-dev` Worker | `jpatrickbeal-com/dev.tfstate` |
-| `prod` | `main` deploys (`deploy.yml`) | `jpatrickbeal.com` pointed at the `patrick-beal` Worker, the proxied `www` record, and the `www` to apex redirect | `jpatrickbeal-com/prod.tfstate` |
+| `prod` | `main` deploys (`deploy.yml`) | `jpatrickbeal.com` pointed at the `patrick-beal` Worker, the proxied `www` record, the `www` to apex redirect, and Cloudflare Web Analytics for the apex | `jpatrickbeal-com/prod.tfstate` |
 
 Each deploy publishes the Worker with wrangler first, then applies this, then smoke-tests. A pull request that
 touches `infra/` gets the plan for both environments as a comment (`terraform-plan.yml`). Applying only happens
@@ -84,12 +84,13 @@ Dashboard, **Manage Account**, **Account API Tokens** (or **My Profile**, **API 
 | **Account**, **Workers Scripts** | n/a | **Edit** |
 | **Zone**, **DNS** | n/a | **Edit** |
 | **Zone**, **Single Redirect** | n/a | **Edit** |
+| **Account**, **Web Analytics** | n/a | **Edit** |
 
 **Account Resources:** Include, your account. **Zone Resources:** Include, **Specific zone**, `jpatrickbeal.com`.
 No IP filtering. TTL: no end date. Click **Continue to summary**, **Create Token**, and copy the token
 (shown once).
 
-**#4, plan (read-only).** **Token name:** `jpatrickbeal-terraform-plan-readonly`. Same three permission groups,
+**#4, plan (read-only).** **Token name:** `jpatrickbeal-terraform-plan-readonly`. Same four permission groups,
 but set every level to **Read**:
 
 | Permission group | Level |
@@ -97,12 +98,14 @@ but set every level to **Read**:
 | **Account**, **Workers Scripts** | **Read** |
 | **Zone**, **DNS** | **Read** |
 | **Zone**, **Single Redirect** | **Read** |
+| **Account**, **Web Analytics** | **Read** |
 
 Same account and zone resources.
 
 Why each permission: Workers Scripts **Edit** is what Cloudflare requires to attach a custom domain to a Worker
 (and it also creates the DNS record and certificate for you). DNS **Edit** manages the `www` placeholder record.
-Single Redirect **Edit** manages the `www` to apex redirect. You do **not** need Account Rulesets, Workers Routes,
+Single Redirect **Edit** manages the `www` to apex redirect. Web Analytics **Edit** registers the site for
+Cloudflare Web Analytics (prod only). You do **not** need Account Rulesets, Workers Routes,
 or any R2 permission on these tokens.
 
 ### A5. The existing wrangler token (#1)
@@ -181,6 +184,7 @@ Merge a change to `develop`. The deploy publishes the `patrick-beal-dev` Worker,
 | `CLOUDFLARE_API_TOKEN is not set` (or any `... is not set`) in a plan comment or deploy log | That GitHub name is missing or misspelled, or it was added to the wrong place (an environment secret that the job's environment doesn't match). Compare against the table above. |
 | `403` or `Authentication error` creating the redirect | The apply token is missing **Zone, Single Redirect, Edit**, or its zone resource isn't `jpatrickbeal.com`. |
 | `403` creating the custom domain | The apply token is missing **Account, Workers Scripts, Edit**, or its account resource is wrong. |
+| `403` creating the Web Analytics site | The apply token is missing **Account, Web Analytics, Edit**. The plan token needs **Read**. |
 | `403` creating the `www` DNS record | The apply token is missing **Zone, DNS, Edit**. |
 | `NoSuchBucket`, `AccessDenied`, or `SignatureDoesNotMatch` at `terraform init` | `TF_STATE_BUCKET` isn't your bucket's exact name, the R2 token wasn't scoped to that bucket, or the key and secret were swapped or copied wrongly. |
 | Plan works but apply fails with a state write error | `R2_ACCESS_KEY_ID` is the read-only token. The environment ones must be the **read and write** token. |
