@@ -51,7 +51,7 @@ Read `docs/DELIVERY.md` before changing anything about branches, deploys or envi
   `X-Robots-Tag: noindex` header, a robots meta tag and `Disallow: /`. `scripts/smoke.sh` checks all three.
 - **Nothing secret goes in this repo.** It is public. No API tokens, no Terraform state, no real `terraform.tfvars` or
   `backend.hcl`. Deploy tokens are GitHub environment secrets limited to one branch each.
-- **Workflows in `.github/` are vendored from the private `patea-devops` repo.** Third-party actions are pinned to
+- **The workflows and actions in `.github/` live in this repo and are edited here.** Third-party actions are pinned to
   commit SHAs. Pass untrusted values (branch names, tag inputs) through `env:`, never inside `${{ }}` in a `run:` block.
   Do not use `pull_request_target`.
 - **Terraform runs in CI** (`deploy.yml` applies, `terraform-plan.yml` comments the plan). Apply credentials are

@@ -1,6 +1,6 @@
 name: Verify promotion
 description: >
-  The prod gate, vendored from patea-devops and simplified (no staging).
+  The prod gate. There is no staging environment, so it checks only the promotion itself.
   Run it first in every prod deploy, after a checkout with fetch-depth 0. The
   job needs contents read and pull-requests read.
 

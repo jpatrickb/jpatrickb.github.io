@@ -1,9 +1,9 @@
 name: Set up toolchain
-description: Node, pnpm and optionally Terraform, pinned to the same versions as the Patea repos.
+description: Node, pnpm and optionally Terraform, pinned to the versions this site uses.
 
 inputs:
   node-version:
-    description: Node version. Patea repos are on 24.
+    description: Node version.
     default: "24"
   terraform:
     description: Install Terraform ("true" or "false").
