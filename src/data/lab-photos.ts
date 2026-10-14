@@ -10,7 +10,7 @@ type Entry = {
   id: string
   title: string
   album: string
-  // who took it, when it wasn't me
+  // shown as "Photo by …" when set
   credit?: string
   wallpaper?: boolean
   // CSS object-position when the photo is cropped to fill the desktop
