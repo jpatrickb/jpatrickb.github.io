@@ -4,9 +4,18 @@
   <meta charset="utf-8" />
   <title>Patrick Beal has moved</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>location.replace('https://jpatrickbeal.com' + location.pathname + location.search + location.hash)</script>
+  <script>
+    // Only a top-level path that does not exist here (the old portfolio pages) goes to the same path on the new
+    // site. The project write-ups live in their own repos at /<repo>/, so a missing page under one of those, or
+    // under any other path with more than one segment, is left alone.
+    var repos = ['byu-econ-588', 'esop-tax-credit-did', 'football-to-admissions', 'moonlander_optimal_control', 'vol3_housing_project', 'vol3_semester1_project_imdb']
+    var parts = location.pathname.split('/').filter(Boolean)
+    if (parts.length <= 1 && repos.indexOf(parts[0]) === -1) {
+      location.replace('https://jpatrickbeal.com' + location.pathname + location.search + location.hash)
+    }
+  </script>
 </head>
 <body>
-  <p>This site has moved to <a href="https://jpatrickbeal.com/">jpatrickbeal.com</a>.</p>
+  <p>This page was not found. Patrick's portfolio is at <a href="https://jpatrickbeal.com/">jpatrickbeal.com</a>.</p>
 </body>
 </html>
