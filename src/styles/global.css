@@ -139,8 +139,9 @@
     background: var(--card); color: var(--foreground);
   }
   .label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
-  .link { color: var(--primary); text-underline-offset: 3px; }
-  .link:hover { text-decoration: underline; }
+  /* Underlined so a link in a block of text doesn't rely on colour alone (WCAG 1.4.1). */
+  .link { color: var(--primary); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--primary) 45%, transparent); }
+  .link:hover { text-decoration-color: currentColor; }
   .prose-site p { margin-block: 0 .9rem; max-width: 66ch; line-height: 1.7; }
   .prose-site ul { list-style: disc; padding-left: 1.25rem; margin-block: 0 .9rem; }
   .prose-site li { margin-bottom: .4rem; max-width: 64ch; line-height: 1.65; }

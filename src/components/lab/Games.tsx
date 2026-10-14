@@ -39,7 +39,7 @@ export default function Games({ game, onGame }: { game: LabGameId | null; onGame
 
   if (!game) {
     return (
-      <SidebarLayout sidebar={sidebar}>
+      <SidebarLayout label="Games" sidebar={sidebar}>
       <div className="h-full overflow-auto p-5">
         <h2 className="text-lg font-semibold">Games</h2>
         <p className="mt-1 max-w-[60ch] text-sm text-muted-foreground">
@@ -68,7 +68,7 @@ export default function Games({ game, onGame }: { game: LabGameId | null; onGame
   const play = () => { markSeen(game); setTab('play') }
 
   return (
-    <SidebarLayout sidebar={sidebar}>
+    <SidebarLayout label="Games" sidebar={sidebar}>
     <div className="flex h-full flex-col text-sm">
       <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border px-3 py-2">
         <button type="button" onClick={() => onGame(null)} className="rounded-md px-2 py-1 text-sm text-primary hover:bg-muted md:hidden">‹ All games</button>

@@ -59,10 +59,10 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
                 <span class="pointer-events-none absolute -bottom-5 left-1/2 hidden -translate-x-1/2 whitespace-nowrap font-mono text-[10px] text-muted-foreground group-hover:block">g {n.key}</span>
               </a>
             ))}
-            <button type="button" data-action="palette" class="ml-2 hidden items-center gap-1.5 rounded-md border border-border px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground sm:inline-flex" aria-label="Open search">
+            <button type="button" data-action="palette" class="ml-2 hidden items-center gap-1.5 rounded-md border border-border px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground sm:inline-flex">
               search <span class="kbd">⌘K</span>
             </button>
-            <button type="button" data-action="palette" class="ml-1 rounded px-2 py-1 font-mono text-xs text-muted-foreground sm:hidden" aria-label="Open search">⌘K</button>
+            <button type="button" data-action="palette" class="ml-1 rounded px-2 py-1 font-mono text-xs text-muted-foreground sm:hidden" aria-label="⌘K search">⌘K</button>
             <button type="button" data-action="themes" class="ml-1 rounded-md border border-border px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground" aria-label="Choose a theme" title="Choose a theme">◐</button>
           </nav>
         </div>
@@ -101,6 +101,10 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
         <dt><span class="kbd">c</span></dt><dd>Copy email</dd>
         <dt><span class="kbd">?</span></dt><dd>This list</dd>
       </dl>
+      <label class="flex items-center gap-2.5 border-t border-border px-5 py-3 text-sm">
+        <input type="checkbox" id="shortcuts-toggle" checked class="size-4 accent-[var(--primary)]" />
+        <span>Single-key shortcuts <span class="text-muted-foreground">(<span class="kbd">⌘K</span> still works when off)</span></span>
+      </label>
     </dialog>
 
     <dialog id="theme-dialog" class="m-auto w-[calc(100%-2rem)] max-w-lg rounded-xl border border-border bg-popover p-0 text-foreground shadow-2xl backdrop:bg-background/60 backdrop:backdrop-blur-[3px]">

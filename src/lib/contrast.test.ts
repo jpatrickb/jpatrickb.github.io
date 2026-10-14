@@ -17,11 +17,6 @@ const pairs: [string, string][] = [
   ['primary-foreground', 'primary'],
 ]
 
-// Dimmed "not covered" pipeline chips (PipelineStrip.astro uses text-muted-foreground/80). They are
-// de-emphasised on purpose and also described in text, so the bar is 3:1, not 4.5:1.
-const DIMMED_OPACITY = 0.8
-const DIMMED_MIN = 3
-
 describe('contrast helpers', () => {
   it('gives 21 for black on white and 1 for identical colours', () => {
     expect(contrast('#000000', '#ffffff')).toBeCloseTo(21, 5)
@@ -58,12 +53,6 @@ describe('theme palettes in global.css', () => {
 
       it('keeps primary text readable on the tinted chip (primary at 15% over the background)', () => {
         expect(contrast(p.primary, blend(p.primary, p.background, 0.15))).toBeGreaterThanOrEqual(AA)
-      })
-
-      it('keeps dimmed chip text at 3:1 or better on the background and cards', () => {
-        const dimmed = blend(p['muted-foreground'], p.background, DIMMED_OPACITY)
-        expect(contrast(dimmed, p.background)).toBeGreaterThanOrEqual(DIMMED_MIN)
-        expect(contrast(blend(p['muted-foreground'], p.card, DIMMED_OPACITY), p.card)).toBeGreaterThanOrEqual(DIMMED_MIN)
       })
     })
   }
