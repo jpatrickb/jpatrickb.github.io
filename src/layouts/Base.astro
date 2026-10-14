@@ -27,7 +27,7 @@ const headerNav = nav.slice(1).filter((n) => n.href !== '/blog/' || hasPosts)
 const ogImage = new URL('/profile.jpeg', Astro.site).toString()
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-has-posts={hasPosts ? 'true' : 'false'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -36,7 +36,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
     {!indexable && <meta name="robots" content="noindex, nofollow, noarchive" />}
     <link rel="canonical" href={new URL(path, Astro.site)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title={`${site.name} · Blog`} href="/rss.xml" />
+    {hasPosts && <link rel="alternate" type="application/rss+xml" title={`${site.name} · Blog`} href="/rss.xml" />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -79,7 +79,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
           <span>build {build.sha} · {build.date} · static, no trackers</span>
           <span class="flex flex-wrap gap-4">
             <a href="/uses/" class="hover:text-foreground">uses</a>
-            <a href="/rss.xml" class="hover:text-foreground">rss</a>
+            {hasPosts && <a href="/rss.xml" class="hover:text-foreground">rss</a>}
             <button type="button" data-action="themes" class="hover:text-foreground">theme: <span data-theme-name>theme</span></button>
             <button type="button" data-action="help" class="hover:text-foreground"><span class="kbd">?</span> keys</button>
           </span>
@@ -97,7 +97,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
         <dt><span class="kbd">t</span> <span class="kbd">T</span></dt><dd>Next / previous theme</dd>
         <dt><span class="kbd">j</span> <span class="kbd">k</span></dt><dd>Move through items on the page (<span class="kbd">k</span> on the first one goes back to the top)</dd>
         <dt><span class="kbd">o</span></dt><dd>Open the selected item</dd>
-        <dt><span class="kbd">g</span> then <span class="kbd">h</span> <span class="kbd">w</span> <span class="kbd">p</span> <span class="kbd">b</span> <span class="kbd">a</span> <span class="kbd">l</span></dt><dd>Home, Work, Projects, Blog, About, Lab</dd>
+        <dt><span class="kbd">g</span> then <span class="kbd">h</span> <span class="kbd">w</span> <span class="kbd">p</span> {hasPosts && <Fragment><span class="kbd">b</span> </Fragment>}<span class="kbd">a</span> <span class="kbd">l</span></dt><dd>{hasPosts ? 'Home, Work, Projects, Blog, About, Lab' : 'Home, Work, Projects, About, Lab'}</dd>
         <dt><span class="kbd">c</span></dt><dd>Copy email</dd>
         <dt><span class="kbd">?</span></dt><dd>This list</dd>
       </dl>
@@ -130,7 +130,7 @@ const ogImage = new URL('/profile.jpeg', Astro.site).toString()
       </div>
     </dialog>
 
-    <CommandPalette client:idle />
+    <CommandPalette client:idle hasPosts={hasPosts} />
     <script>
       import '@/scripts/keys'
     </script>
