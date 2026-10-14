@@ -59,7 +59,8 @@ Shortcuts are off while you type or while a dialog is open.
 - Gradient Descent Golf: `src/lib/golf.ts` (surfaces, SGD, momentum and Adam, scoring). Pars were tuned by grid search
   over learning rate and β.
 
-No analytics, no trackers, and no third-party requests: the fonts are self-hosted.
+Fonts and assets are self-hosted. The one third-party request is the Cloudflare Web Analytics beacon on prod: it is
+cookieless, and it is enabled in the Cloudflare dashboard rather than in `infra/`. Dev has none.
 
 ## Tests
 

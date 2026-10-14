@@ -57,7 +57,7 @@ Read `docs/DELIVERY.md` before changing anything about branches, deploys or envi
 - **Terraform runs in CI** (`deploy.yml` applies, `terraform-plan.yml` comments the plan). Apply credentials are
   environment secrets; plan credentials are read-only repo secrets. Keep the account id, zone id and state bucket as
   secrets, never variables, because workflow logs and PR comments are public and only secrets are masked. See `infra/README.md`.
-- **No new third-party requests.** The footer says "static, no trackers". Self-host fonts and assets.
+- **No new third-party requests.** Self-host fonts and assets. The only exception is the Cloudflare Web Analytics beacon on prod (cookieless, enabled in the Cloudflare dashboard, none on dev).
 - Tests are for pure logic (`src/lib`). Check a test can fail: break the code on purpose and watch it go red.
 
 ## Stale files

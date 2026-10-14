@@ -186,6 +186,13 @@ Merge a change to `develop`. The deploy publishes the `patrick-beal-dev` Worker,
 | Plan works but apply fails with a state write error | `R2_ACCESS_KEY_ID` is the read-only token. The environment ones must be the **read and write** token. |
 | Plan comment shows `<account-id>` or `<zone-id>` | Working as intended: the real ids are redacted because PR comments are public. |
 
+## Not managed here: Web Analytics
+
+Cloudflare Web Analytics for `jpatrickbeal.com` was switched on by hand in the dashboard (Web Analytics, Add a site,
+automatic setup). Managing it from Terraform needs an Account Settings Edit token, which is broader than these
+tokens should be, so it stays out of code. If the beacon ever stops appearing, check that site is still enabled
+there.
+
 ## Notes
 
 - **No state lock.** Deploys of one environment are serialized by the workflow's concurrency group, and the plan
