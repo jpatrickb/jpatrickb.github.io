@@ -1,7 +1,9 @@
 ---
 import { getCollection } from 'astro:content'
+import { getImage } from 'astro:assets'
 import Base from '@/layouts/Base.astro'
 import Desktop from '@/components/lab/Desktop'
+import { labPhotos, type LabPhoto } from '@/data/lab-photos'
 
 const work = (await getCollection('work', (w) => !w.data.draft))
   .sort((a, b) => a.data.order - b.data.order)
@@ -12,10 +14,21 @@ const work = (await getCollection('work', (w) => !w.data.draft))
 const projects = (await getCollection('projects'))
   .sort((a, b) => a.data.order - b.data.order)
   .map((p) => ({ id: p.id, title: p.data.title, summary: p.data.summary, lane: p.data.lane }))
+
+// each photo as a small thumbnail plus three full widths, AVIF first with a JPEG fallback
+const widths = [1600, 2560, 3840]
+const photos: LabPhoto[] = await Promise.all(labPhotos.map(async ({ src, ...photo }) => {
+  const [thumb, avif, jpeg] = await Promise.all([
+    getImage({ src, width: 640, format: 'jpeg' }),
+    getImage({ src, widths, format: 'avif' }),
+    getImage({ src, widths, format: 'jpeg' }),
+  ])
+  return { ...photo, width: src.width, height: src.height, thumb: thumb.src, full: { avif: avif.srcSet.attribute, jpeg: jpeg.srcSet.attribute, src: jpeg.src } }
+}))
 ---
 <Base title="Lab" description="A small desktop with a terminal, a chat that answers questions about Patrick, and a few games that teach ideas from machine learning and statistics." bare>
   <noscript>
     <div class="mx-auto max-w-xl p-8">The lab needs JavaScript, but the rest of the site works without it, so you can <a class="link" href="/">head back home</a>.</div>
   </noscript>
-  <Desktop client:load work={work} projects={projects} />
+  <Desktop client:load work={work} projects={projects} photos={photos} />
 </Base>
