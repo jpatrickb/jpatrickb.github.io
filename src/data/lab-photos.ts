@@ -68,8 +68,8 @@ const entries: Entry[] = [
   { id: 'wombat', title: 'Wombat at Cradle Mountain National Park, Tasmania, AU', album: 'Australia' },
   { id: 'sydney-opera-house-moon', title: 'Super-moon above the Sydney Opera House', album: 'Australia' },
 
-  { id: 'niagara-falls-brink', title: 'Niagara Falls, CA', album: 'More places' },
-  { id: 'niagara-falls-mist', title: 'Niagara Falls, CA', album: 'More places' },
+  { id: 'niagara-falls-brink', title: 'Niagara Falls, Canada', album: 'More places' },
+  { id: 'niagara-falls-mist', title: 'Niagara Falls, Canada', album: 'More places' },
   { id: 'washington-dc-temple', title: 'Washington DC Temple', album: 'More places' },
 ]
 
