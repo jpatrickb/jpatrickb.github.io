@@ -26,7 +26,7 @@ There is no `deploy` script on purpose. Deploys go through CI, or `scripts/deplo
 
 | What | Where |
 |---|---|
-| Name, links, nav, hero lines | `src/data/site.ts` |
+| Name, links, nav, hero tagline | `src/data/site.ts` |
 | Projects (one file each) | `src/content/projects/*.md`, schema in `src/content.config.ts` |
 | Work history (`draft: true` hides an entry) | `src/content/work/*.md` |
 | Blog posts (`draft: true` keeps one off the published site) | `src/content/blog/*.md` (copy `example-draft.md`) |
@@ -47,7 +47,7 @@ text meets WCAG AA contrast, so a new palette that is too faint fails CI.
 ## Keyboard
 
 `⌘K` or `/` search · `t` / `T` next or previous theme · `j` / `k` move · `o` open · `c` copy email ·
-`s` next hero line (home page) · `?` help.
+`?` help.
 `g` then a letter goes to a page: `h` home, `w` work, `p` projects, `b` blog, `a` about, `l` lab.
 In the lab, `Esc` leaves a text box and then closes the front window.
 Shortcuts are off while you type or while a dialog is open.

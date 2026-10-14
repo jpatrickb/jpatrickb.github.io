@@ -5,7 +5,7 @@ import About from '@/components/About.astro'
 import RunsTable from '@/components/RunsTable.astro'
 import ProjectRow from '@/components/ProjectRow.astro'
 import PipelineLegend from '@/components/PipelineLegend.astro'
-import { samples, site } from '@/data/site'
+import { site } from '@/data/site'
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
 const featured = projects.filter((p) => p.data.featured)
@@ -24,13 +24,7 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
     <p class="mt-4 max-w-[40ch] text-xl leading-snug sm:text-2xl">
       I build models, <span class="text-primary">and</span> I also build the systems that run them.
     </p>
-    <button type="button" id="sample" class="group mt-5 flex max-w-full items-start gap-3 text-left font-mono text-[13px] text-muted-foreground" aria-label="Show another line">
-      <span class="shrink-0 rounded border border-border px-1.5 py-0.5 text-[10.5px] group-hover:border-primary group-hover:text-primary">↻ more</span>
-      <span id="sample-text" class="min-h-[1.5em] pt-px">{samples[0]}</span>
-    </button>
-    <p class="mt-10 hidden font-mono text-xs text-muted-foreground sm:block">
-      <span class="kbd">⌘K</span> search · <span class="kbd">j</span><span class="kbd">k</span> move · <span class="kbd">t</span> theme · <span class="kbd">g</span> <span class="kbd">l</span> the lab
-    </p>
+    <p class="mt-5 max-w-[60ch] text-muted-foreground">{site.tagline}</p>
   </section>
 
   <section aria-labelledby="lanes" class="border-t border-border py-12">
@@ -88,31 +82,3 @@ const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind =
     </a>
   </section>
 </Base>
-
-<script>
-  import { samples } from '@/data/site'
-  const btn = document.getElementById('sample')
-  const out = document.getElementById('sample-text')
-  let i = 0
-  let timer: number | undefined
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-  function resample() {
-    if (!out) return
-    i = (i + 1) % samples.length
-    const text = samples[i]
-    window.clearInterval(timer)
-    if (reduce) { out.textContent = text; return }
-    let n = 0
-    out.textContent = ''
-    timer = window.setInterval(() => {
-      n += 1 + Math.floor(Math.random() * 3)
-      out.textContent = text.slice(0, n)
-      if (n >= text.length) window.clearInterval(timer)
-    }, 22)
-  }
-  btn?.addEventListener('click', resample)
-  window.addEventListener('keydown', (e) => {
-    const t = e.target as HTMLElement
-    if (e.key === 's' && !e.metaKey && !e.ctrlKey && !t.closest('input, textarea')) resample()
-  })
-</script>
