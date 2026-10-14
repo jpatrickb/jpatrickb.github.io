@@ -84,7 +84,7 @@ Dashboard, **Manage Account**, **Account API Tokens** (or **My Profile**, **API 
 | **Account**, **Workers Scripts** | n/a | **Edit** |
 | **Zone**, **DNS** | n/a | **Edit** |
 | **Zone**, **Single Redirect** | n/a | **Edit** |
-| **Account**, **Web Analytics** | n/a | **Edit** |
+| **Account**, **Account Settings** | n/a | **Edit** |
 
 **Account Resources:** Include, your account. **Zone Resources:** Include, **Specific zone**, `jpatrickbeal.com`.
 No IP filtering. TTL: no end date. Click **Continue to summary**, **Create Token**, and copy the token
@@ -98,13 +98,13 @@ but set every level to **Read**:
 | **Account**, **Workers Scripts** | **Read** |
 | **Zone**, **DNS** | **Read** |
 | **Zone**, **Single Redirect** | **Read** |
-| **Account**, **Web Analytics** | **Read** |
+| **Account**, **Account Settings** | **Read** |
 
 Same account and zone resources.
 
 Why each permission: Workers Scripts **Edit** is what Cloudflare requires to attach a custom domain to a Worker
 (and it also creates the DNS record and certificate for you). DNS **Edit** manages the `www` placeholder record.
-Single Redirect **Edit** manages the `www` to apex redirect. Web Analytics **Edit** registers the site for
+Single Redirect **Edit** manages the `www` to apex redirect. Account Settings **Edit** is what Cloudflare's Web Analytics API (`rum/site_info`) requires to register the site for
 Cloudflare Web Analytics (prod only). You do **not** need Account Rulesets, Workers Routes,
 or any R2 permission on these tokens.
 
@@ -184,7 +184,7 @@ Merge a change to `develop`. The deploy publishes the `patrick-beal-dev` Worker,
 | `CLOUDFLARE_API_TOKEN is not set` (or any `... is not set`) in a plan comment or deploy log | That GitHub name is missing or misspelled, or it was added to the wrong place (an environment secret that the job's environment doesn't match). Compare against the table above. |
 | `403` or `Authentication error` creating the redirect | The apply token is missing **Zone, Single Redirect, Edit**, or its zone resource isn't `jpatrickbeal.com`. |
 | `403` creating the custom domain | The apply token is missing **Account, Workers Scripts, Edit**, or its account resource is wrong. |
-| `403` creating the Web Analytics site | The apply token is missing **Account, Web Analytics, Edit**. The plan token needs **Read**. |
+| `403` creating the Web Analytics site | The apply token is missing **Account, Account Settings, Edit**. The plan token needs **Read**. |
 | `403` creating the `www` DNS record | The apply token is missing **Zone, DNS, Edit**. |
 | `NoSuchBucket`, `AccessDenied`, or `SignatureDoesNotMatch` at `terraform init` | `TF_STATE_BUCKET` isn't your bucket's exact name, the R2 token wasn't scoped to that bucket, or the key and secret were swapped or copied wrongly. |
 | Plan works but apply fails with a state write error | `R2_ACCESS_KEY_ID` is the read-only token. The environment ones must be the **read and write** token. |
