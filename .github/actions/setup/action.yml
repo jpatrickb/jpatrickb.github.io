@@ -36,3 +36,14 @@ runs:
     - if: inputs.install == 'true'
       shell: bash
       run: pnpm install --frozen-lockfile
+
+    # Astro keeps its encoded images in node_modules/.astro. Without this every build, and CI runs three per change,
+    # re-encodes every photo from scratch. The key changes when the photos or the config do, and the restore key
+    # lets a build that adds photos start from the previous cache and encode only the new ones.
+    - if: inputs.install == 'true'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: node_modules/.astro
+        key: astro-images-${{ runner.os }}-${{ hashFiles('src/assets/photos/**', 'astro.config.mjs') }}
+        restore-keys: |
+          astro-images-${{ runner.os }}-
