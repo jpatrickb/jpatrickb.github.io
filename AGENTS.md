@@ -19,7 +19,7 @@ pnpm only. CI fails if `package-lock.json`, `yarn.lock` or `npm-shrinkwrap.json`
 
 | What | Where |
 |---|---|
-| Name, links, nav, hero lines | `src/data/site.ts` |
+| Name, links, nav, hero tagline | `src/data/site.ts` |
 | Projects (one file each; schema in `src/content.config.ts`) | `src/content/projects/*.md` |
 | Work history (`draft: true` hides an entry) | `src/content/work/*.md` |
 | Blog posts (`draft: true` keeps one off the published site) | `src/content/blog/*.md` |
