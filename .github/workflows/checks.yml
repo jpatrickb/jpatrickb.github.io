@@ -1,0 +1,49 @@
+name: Checks
+
+# Reusable. Checks only: nothing here has Cloudflare credentials, so a pull request
+# can never touch the live site. ci.yml runs it on every PR and deploy.yml runs it
+# before every deploy, so the same checks gate both.
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # One package manager, the same as the Patea repos.
+      - name: Only pnpm
+        run: |
+          for f in package-lock.json yarn.lock npm-shrinkwrap.json; do
+            if [ -e "$f" ]; then
+              echo "::error::$f found. Use pnpm only: delete it, run pnpm install, and commit pnpm-lock.yaml."
+              exit 1
+            fi
+          done
+
+      - uses: ./.github/actions/setup
+
+      # astro check (types) and the production build.
+      - run: pnpm run build
+
+      # Runs unit tests once a "test" script exists (see the testing issue).
+      - run: pnpm run --if-present test
+
+  infra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+        with:
+          terraform: "true"
+          install: "false"
+
+      - run: terraform fmt -check -recursive infra
+      - run: terraform -chdir=infra init -backend=false -input=false
+      - run: terraform -chdir=infra validate

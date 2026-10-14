@@ -1,0 +1,106 @@
+name: Deploy
+
+# Every push to one of these branches deploys to its environment, automatically:
+#
+#   develop -> dev    https://dev.jpatrickbeal.com   not indexable
+#   main    -> prod   https://jpatrickbeal.com       indexable (the prod gate refuses
+#                                                    anything that skipped the process)
+#
+# Each deploy publishes the Worker with wrangler, then applies the Cloudflare Terraform for that
+# environment (custom domain, and for prod the www redirect), then smoke-tests. Doing the Worker
+# first means the domain always has something to point at.
+#
+# Cloudflare has no OIDC federation like AWS, so the deploy token is a GitHub environment
+# secret. The `dev` and `prod` environments are restricted to the develop and main
+# branches, so a workflow on any other branch can't read either token.
+# Unlike patea-devops, jobs here do use `environment:`, because there is no staging
+# record for the prod gate to confuse them with.
+
+on:
+  push:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+jobs:
+  target:
+    runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.pick.outputs.env }}
+    steps:
+      - id: pick
+        env:
+          REF: ${{ github.ref_name }}
+        run: |
+          case "$REF" in
+            develop) env=dev ;;
+            main) env=prod ;;
+            *) echo "::error::No environment for branch $REF"; exit 1 ;;
+          esac
+          echo "env=$env" >> "$GITHUB_OUTPUT"
+
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  deploy:
+    needs: [target, checks]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.target.outputs.env }}
+    permissions:
+      contents: write # to tag a prod release
+      pull-requests: read # for the prod gate
+    # One deploy per environment at a time, and never interrupt one halfway.
+    concurrency:
+      group: deploy-${{ needs.target.outputs.env }}
+      cancel-in-progress: false
+    env:
+      DEPLOY_ENV: ${{ needs.target.outputs.env }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Prod only: the commit must have come from a merged release or hotfix PR.
+      # A direct push to main stops here.
+      - if: env.DEPLOY_ENV == 'prod'
+        uses: ./.github/actions/verify-promotion
+
+      - uses: ./.github/actions/setup
+        with:
+          terraform: "true"
+
+      # Each credential is set only on the step that needs it, so setup actions and the
+      # smoke test never see one. The account id, zone id and state bucket are secrets, not
+      # variables, because GitHub masks secrets in the public logs and never masks variables.
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: scripts/deploy.sh "$DEPLOY_ENV"
+
+      - name: Terraform apply
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TF_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: scripts/terraform.sh apply "$DEPLOY_ENV"
+
+      - name: Smoke test
+        run: scripts/smoke.sh "$DEPLOY_ENV"
+
+      - if: env.DEPLOY_ENV == 'prod'
+        uses: ./.github/actions/tag-release
+
+  # After prod, bring main back into develop so they never drift. It runs even when the
+  # deploy fails, because main already took the merge.
+  back-merge:
+    needs: [target, deploy]
+    if: always() && needs.target.outputs.env == 'prod'
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: ./.github/workflows/back-merge.yml

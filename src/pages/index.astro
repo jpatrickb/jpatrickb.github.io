@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '@/layouts/Base.astro'
+import About from '@/components/About.astro'
+import RunsTable from '@/components/RunsTable.astro'
+import ProjectRow from '@/components/ProjectRow.astro'
+import PipelineLegend from '@/components/PipelineLegend.astro'
+import { site } from '@/data/site'
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+const featured = projects.filter((p) => p.data.featured)
+const lanes = {
+  model: projects.filter((p) => p.data.lane === 'model').slice(0, 5),
+  system: projects.filter((p) => p.data.lane === 'system').slice(0, 5),
+}
+const runs = (await getCollection('work', (w) => !w.data.draft && (w.data.kind === 'engineering' || w.data.kind === 'research')))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4)
+---
+<Base>
+  <section class="pb-12 pt-16 sm:pt-24">
+    <p class="label mb-4">{site.role}</p>
+    <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">Patrick Beal</h1>
+    <p class="mt-4 max-w-[40ch] text-xl leading-snug sm:text-2xl">
+      I build models, <span class="text-primary">and</span> I also build the systems that run them.
+    </p>
+    <p class="mt-5 max-w-[60ch] text-muted-foreground">{site.tagline}</p>
+  </section>
+
+  <section aria-labelledby="lanes" class="border-t border-border py-12">
+    <h2 id="lanes" class="label mb-6">Two lanes</h2>
+    <div class="grid gap-8 sm:grid-cols-2">
+      {(['system', 'model'] as const).map((lane) => (
+        <div class="min-w-0">
+          <h3 class="font-medium">{lane === 'model' ? 'Models' : 'Systems'}</h3>
+          <p class="mb-3 mt-1 text-sm text-muted-foreground">
+            {lane === 'model'
+              ? 'Bayesian modeling, causal inference, and forecasting, mostly from my research and team projects at BYU.'
+              : 'The apps, pipelines, and AWS infrastructure I have built, mostly as a founding engineer.'}
+          </p>
+          <ul class="space-y-1.5 text-sm">
+            {lanes[lane].map((p) => (
+              <li><a href={`/projects/${p.id}/`} class="hover:text-primary"><span class="mr-2 font-mono text-muted-foreground" aria-hidden="true">›</span>{p.data.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section aria-labelledby="about" class="border-t border-border py-12">
+    <h2 id="about" class="label mb-6">About</h2>
+    <About />
+  </section>
+
+  <section aria-labelledby="runs" class="border-t border-border py-12">
+    <div class="mb-4 flex items-baseline justify-between">
+      <h2 id="runs" class="label">Recent work</h2>
+      <a href="/work/" class="font-mono text-xs text-muted-foreground hover:text-primary">all work →</a>
+    </div>
+    <RunsTable runs={runs} link />
+  </section>
+
+  <section aria-labelledby="selected" class="border-t border-border py-12">
+    <div class="mb-2 flex items-baseline justify-between">
+      <h2 id="selected" class="label">Selected projects</h2>
+      <a href="/projects/" class="font-mono text-xs text-muted-foreground hover:text-primary">all projects →</a>
+    </div>
+    <PipelineLegend />
+    <ul>
+      {featured.slice(0, 5).map((p) => <ProjectRow project={p} />)}
+    </ul>
+  </section>
+
+  <section class="border-t border-border pt-12">
+    <a href="/lab/" class="group flex items-center justify-between gap-4 rounded-lg border border-dashed border-border px-5 py-4 transition-colors hover:border-primary">
+      <span>
+        <span class="font-mono text-sm text-foreground">/lab</span>
+        <span class="mt-0.5 block text-sm text-muted-foreground">A small desktop with a terminal, a chat that answers questions about me, and a few games that teach ML ideas.</span>
+      </span>
+      <span class="shrink-0 whitespace-nowrap font-mono text-xs text-muted-foreground group-hover:text-primary"><span class="hidden sm:inline">g l </span>→</span>
+    </a>
+  </section>
+</Base>

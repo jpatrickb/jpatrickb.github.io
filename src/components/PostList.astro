@@ -1,0 +1,21 @@
+---
+import { formatDate, tagSlug, type Post } from '@/lib/blog'
+interface Props { posts: Post[] }
+const { posts } = Astro.props
+---
+<ul class="mt-2">
+  {posts.map((p) => (
+    <li data-nav-item class="group -mx-3 rounded-md px-3 py-4 transition-colors hover:bg-muted/50">
+      <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+        <a href={`/blog/${p.id}/`} class="font-medium group-hover:text-primary">{p.data.title}{p.data.draft && <span class="ml-2 rounded border border-border px-1.5 py-px align-middle font-mono text-[10.5px] font-normal text-muted-foreground">draft</span>}</a>
+        <time datetime={p.data.date.toISOString()} class="shrink-0 font-mono text-[11px] text-muted-foreground">{formatDate(p.data.date)}</time>
+      </div>
+      {p.data.description && <p class="mt-1 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">{p.data.description}</p>}
+      {p.data.tags.length > 0 && (
+        <p class="mt-2 flex flex-wrap gap-1.5">
+          {p.data.tags.map((t) => <a href={`/blog/tags/${tagSlug(t)}/`} class="rounded border border-border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground hover:text-foreground">{t}</a>)}
+        </p>
+      )}
+    </li>
+  ))}
+</ul>

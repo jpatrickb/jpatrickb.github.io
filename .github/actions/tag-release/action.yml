@@ -1,0 +1,55 @@
+name: Tag release
+description: >
+  Tag the commit that just deployed to prod, vendored from patea-devops (semver
+  only). A merge from release/X.Y is tagged vX.Y.0, or the next patch if that tag
+  exists. A merge from hotfix/* bumps the patch of the highest tag. The job needs
+  contents write and pull-requests read.
+
+inputs:
+  sha:
+    description: Commit to tag.
+    default: ${{ github.sha }}
+  token:
+    default: ${{ github.token }}
+
+outputs:
+  tag:
+    description: The tag that was created.
+    value: ${{ steps.tag.outputs.tag }}
+
+runs:
+  using: composite
+  steps:
+    - id: tag
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        REPO: ${{ github.repository }}
+        SHA: ${{ inputs.sha }}
+      run: |
+        set -euo pipefail
+        fail() { echo "::error::$*"; exit 1; }
+
+        tags() { gh api --paginate "repos/$REPO/git/matching-refs/tags/$1" --jq '.[].ref' | sed 's#^refs/tags/##'; }
+
+        head="$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '[.[] | select(.merged_at != null)][0].head.ref // empty')"
+        [ -n "$head" ] || fail "Can't tell which branch $SHA was merged from, so can't pick a version."
+        case "$head" in
+          release/*)
+            minor="${head#release/}"
+            [[ "$minor" =~ ^[0-9]+\.[0-9]+$ ]] || fail "Release branch '$head' must be release/X.Y."
+            ;;
+          hotfix/*)
+            latest="$(tags v | sort -V | tail -n1)"
+            [ -n "$latest" ] || fail "A hotfix needs an earlier release tag to bump, and this repo has none. Tag the first release by hand at the deployed commit."
+            minor="$(sed -E 's/^v([0-9]+\.[0-9]+)\..*/\1/' <<<"$latest")"
+            ;;
+          *) fail "Don't know how to version a merge from '$head'." ;;
+        esac
+        last="$(tags "v$minor." | sed -E 's/.*\.([0-9]+)$/\1/' | sort -n | tail -n1)"
+        if [ -z "$last" ]; then patch=0; else patch=$((last + 1)); fi
+        tag="v$minor.$patch"
+
+        gh api "repos/$REPO/git/refs" -f "ref=refs/tags/$tag" -f "sha=$SHA" >/dev/null
+        echo "Tagged $SHA as $tag."
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
