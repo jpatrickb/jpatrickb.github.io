@@ -104,7 +104,9 @@ Done once. Steps marked **(manual)** need you in a dashboard.
 5. Merge to `develop`. The deploy publishes the dev Worker, applies the dev domain and smoke-tests it.
 6. Cut the first release. The deploy from `main` publishes the prod Worker, applies `jpatrickbeal.com` and the
    `www` redirect, tags `v1.0.0` and smoke-tests prod.
-7. Remove `pages.yml` (done) and check the project links that point at `jpatrickb.github.io/<repo>`. The old site
-   keeps serving its last build until Pages is turned off or replaced with a redirect.
+7. The old `jpatrickb.github.io` site is replaced by a redirect to jpatrickbeal.com (`redirect/`, published by
+   `pages-redirect.yml` when it changes on `main`, or by hand from the Actions tab). The BYU project pages are separate
+   repos with their own Pages, so they are untouched, and the project pages here link to them at
+   `jpatrickb.github.io/<repo>`.
 8. **(manual)** Install the Renovate GitHub App on this repo. `renovate.json` sends its PRs to `develop`.
 9. **(manual, after launch)** Add the site in Google Search Console and submit the sitemap when there is one.
