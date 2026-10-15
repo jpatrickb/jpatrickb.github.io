@@ -55,7 +55,7 @@ I built this at TechForce Advisors as the founding engineer. A visitor enters th
 </g>
 </svg></div>
 
-A control plane built in Next.js on Amplify takes the lead webhook, writes a job to Postgres and invokes a worker container on AgentCore Runtime. AgentCore hosts the container and gives it a managed browser, and the agent loop itself is TypeScript I wrote on Bedrock's tool-use API. A scheduled sweeper re-drives anything that gets stuck.
+A control plane built in Next.js on Amplify takes the lead webhook, writes a job to Postgres and invokes a worker container on AgentCore Runtime. AgentCore hosts the container and gives it a managed browser, and the agent loop itself is custom TypeScript on Bedrock's tool-use API, which Claude Code and Cursor wrote to my specification and I verified. A scheduled sweeper re-drives anything that gets stuck.
 
 ## How a request flows
 

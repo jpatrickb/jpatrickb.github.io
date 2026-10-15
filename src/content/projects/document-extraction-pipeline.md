@@ -35,7 +35,7 @@ There are two repos joined by one schema. A Python agent reads documents, and a 
 
 I refused to report an accuracy number until the ground truth was trustworthy, and it wasn't at first. The legacy labels were unverified, and when I re-checked 32 of them myself, 6 were wrong. I also found that one holdout deal was byte-identical to a development deal, so I recorded the contamination and re-cut the split, which left a single clean holdout deal.
 
-On real documents, the bounded agent loop accepted no values, and I wrote that result down instead of tuning around it.
+On real documents, the bounded agent loop accepted no values, and I recorded that result instead of tuning around it.
 
 ## Decisions and tradeoffs
 

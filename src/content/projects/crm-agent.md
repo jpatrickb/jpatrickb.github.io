@@ -72,6 +72,6 @@ The agent works with sensitive data about clients, and what it writes ends up on
 
 ## How it changed
 
-- **A hand-built loop, then a framework.** I started with a Node app on the Anthropic SDK and wrote the agent loop and model calls myself, and moved the calls to Bedrock the same day. A week later I rebuilt it in Python on LangGraph, since a supported and proven framework gave me room to design a proper loop where the hand-built one boxed me in. It also removed about 700 lines of loop code and gave me native interrupts, which the approval gate is built on.
+- **A hand-built loop, then a framework.** I started with a Node app on the Anthropic SDK with a custom agent loop and model calls instead of a framework, and moved the calls to Bedrock the same day. A week later I rebuilt it in Python on LangGraph, since a supported and proven framework gave me room to specify a proper loop where the custom one boxed me in. It also removed about 700 lines of loop code and gave me native interrupts, which the approval gate is built on.
 - **A new CRM.** The company decided to use a different CRM for other work and ported its data over, so I moved the agent's tools onto the new CRM's API.
 - **A hosting move I didn't make.** I planned to move the agent onto AgentCore Runtime, which is built for agents and opens up other agent features, instead of running it on ECS. I didn't do it because there was no demand for it.

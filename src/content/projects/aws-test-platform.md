@@ -75,4 +75,4 @@ NAT Gateways were the largest avoidable line. AWS Cost Explorer shows NAT Gatewa
 
 ## What I'd do differently
 
-The shared platform's Terraform lives only on my machine, with no repository, no CI and no review. I would put it in a repo with a pipeline from the start, so anyone on the team could change it safely.
+The shared platform's Terraform source lives in a folder on my machine, outside any git repository, so it has no history, no review and no CI. Its state is stored in S3, so the running platform is safe, but the code isn't. I would put it in a repo with a pipeline from the start, so anyone on the team could change it safely.
