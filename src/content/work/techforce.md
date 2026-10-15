@@ -13,7 +13,7 @@ order: 1
 ---
 
 - Owned the entire technical surface as the founding engineer. I specified the systems, made the architecture decisions and verified the work, and Claude Code and Cursor wrote the code
-- Built a production agentic research system that turns a visitor's email into a personalized company report, with a verifier and a deterministic grounding pass that strip unsupported claims, and durable jobs that survive crashes and retries (Next.js, AWS Bedrock AgentCore, Claude)
+- Built a production agentic research system that turns a visitor's email into a personalized company report, with a verifier and a deterministic grounding pass that strip unsupported claims (Next.js, AWS Bedrock AgentCore, Claude)
 - Extended that same research system into an automated outbound pipeline that sources prospects and generates a personalized report for each in parallel, then emails them with automated bounce detection and suppression to protect deliverability
 - Built a Slack agent that reads and updates the CRM in plain language, with every write held for a person's approval before it lands on a client record (Python, LangGraph, AWS Bedrock Claude)
 - Built a native iOS app (SwiftUI) that transcribes a consultant's voice note (AWS Transcribe), extracts the company, contact, and a summary of the discussion (Bedrock Claude), and writes them directly into the CRM, authenticated via SAML SSO through a custom-scheme deep-link callback. Apple approved it and a TestFlight build existed, and it was cut from scope before it reached any consultants

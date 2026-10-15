@@ -3,7 +3,7 @@ title: Agentic Company Research System
 summary: A production system that turns a visitor's email into a personalized company report, with a verifier and a grounding pass that strip unsupported claims before anything is sent.
 lane: system
 stages: [data, model, eval, serve, monitor]
-outcome: A production system that checks its own reports twice before sending them, survives crashed workers and retried requests, and shows what each report costs.
+outcome: A production system that checks its own reports twice before sending them and shows what each report costs.
 tech: [Next.js, AWS Bedrock AgentCore, Claude, TypeScript, PostgreSQL]
 year: 2026
 featured: true
@@ -76,5 +76,4 @@ The worker also generates reports in parallel for outbound campaigns. Each prosp
 - **The verifier can fail, and the pipeline survives.** If the verifier errors out, the original report passes through, since an outage shouldn't block every report. Because an LLM verifier misses things, the deterministic grounding pass runs even then. I added that pass after an evaluation showed the verifier under-detecting fabricated numbers.
 - **The verifier never grades itself.** It runs on a different model from the writer.
 - **Store, then send.** A crash between the two can repeat an email but can never lose a report.
-- **Jobs live in a Postgres table.** Idempotency keys and the sweeper mean a retried webhook or a crashed worker can't lose or double a report.
 - **Budgets fail open and are recorded.** A lead that hits its token or time cap still gets a report from what was found, and the telemetry notes it.
