@@ -24,8 +24,8 @@ I designed and built it with Claude Code.
 <rect x="10" y="130" width="100" height="50" rx="8"/>
 <rect x="150" y="130" width="110" height="50" rx="8"/>
 <rect x="150" y="30" width="110" height="46" rx="8"/>
-<rect x="350" y="105" width="170" height="100" rx="8"/>
-<rect x="350" y="250" width="170" height="44" rx="8"/>
+<rect x="325" y="105" width="220" height="100" rx="8"/>
+<rect x="325" y="250" width="220" height="44" rx="8"/>
 <rect x="580" y="20" width="210" height="280" rx="10" fill="none" stroke-dasharray="5 4"/>
 </g>
 <g fill="var(--muted)" stroke="var(--primary)" stroke-width="1.5">
@@ -35,9 +35,9 @@ I designed and built it with Claude Code.
 <g fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" marker-end="url(#ll-arrow)">
 <path d="M110 155H148"/>
 <path d="M205 128V78"/>
-<path d="M260 155H348"/>
-<path d="M520 135C555 135 565 110 598 110"/>
-<path d="M520 175C555 175 565 210 598 210"/>
+<path d="M260 155H323"/>
+<path d="M545 135C570 135 575 110 598 110"/>
+<path d="M545 175C570 175 575 210 598 210"/>
 <path d="M435 207V248"/>
 </g>
 <g fill="var(--foreground)" text-anchor="middle">
@@ -60,7 +60,7 @@ I designed and built it with Claude Code.
 <text x="685" y="240">role: auth_service</text>
 <text x="435" y="292">invites and verification</text>
 <text x="215" y="108" text-anchor="start">static files</text>
-<text x="304" y="147">dynamic</text>
+<text x="292" y="147">dynamic</text>
 </g>
 </svg></div>
 
