@@ -8,7 +8,6 @@ tech: [Python, XGBoost, SHAP, scikit-learn, pandas]
 year: 2025
 liveUrl: https://jpatrickb.github.io/football-to-admissions
 repoUrl: https://github.com/jpatrickb/football-to-admissions
-featured: true
 order: 11
 ---
 
