@@ -68,10 +68,6 @@ Each app's Terraform has switches for the pieces it can share (`create_vpc`, `cr
 
 NAT Gateways were the largest avoidable line. AWS Cost Explorer shows NAT Gateway spend of $68 in December, $109 in January, $97 in April and $89 in May, and $0 every month since June, once the last gateway was replaced. Four small `t4g.nano` NAT instances run in their place at a few dollars a month each.
 
-## A production failure that is still open
-
-Both production apps intermittently served 503s until a redeploy cleared them, and ECS health checks kept failing. I couldn't reproduce it locally, since it only happened in production. Changing the health check command from `curl` to `wget` and then to a Node script changed nothing. I did find one real bug along the way. Docker and ECS overwrite the container's `HOSTNAME`, so Next.js bound to the container's internal address and refused `localhost`, and I fixed that in both apps. The failures still happen, so that wasn't the whole cause, and I haven't closed this one.
-
 ## Decisions and tradeoffs
 
 - **Shared test, separate production.** Sharing saves money where an outage doesn't matter, and production keeps its own stack where it does.
