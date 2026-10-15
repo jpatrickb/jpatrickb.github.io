@@ -5,8 +5,9 @@ lane: system
 stages: [serve]
 tech: [Next.js, TypeScript, Supabase, PostgreSQL, Row Level Security]
 liveUrl: https://lumenlist.app
-repoUrl: https://github.com/jpatrickb/family-gift-registry
+repoUrl: https://github.com/pateastudio/lumenlist
 order: 20
+featured: true
 ---
 
 The rule that keeps gifts a surprise is enforced with Postgres row-level security policies, so that even a bug in the app can't show someone who claimed the items on their own list.

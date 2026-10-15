@@ -12,5 +12,11 @@ const p = project.data
   </div>
   <p class="mt-1 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">{p.summary}</p>
   {p.outcome && <p class="mt-1.5 max-w-[62ch] text-sm"><span class="font-mono text-[11px] text-secondary-accent">result</span> {p.outcome}</p>}
+  {(p.liveUrl || p.repoUrl) && (
+    <p class="relative z-10 mt-1.5 flex gap-4 font-mono text-[11px]">
+      {p.liveUrl && <a class="link" href={p.liveUrl} rel="noopener">live</a>}
+      {p.repoUrl && <a class="link" href={p.repoUrl} rel="noopener">repo</a>}
+    </p>
+  )}
   {p.stages.length > 0 && <div class="mt-2.5"><PipelineStrip stages={p.stages} /></div>}
 </li>
