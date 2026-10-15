@@ -68,9 +68,9 @@ Each app's Terraform has switches for the pieces it can share (`create_vpc`, `cr
 
 NAT Gateways were the largest avoidable line. AWS Cost Explorer shows NAT Gateway spend of $68 in December, $109 in January, $97 in April and $89 in May, and $0 every month since June, once the last gateway was replaced. Four small `t4g.nano` NAT instances run in their place at a few dollars a month each.
 
-## A health-check failure that wasn't the health check
+## A production failure that is still open
 
-Production intermittently served 503s on the AI assessment app until a redeploy cleared them. ECS health checks kept failing, and the first fixes changed the check command from `curl` to `wget`, then to `wget --spider`, then to a Node script, since each looked like it might be missing from the Alpine image. None of that was the cause. Docker and ECS overwrite the container's `HOSTNAME` at start, and Next.js binds to whatever that value is, so the server listened on the container's internal address and refused connections to `localhost`. The load balancer reached the container by that address and passed, while the container's own check failed and ECS marked tasks unhealthy. The fix was to set `HOSTNAME=0.0.0.0` in the container's start command, and I applied it to the portal app too. The check went back to `curl`.
+Both production apps intermittently served 503s until a redeploy cleared them, and ECS health checks kept failing. I couldn't reproduce it locally, since it only happened in production. Changing the health check command from `curl` to `wget` and then to a Node script changed nothing. I did find one real bug along the way. Docker and ECS overwrite the container's `HOSTNAME`, so Next.js bound to the container's internal address and refused `localhost`, and I fixed that in both apps. The failures still happen, so that wasn't the whole cause, and I haven't closed this one.
 
 ## Decisions and tradeoffs
 
@@ -79,4 +79,4 @@ Production intermittently served 503s on the AI assessment app until a redeploy 
 
 ## What I'd do differently
 
-TODO-CONFIRM
+The shared platform's Terraform lives only on my machine, with no repository, no CI and no review. I would put it in a repo with a pipeline from the start, so anyone on the team could change it safely.
