@@ -3,7 +3,7 @@ title: Voice-to-CRM iOS App
 summary: A native iOS app (SwiftUI) that transcribes a consultant's voice note, extracts the company, contact, and a summary of the discussion, and writes them directly into the CRM.
 lane: system
 stages: [data, model, serve]
-outcome: Approved by Apple and released on TestFlight.
+outcome: Approved by Apple and built for TestFlight, then cut from scope before it reached any consultants.
 tech: [Swift, SwiftUI, AWS Transcribe, AWS Bedrock, Claude, SAML SSO]
 year: 2025
 order: 4
