@@ -1,6 +1,6 @@
 ---
 title: Shared AWS Test Platform
-summary: One Terraform-managed test environment shared by three apps: a single load balancer routes by hostname, one Aurora cluster serves them all, and a NAT instance replaces the NAT Gateways.
+summary: "One Terraform-managed test environment shared by three apps: a single load balancer routes by hostname, one Aurora cluster serves them all, and a NAT instance replaces the NAT Gateways."
 lane: system
 stages: [serve, monitor]
 outcome: Three apps share one test environment, and replacing NAT Gateways with NAT instances cut that line from as much as $109 a month to a few dollars.
