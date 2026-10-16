@@ -68,7 +68,7 @@ The agent runs as one container on ECS Fargate and holds a socket connection to 
 
 ## Why a person approves every write
 
-The agent works with sensitive data about clients, and what it writes ends up on a client record that people use to make decisions about that client. I wanted the agent to take the work off the team while a person still checked each change before it landed, so the humans keep control and the burden is lighter.
+The agent works with sensitive data about clients, and what it writes ends up on a client record that people use to make decisions about that client. The agent does the work; a person approves every change before it lands on a client record.
 
 ## How it changed
 

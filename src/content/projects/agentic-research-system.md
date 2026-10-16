@@ -1,9 +1,9 @@
 ---
 title: Agentic Company Research System
-summary: A production system that turns a visitor's email into a personalized company report, with a verifier and a grounding pass that strip unsupported claims before anything is sent.
+summary: A production system that turns a visitor's email into a personalized company report, then checks the report twice for unsupported claims before sending it.
 lane: system
 stages: [data, model, eval, serve, monitor]
-outcome: A production system that checks its own reports twice before sending them and shows what each report costs.
+outcome: A production system that double-checks every report before sending it, with per-report cost tracking.
 tech: [Next.js, AWS Bedrock AgentCore, Claude, TypeScript, PostgreSQL]
 year: 2026
 featured: true
@@ -55,7 +55,7 @@ I built this at TechForce Advisors as the founding engineer. A visitor enters th
 </g>
 </svg></div>
 
-A control plane built in Next.js on Amplify takes the lead webhook, writes a job to Postgres and invokes a worker container on AgentCore Runtime. AgentCore hosts the container and gives it a managed browser, and the agent loop itself is custom TypeScript on Bedrock's tool-use API, which Claude Code and Cursor wrote to my specification and I verified. A scheduled sweeper re-drives anything that gets stuck.
+When a lead comes in, a Next.js control plane on Amplify records the job in Postgres and invokes a worker container on AgentCore Runtime. AgentCore hosts the container and gives it a managed browser, and the agent loop itself is custom TypeScript on Bedrock's tool-use API, which Claude Code and Cursor wrote to my specification and I verified. A scheduled sweeper re-drives anything that gets stuck.
 
 ## How a request flows
 
