@@ -95,6 +95,9 @@ exports, which is one of the top digital music editors. Born-digital as Finale e
 because it means that the PDFs had bar numbers, staff labels, and Music-font glyphs embedded into it
 with precise positions recorded.
 
+![A green handwritten 'Sit' with an arrow, drawn on the vocal score](/images/omr-failed-on-single-note-music/10-hand-marking-sit-mvt8.png)
+_A hand marking in the vocal score (Movement 8, bar 68). Colored ink was erased from every page before OMR. © 2010 Rob Gardner Music, ASCAP._
+
 The layout of the music also varied throughout the score. The score hides empty staves, so soloists
 only show up when they sing. Also, sometimes the choir splits into 4 staves (S/A/T/B) instead of 2
 (SA/TB).
@@ -247,6 +250,9 @@ instead as notes. A 12/8 time signature at the end of a line (serving to notify 
 next line begins with a time change) mistakenly created an extra bar in that line. Clef changes
 mid-staff were interpreted as notes.
 
+![Audiveris's raw output for the first choral page: time signatures turned into chords and an extra bar at the end of the second line](/images/omr-failed-on-single-note-music/09-audiveris-raw-output-choral-mvt1.png)
+_Audiveris's raw output for the first page of the vocal score, rendered in MuseScore. The 12/8 and 9/8 time signatures came back as chords, the cautionary 12/8 at the end of the second line became an extra bar 8, and hairpins and accents came back as dynamics like *f* and *fz*._
+
 ![Vocal score, Movement 1, bars 5–7, as printed](/images/omr-failed-on-single-note-music/05-vocal-score-mvt1-bars5-7-original.png)
 _Vocal score, Movement 1, bars 5–7, as printed. © 2010 Rob Gardner Music, ASCAP._
 
@@ -264,6 +270,9 @@ ground truth programmatically. For example, bars were numbered. Multi-measure re
 number ranges. Time signatures, clefs, and staff names showed up. Lyric syllables were given with
 their positions. Noteheads were given with exact staff positions. Staff lines and barlines were
 given with the exact vector geometry that they were defined with.
+
+![Vocal score bars 5–7 with boxes over every symbol the PDF records: music glyphs in blue, text in orange, stems and barlines in green](/images/omr-failed-on-single-note-music/08-answer-key-pdf-layers-mvt1-bars5-7.png)
+_What the PDF itself records for vocal score bars 5–7. Blue: music-font characters (noteheads, rests, clefs, accidentals, time-signature digits) at their stored positions. Orange: text (lyrics, staff labels, bar numbers). Green: vertical vector lines (stems and barlines). Boxes are the font's character cells, not the ink. © 2010 Rob Gardner Music, ASCAP._
 
 By no means was reconciling this an easy task. But having the ground truth in this case meant the
 task was solvable. Fortunately we have AI tools that can deal with programming tasks like this for
@@ -311,6 +320,12 @@ something someone else could put their music into and get out exactly what they 
 closer. The long-term solution is helping frontier models to train on more and more types of data so
 that they can handle complex tasks like this.
 
+![Movement 1 bar 25 before and after re-timing: before, the S/A pickup sits left of the T/B pickup; after, they line up](/images/omr-failed-on-single-note-music/12-pickup-alignment-before-after-mvt1-bar25.png)
+_Movement 1, bar 25, before and after re-timing notes from their vertical alignment on the page. Before, the S/A pickup lands two eighths earlier than the T/B pickup. The "before" is a re-creation: the same pipeline re-run with the re-timing step turned off. The piano right hand in this bar is wrong in both versions (one of the known pitch issues)._
+
+![Trombone 1 part, Movement 6, bars 36–37: an A flat tied across a line break](/images/omr-failed-on-single-note-music/11-trombone-part-mvt6-bars36-37-tie-across-lines.png)
+_Trombone 1, Movement 6, bars 36–37. The A♭ is tied across the line break, so the tied A in bar 37 carries no printed flat. Audiveris lost the tie, and bar 37 came out as A natural. © 2010 Rob Gardner Music, ASCAP._
+
 ## The Result
 
 All of this work was done on Thursday, October 22, prior to my 7pm rehearsal, the real test of the
@@ -336,6 +351,12 @@ notes, but if so they were there from the beginning and simply got carried throu
 sure bolstered my confidence that the extraction worked, though it showed that I am far from a
 system that intelligently understands the music, because it likely would have flagged that the
 trombone part had a note that didn't fit into the chord the rest of the ensemble was playing.
+
+![Combined score, Movement 10, bars 67–69: the blue trombone G above the choir and piano's A flat major chord in bar 69](/images/omr-failed-on-single-note-music/13-combined-score-mvt10-bars67-69.png)
+_The combined score, Movement 10, bars 67–69. In bar 69 the trombone plays G (blue) against the choir and piano's A♭ major chord. The transcription matches the printed part. © 2010 Rob Gardner Music, ASCAP._
+
+![Movement 8 bar 76: the printed trombone part next to the vocal score's piano part](/images/omr-failed-on-single-note-music/14-mvt8-bar76-trombone-and-piano.png)
+_Movement 8, bar 76. The printed trombone part has A on beat 4; under it, the piano has C in the bass with E–F–G above. The transcription matches the printed A. © 2010 Rob Gardner Music, ASCAP._
 
 Because I had access to the whole chordal texture in the piano reduction, I was even able to pitch
 in a couple times to fill missing parts on the trombone or with my voice for instrumentals or vocal
