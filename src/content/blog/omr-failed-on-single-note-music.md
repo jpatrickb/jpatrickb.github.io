@@ -1,8 +1,8 @@
 ---
 title: The Newest Music-Reading AI Failed To Read My Single-Note Trombone Music
 description:
-  I gave my sheet music to the newest music-reading AI, and it failed. I gave it to an older
-  Java app, and it crushed it.
+  I gave my sheet music to the newest music-reading AI, and it failed. I gave it to an older Java
+  app, and it crushed it.
 date: 2026-10-23
 tags: [music, trombone, orchestra, ai, computer-vision, omr, piano]
 draft: false
@@ -150,7 +150,8 @@ writes images to) and what the sheet music rendering of that looks like:
 <-- insert `**kern` code and image -->
 
 ![Transcoda's trombone output rendered with Verovio: an invented grand staff in 15/16 with dotted rests and no notes](/images/omr-failed-on-single-note-music/03-transcoda-trombone-output-rendered.png)
-_Transcoda's output for the trombone page, rendered with Verovio. The raw output crashes Verovio; only the final truncated line was removed and the spines terminated so it would render._
+_Transcoda's output for the trombone page, rendered with Verovio. The raw output crashes Verovio;
+only the final truncated line was removed and the spines terminated so it would render._
 
 I tried again using an optional feature of the Transcoda model, grammar-constrained decoding.
 Basically, this forced the model to only output music that is valid.
@@ -166,7 +167,8 @@ then wrote data with 3 columns. It completely missed the SA and TB staves, and i
 bars where the original music only had 7.
 
 ![Transcoda's choral output rendered with Verovio: three staves of rests and a held bass pedal, with the vocal staves missing](/images/omr-failed-on-single-note-music/04-transcoda-choral-output-rendered.png)
-_Transcoda's output for the first choral page, rendered with Verovio. The header was changed from 2 spines to 3 so it would load; the content is unchanged._
+_Transcoda's output for the first choral page, rendered with Verovio. The header was changed from 2
+spines to 3 so it would load; the content is unchanged._
 
 These findings were disappointing to say the least. I'd been really hoping that I could get a model
 that could do what I needed it to. The benchmark values and examples in their paper gave me hope
@@ -174,10 +176,10 @@ that it was up to the task.
 
 So why did the "best model" fail so hard?
 
-The answer comes down to training data. Transcoda was trained primarily on piano grand-staff music
-only (piano music with two staves for treble and bass clef), all synthetically generated for them.
-Even though trombone music, with a single staff and single note, are technically easier to analyze
-than piano music, the model hadn't seen anything like it so it completely failed.
+The answer comes down to training data. Transcoda was trained only on piano grand-staff music only
+(piano music with two staves for treble and bass clef), all synthetically generated for them. Even
+though trombone music, with a single staff and single note, are technically easier to analyze than
+piano music, the model hadn't seen anything like it so it completely failed.
 
 #### Legato
 
@@ -202,17 +204,12 @@ trained glyph classifier, so it has some elements of machine learning but functi
 rule-based classifier and not as an end-to-end model like Transcoda and Legato aim to be.
 
 Algorithmic tools like this have their place and can function well, but typically they are far
-inferior to newer neural networks that can crush any task you put a loss function to. They often
-win in speed (don't require trillions of computations to feed through a neural network) but
-typically fail on complex tasks, because each individual component of an algorithm like this is
-fragile, so a mistake early in the pipeline feeds throughout and spoils most of the results, whereas
-neural networks attempt to perform the task comprehensively, being less prone to this type of
-cascading error.
-
-(Those working with agents will call me out by saying that agent errors cascade too. Yes, you're
-correct; the difference here is that these neural models run a task through the model once and give
-an output, agents break tasks into multiple steps and perform each step in sequence, reintroducing
-the risk of compounding error that's absent in a single pass.)
+inferior to newer neural networks that can crush any task you put a loss function to. They often win
+in speed (don't require trillions of computations to feed through a neural network) but typically
+fail on complex tasks, because each individual component of an algorithm like this is fragile, so a
+mistake early in the pipeline feeds throughout and spoils most of the results, whereas neural
+networks attempt to perform the task comprehensively, being less prone to this type of cascading
+error.
 
 When I passed my music into Audiveris, it analyzed a page of music in about 10 seconds, rather than
 the several minutes that Transcoda required.
@@ -265,8 +262,14 @@ examples of issues identified that Claude crunched and fixed:
 Beyond this, we were also able to perform a pitch check from the notehead positions to determine if
 the transcribed notes match the notes in the printed music.
 
-<-- Should answer why we didn't just write a script to parse the PDF. Why did we still use
-Audiveris? Did we have to? Was there another option? I honestly don't know -->
+You may ask why I didn't just choose to parse the PDF directly if we had the symbols there. Valid
+question. The PDF gives some items as symbols, and some only as drawn lines. A pure PDF reader would
+need to try to work out each note's length from the head, stem, beams, flags, and dots, and group
+heads that share a stem into chords, split the piano's two or three simultaneous lines into voices,
+handle triplets (including ones without a label of "3") which is pretty much what an OMR system
+should do, and I'm not ready to try to make my own OMR yet. Audiveris does most of this already, so
+it made the most sense to just use that. Plus, my point was to test existing OMR systems, not to
+build my own.
 
 Audiveris did a good job providing a foundational music reading tool, and the PDF provided ground
 truth to verify, but it wasn't all automatic, nor was the manual parsing something that Claude could
@@ -300,7 +303,8 @@ the trombone played at, the whole trombone staff was colored blue so I could see
 I needed to play.
 
 ![Combined score, Movement 1, bars 21–22: the blue trombone staff at its first entrance above the choir and piano](/images/omr-failed-on-single-note-music/07-combined-score-mvt1-bars21-22-trombone-entrance.png)
-_The combined score, Movement 1, bars 21–22: the trombone's first entrance. © 2010 Rob Gardner Music, ASCAP._
+_The combined score, Movement 1, bars 21–22: the trombone's first entrance. © 2010 Rob Gardner
+Music, ASCAP._
 
 Though I was initially nervous about playing the wrong thing, I soon came to trust the music and
 found that it worked quite well for me. There were a couple of places that the notes written did not
