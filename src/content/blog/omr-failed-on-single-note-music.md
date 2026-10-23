@@ -320,8 +320,8 @@ something someone else could put their music into and get out exactly what they 
 closer. The long-term solution is helping frontier models to train on more and more types of data so
 that they can handle complex tasks like this.
 
-![Movement 1 bar 25 before and after re-timing: before, the S/A pickup sits left of the T/B pickup; after, they line up](/images/omr-failed-on-single-note-music/12-pickup-alignment-before-after-mvt1-bar25.png)
-_Movement 1, bar 25, before and after re-timing notes from their vertical alignment on the page. Before, the S/A pickup lands two eighths earlier than the T/B pickup. The "before" is a re-creation: the same pipeline re-run with the re-timing step turned off. The piano right hand in this bar is wrong in both versions (one of the known pitch issues)._
+![Movement 1 bars 21–22 before and after re-timing: before, the choir pickup at the end of bar 21 sits over a piano note that belongs on beat 4; after, the piano notes sit on their beats](/images/omr-failed-on-single-note-music/12-pickup-alignment-before-after-mvt1-bar21.png)
+_Movement 1, bars 21–22, before and after re-timing notes from their vertical alignment on the page. Before, the piano right hand overflows the bar, so its low note, which belongs on beat 4, is pushed to the end of the bar next to the choir pickup. The "before" is a re-creation: the same pipeline re-run with the re-timing step turned off._
 
 ![Trombone 1 part, Movement 6, bars 36–37: an A flat tied across a line break](/images/omr-failed-on-single-note-music/11-trombone-part-mvt6-bars36-37-tie-across-lines.png)
 _Trombone 1, Movement 6, bars 36–37. The A♭ is tied across the line break, so the tied A in bar 37 carries no printed flat. Audiveris lost the tie, and bar 37 came out as A natural. © 2010 Rob Gardner Music, ASCAP._
@@ -354,9 +354,6 @@ trombone part had a note that didn't fit into the chord the rest of the ensemble
 
 ![Combined score, Movement 10, bars 67–69: the blue trombone G above the choir and piano's A flat major chord in bar 69](/images/omr-failed-on-single-note-music/13-combined-score-mvt10-bars67-69.png)
 _The combined score, Movement 10, bars 67–69. In bar 69 the trombone plays G (blue) against the choir and piano's A♭ major chord. The transcription matches the printed part. © 2010 Rob Gardner Music, ASCAP._
-
-![Movement 8 bar 76: the printed trombone part next to the vocal score's piano part](/images/omr-failed-on-single-note-music/14-mvt8-bar76-trombone-and-piano.png)
-_Movement 8, bar 76. The printed trombone part has A on beat 4; under it, the piano has C in the bass with E–F–G above. The transcription matches the printed A. © 2010 Rob Gardner Music, ASCAP._
 
 Because I had access to the whole chordal texture in the piano reduction, I was even able to pitch
 in a couple times to fill missing parts on the trombone or with my voice for instrumentals or vocal
