@@ -150,7 +150,11 @@
   .prose-site a { color: var(--primary); text-underline-offset: 3px; text-decoration: underline; }
   .prose-site pre { background: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; margin-block: 0 1rem; overflow-x: auto; font-size: .85rem; line-height: 1.6; }
   .prose-site pre code { background: none; padding: 0; font-size: inherit; }
-  .prose-site h3 { font-weight: 600; margin-block: 1.25rem .5rem; }
+  .prose-site h1 { font-size: 1.4rem; font-weight: 600; line-height: 1.3; margin-block: 2.25rem .7rem; }
+  .prose-site h3 { font-size: 1.05rem; font-weight: 600; margin-block: 1.25rem .5rem; }
+  /* h4 and below borrow the mono .label look, since they can't shrink much below body size */
+  .prose-site :is(h4, h5, h6) { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); margin-block: 1.4rem .4rem; }
+  .prose-site hr { border-color: var(--border); margin-block: 2rem; }
   .prose-site ol { list-style: decimal; padding-left: 1.25rem; margin-block: 0 .9rem; }
   .prose-site img { border-radius: 8px; margin-block: 0 1rem; }
   .prose-site blockquote { border-left: 2px solid var(--border); padding-left: 1rem; color: var(--muted-foreground); margin-block: 0 .9rem; }
