@@ -147,7 +147,28 @@ not even yielding a single note.
 Here was the original output from the model, both in `**kern` format (the digital format Transcoda
 writes images to) and what the sheet music rendering of that looks like:
 
-<-- insert `**kern` code and image -->
+```text
+**kern	**kern
+*clefF4	*clefG2
+*k[]	*k[]
+*M15/16	*M15/16
+3...r	3...r
+=	=
+*M13...r	3...r
+=	=
+*M13...r	3...r
+=	=
+*M13...r	3...r
+=	=
+*M13...r	3...r
+=	=
+*M13...r	3...r
+=	=
+*M13...r	3...r
+=	=
+*M13/8	*M13/8
+3...r	3...r
+```
 
 ![Transcoda's trombone output rendered with Verovio: an invented grand staff in 15/16 with dotted rests and no notes](/images/omr-failed-on-single-note-music/03-transcoda-trombone-output-rendered.png)
 _Transcoda's output for the trombone page, rendered with Verovio. The raw output crashes Verovio;
