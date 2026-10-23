@@ -197,7 +197,7 @@ that it was up to the task.
 
 So why did the "best model" fail so hard?
 
-The answer comes down to training data. Transcoda was trained only on piano grand-staff music only
+The answer comes down to training data. Transcoda was trained only on piano grand-staff music
 (piano music with two staves for treble and bass clef), all synthetically generated for them. Even
 though trombone music, with a single staff and single note, are technically easier to analyze than
 piano music, the model hadn't seen anything like it so it completely failed.
