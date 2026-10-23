@@ -23,6 +23,9 @@ little-to-no context about the rest of the ensemble. _Lamb of God_ is especially
 by counting rests because several movements have time changes nearly every bar, meaning that sitting
 and counting my fingers (my typical band/orchestra strategy haha) would not work.
 
+![Trombone 1 part, Movement 1, bars 1–13: multi-measure rests and a time signature change nearly every bar](/images/omr-failed-on-single-note-music/01-trombone-part-mvt1-bars1-13.png)
+_Trombone 1, Movement 1, bars 1–13. © 2010 Rob Gardner Music, ASCAP._
+
 In previous ensembles, when performing literature in the public domain I would often go find the
 entire orchestral score, save it to my iPad, highlight the parts where the trombone plays, and then
 use that in rehearsals and performances. It's fun, because I can see what's going on in the ensemble
@@ -123,6 +126,9 @@ At 59M parameters, Transcoda was small enough for me to run on my MacBook, so I 
 on the entire first page of Movement 1 of the trombone score, with its 12 notes and many measures of
 rest.
 
+![Trombone 1 part, Movement 1, bars 22–29: every note in the movement](/images/omr-failed-on-single-note-music/02-trombone-part-mvt1-bars22-29.png)
+_Trombone 1, Movement 1, bars 22–29. © 2010 Rob Gardner Music, ASCAP._
+
 Let me pause to excite you a bit--this was a big moment! I was taking research that I'd done,
 bringing it to my machine, to my life, to solve a problem I was experiencing, while exploring a
 direction I hope to take my career in. How amazing that I can run a frontier model on my computer
@@ -143,6 +149,9 @@ writes images to) and what the sheet music rendering of that looks like:
 
 <-- insert `**kern` code and image -->
 
+![Transcoda's trombone output rendered with Verovio: an invented grand staff in 15/16 with dotted rests and no notes](/images/omr-failed-on-single-note-music/03-transcoda-trombone-output-rendered.png)
+_Transcoda's output for the trombone page, rendered with Verovio. The raw output crashes Verovio; only the final truncated line was removed and the spines terminated so it would render._
+
 I tried again using an optional feature of the Transcoda model, grammar-constrained decoding.
 Basically, this forced the model to only output music that is valid.
 
@@ -155,6 +164,9 @@ I tried running this model on the choral/piano score too, just on the first page
 here, taking about 48 seconds to run, but gave garbage once again. It declared 2 parts (staves) and
 then wrote data with 3 columns. It completely missed the SA and TB staves, and it generated about 20
 bars where the original music only had 7.
+
+![Transcoda's choral output rendered with Verovio: three staves of rests and a held bass pedal, with the vocal staves missing](/images/omr-failed-on-single-note-music/04-transcoda-choral-output-rendered.png)
+_Transcoda's output for the first choral page, rendered with Verovio. The header was changed from 2 spines to 3 so it would load; the content is unchanged._
 
 These findings were disappointing to say the least. I'd been really hoping that I could get a model
 that could do what I needed it to. The benchmark values and examples in their paper gave me hope
@@ -216,6 +228,12 @@ oversized time signature common in pit orchestra music, which Audiveris failed o
 instead as notes. A 12/8 time signature at the end of a line (serving to notify musicians that the
 next line begins with a time change) mistakenly created an extra bar in that line. Clef changes
 mid-staff were interpreted as notes.
+
+![Vocal score, Movement 1, bars 5–7, as printed](/images/omr-failed-on-single-note-music/05-vocal-score-mvt1-bars5-7-original.png)
+_Vocal score, Movement 1, bars 5–7, as printed. © 2010 Rob Gardner Music, ASCAP._
+
+![The same bars with the time signatures erased before Audiveris reads the page](/images/omr-failed-on-single-note-music/06-vocal-score-mvt1-bars5-7-timesigs-masked.png)
+_The same bars with the time signatures erased before Audiveris reads the page._
 
 The output still wasn't perfect. I'd say it still wasn't even at the 90% bar. This meant that as is,
 the music was unusable for me. However, there's a silver lining.
@@ -280,6 +298,9 @@ The rehearsal began, and all went smoothly. The choir and piano parts followed t
 and the rest of the orchestra members well, and I could stay with the music. When we got to parts
 the trombone played at, the whole trombone staff was colored blue so I could see it clearly and know
 I needed to play.
+
+![Combined score, Movement 1, bars 21–22: the blue trombone staff at its first entrance above the choir and piano](/images/omr-failed-on-single-note-music/07-combined-score-mvt1-bars21-22-trombone-entrance.png)
+_The combined score, Movement 1, bars 21–22: the trombone's first entrance. © 2010 Rob Gardner Music, ASCAP._
 
 Though I was initially nervous about playing the wrong thing, I soon came to trust the music and
 found that it worked quite well for me. There were a couple of places that the notes written did not
