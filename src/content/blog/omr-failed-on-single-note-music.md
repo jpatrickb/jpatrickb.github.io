@@ -1,7 +1,7 @@
 ---
 title: The Newest Music-Reading AI Failed To Read My Single-Note Trombone Music
 description:
-  I gave my sheet music to the newest music-reading AI, and it failed. I gave it to a 20 year old
+  I gave my sheet music to the newest music-reading AI, and it failed. I gave it to an older
   Java app, and it crushed it.
 date: 2026-10-23
 tags: [music, trombone, orchestra, ai, computer-vision, omr, piano]
@@ -40,7 +40,7 @@ exploring neural network architectures, and comparing against conventional algor
 OMR to try to better understand how people are applying deep learning to real problems in music.
 
 I decided that these models might be able to help me scan both my trombone part and the choir/piano
-parts (which I've been rehearsing off of for weeks) and then allow me to splice to two together in
+parts (which I've been rehearsing off of for weeks) and then allow me to splice the two together in
 MuseScore, giving me exactly that combined score of my trombone music on top of the familiar choral
 score and piano reduction.
 
@@ -93,7 +93,7 @@ because it means that the PDFs had bar numbers, staff labels, and Music-font gly
 with precise positions recorded.
 
 The layout of the music also varied throughout the score. The score hides empty staves, so soloists
-only show up when they sing. Also, sometimes the choir splits until 4 staves (S/A/T/B) instead of 2
+only show up when they sing. Also, sometimes the choir splits into 4 staves (S/A/T/B) instead of 2
 (SA/TB).
 
 ## Models
@@ -182,7 +182,7 @@ be back for more testing with them!
 
 Because I was unable to use the neural models I hoped to use, and Transcoda's performance was
 disappointing, I resorted to open-source algorithmic tools for this problem. For that, I turned to
-**Audiveris**, and older open source Java tool.
+**Audiveris**, an older open source Java tool.
 
 Audiveris is a staff-first pipeline, and works by finding staves, barlines, and symbols, and then
 assembling them into a usable format. While mostly mechanical and algorithmic, Audiveris uses a
@@ -190,7 +190,7 @@ trained glyph classifier, so it has some elements of machine learning but functi
 rule-based classifier and not as an end-to-end model like Transcoda and Legato aim to be.
 
 Algorithmic tools like this have their place and can function well, but typically they are far
-inferior to newer neural networks that can crush any task you put a loss function too. They often
+inferior to newer neural networks that can crush any task you put a loss function to. They often
 win in speed (don't require trillions of computations to feed through a neural network) but
 typically fail on complex tasks, because each individual component of an algorithm like this is
 fragile, so a mistake early in the pipeline feeds throughout and spoils most of the results, whereas
@@ -224,7 +224,7 @@ the music was unusable for me. However, there's a silver lining.
 
 Remember how I said earlier that the born-digital PDFs contain symbols? Well, it holds both a text
 and a vector layer, meaning that we actually had a way to verify the output of the model against the
-ground truth programatically. For example, bars were numbered. Multi-measure rests had measure
+ground truth programmatically. For example, bars were numbered. Multi-measure rests had measure
 number ranges. Time signatures, clefs, and staff names showed up. Lyric syllables were given with
 their positions. Noteheads were given with exact staff positions. Staff lines and barlines were
 given with the exact vector geometry that they were defined with.
@@ -235,14 +235,14 @@ us.
 
 Instead of treating Audiveris as a standalone OMR tool that provided sufficient music, we used it to
 read the music and then compared against the PDF to check the structure. Here are some of the
-example of issues identified that Claude crunched and fixed:
+examples of issues identified that Claude crunched and fixed:
 
 - Time signatures erased before reading were re-applied from the PDF
 - Multi-bar rests were written out from the printed bar labels
 - Staff identity per system was taken from the printed labels
 - Clef symbols misread as notes were removed, and notes were re-read into the printed clef.
 - Notes printed in the same vertical column were re-timed to start together
-- Lyric syllables were places from the text layer, since Audiveris got none
+- Lyric syllables were placed from the text layer, since Audiveris got none
 
 Beyond this, we were also able to perform a pitch check from the notehead positions to determine if
 the transcribed notes match the notes in the printed music.
@@ -256,7 +256,7 @@ do alone. It was able to get pretty far, but I still had to catch many of the re
 hard to spot errors.
 
 For example, I could see that an eighth note pickup in the choir was vertically aligned with notes
-occuring 3 beats earlier in the piano score. It was syntactically correct, but confusing to any
+occurring 3 beats earlier in the piano score. It was syntactically correct, but confusing to any
 reader. Or another time when wrong notes occurred because the right hand was switching between
 clefs, and Audiveris and Claude couldn't see it. In one of the movements, a vocalist part was
 written a measure ahead of where it should actually be, which I only caught from listening to the
@@ -295,7 +295,7 @@ Because I had access to the whole chordal texture in the piano reduction, I was 
 in a couple times to fill missing parts on the trombone or with my voice for instrumentals or vocal
 soloists who weren't at that rehearsal. For example, I joined our one French Horn on the triumphal
 French Horn duet in "Hosanna", filled a missing bassoon part, and sang some of John's solo parts
-while he was gone. If all I had was the trombone part, the rehearsal would have had silence in this
+while he was gone. If all I had was the trombone part, the rehearsal would have had silence in these
 sections, making it harder for the other musicians to see how their part supports or fits into the
 greater tapestry of the music.
 
