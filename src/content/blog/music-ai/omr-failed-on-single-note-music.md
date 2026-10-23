@@ -218,6 +218,8 @@ be back for more testing with them!
 
 ### Algorithmic Tools
 
+#### Audiveris
+
 Because I was unable to use the neural models I hoped to use, and Transcoda's performance was
 disappointing, I resorted to open-source algorithmic tools for this problem. For that, I turned to
 **Audiveris**, an older open source Java tool.
